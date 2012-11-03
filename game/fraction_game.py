@@ -9,3 +9,5 @@ class FractionGame(spyral.Scene):
         super(FractionGame, self).__init__(*args, **kwargs)
 
         self.camera = self.parent_camera.make_child(virtual_size = (WIDTH, HEIGHT))
+        self.buttons = spyral.Group(self.camera)
+        self.texts = spyral.Group(self.camera)

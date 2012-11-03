@@ -1,35 +1,9 @@
 import spyral
 import fraction_game
+import extras
 
 WIDTH = 1200
 HEIGHT = 900
-FONT_PATH = "fonts/bertoltbrecht.ttf"
-
-class Button(spyral.Sprite):
-    def __init__(self, position):
-
-        super(Button, self).__init__()
-        self.image = spyral.Image(size=(200, 50))
-        self.image.fill((255,255,255))
-        self.layer = 'bottom'
-        self.anchor = 'center'
-        self.pos = position
-
-    def clicked(self):
-        spyral.director.push(fraction_game.FractionGame())
-        
-    def check_click(self, position):
-        return self.get_rect().collide_point(position)
-    
-class Text(spyral.Sprite):
-    def __init__(self, position, text):
-
-        super(Text, self).__init__()
-        self.image = spyral.Image(size=(200, 50))
-        self.image = spyral.Font(FONT_PATH, 14, (0,0,255)).render(text)
-        self.layer = 'top'
-        self.anchor = 'center'
-        self.pos = position
 
 class VillageSelection(spyral.Scene):
     def __init__(self, *args, **kwargs):
@@ -40,8 +14,9 @@ class VillageSelection(spyral.Scene):
         self.buttons = spyral.Group(self.camera)
         self.texts = spyral.Group(self.camera)
         
-        fraction_game_button = Button((WIDTH/2, HEIGHT/2))
-        fraction_game_text = Text(position=(WIDTH/2, HEIGHT/2), text="Fraction Game")
+        fraction_game_button = extras.Button((200, 50), (WIDTH/2, HEIGHT/2), layer='bottom')
+        fraction_game_button.clicked = lambda: spyral.director.push(fraction_game.FractionGame())
+        fraction_game_text = extras.Text("Fraction Game", (200, 50), (WIDTH/2, HEIGHT/2), layer='top')
         
         self.buttons.add(fraction_game_button)
         self.texts.add(fraction_game_text)
