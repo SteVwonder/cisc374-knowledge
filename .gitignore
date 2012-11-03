@@ -25,3 +25,9 @@ pip-log.txt
 
 #Mr Developer
 .mr.developer.cfg
+
+#Macintosh Stuff
+.DS_Store
+
+#Emacs stuff
+\#*#
