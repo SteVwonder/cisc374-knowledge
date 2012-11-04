@@ -25,8 +25,13 @@ class Text(spyral.Sprite):
     def __init__(self, text, image_size, position, anchor='center', layer='all', font_size=14, color=(0,0,0)):
 
         super(Text, self).__init__()
-        self.image = spyral.Image(size=image_size)
+        #self.image = spyral.Image(size=image_size)
+        self.font_size = font_size
+        self.color = color
         self.image = spyral.Font(FONT_PATH, font_size, color).render(text)
         self.layer = layer
         self.anchor = anchor
         self.pos = position
+
+    def set_text(self, text):
+        self.image = spyral.Font(FONT_PATH, self.font_size, self.color).render(text)
