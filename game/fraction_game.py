@@ -27,8 +27,9 @@ class FractionGame(spyral.Scene):
         self.water_in_bucket = 0
         
         #Button to move to the fractional tools scene
-        fraction_tools_button = extras.Button((200, 50), (WIDTH-5, 5), anchor='topright', layer='bottom')
-        increase_water_button = extras.Button((150,150), (5, HEIGHT-5), anchor='bottomleft', layer='bottom')
+        fraction_tools_button = extras.Button(image_size=(200, 50), position=(WIDTH-5, 5), anchor='topright', layer='bottom')
+        increase_water_button = extras.Button(filename="images/red_button.png", position=(5, HEIGHT-5),
+                                              anchor='bottomleft', layer='bottom')
         
         #Need to assign an action to the button for when it is clicked
         fraction_tools_button.clicked = lambda: spyral.director.push(fraction_tools.FractionTools())

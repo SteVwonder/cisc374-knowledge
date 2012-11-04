@@ -23,7 +23,7 @@ class VillageSelection(spyral.Scene):
         self.texts = spyral.Group(self.camera)
 
         #Add in our button for the fraction game, notice how I set the layer
-        fraction_game_button = extras.Button((200, 50), (WIDTH/2, HEIGHT/2), layer='bottom')
+        fraction_game_button = extras.Button(image_size=(200, 50), position=(WIDTH/2, HEIGHT/2), layer='bottom')
         
         #Need to assign an action to the button for when it is clicked
         #We do this by using lambda functions.  So when the button is

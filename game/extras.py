@@ -6,11 +6,17 @@ FONT_PATH = "fonts/bertoltbrecht.ttf"
 #I have been using it as the base for a button.  Once you make one of these,
 #just make some Text and layer the Text on top of the Button
 class Button(spyral.Sprite):
-    def __init__(self, image_size, position, anchor='center', layer='all', fill=(255,255,255)):
+    def __init__(self, position, image_size=None, filename=None, anchor='center', layer='all', fill=(255,255,255)):
 
         super(Button, self).__init__()
-        self.image = spyral.Image(size=image_size)
-        self.image.fill(fill)
+        if filename == None and image_size != None:
+            self.image = spyral.Image(size=image_size)
+            self.image.fill(fill)
+        elif filename != None:
+            self.image = spyral.Image(filename)
+        else:
+            raise ValueError("Need either a filename or an image_size")
+        
         self.layer = layer
         self.anchor = anchor
         self.pos = position
