@@ -1,5 +1,5 @@
 import spyral
-import village_selection
+import start_menu
 
 def main():
-    spyral.director.push(village_selection.VillageSelection())
+    spyral.director.push(start_menu.StartMenu())

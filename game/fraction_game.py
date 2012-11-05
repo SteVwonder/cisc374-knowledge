@@ -2,6 +2,7 @@ import spyral
 import extras
 import fraction_tools
 from fractions import Fraction
+import random
 
 WIDTH = 1200
 HEIGHT = 900
@@ -16,7 +17,6 @@ HEIGHT = 900
 
 class FractionGame(spyral.Scene):
     def __init__(self, *args, **kwargs):
-
         super(FractionGame, self).__init__(*args, **kwargs)
 
         self.camera = self.parent_camera.make_child(virtual_size = (WIDTH, HEIGHT), layers=['bottom', 'top'])
@@ -75,6 +75,21 @@ class FractionGame(spyral.Scene):
 
     #Sets the background to an image file store in the repo
     def on_enter(self):
-
         background = spyral.Image(filename="images/farmland.jpg")
         self.camera.set_background(background)
+    
+    def generate_whole_and_fraction(self):
+        denominator = random.randint(2,6)
+        numerator = random.randint(1,denominator-1)
+        if(numerator <= 2):
+            whole_number = random.randint(1,6)
+        else:
+            whole_number = random.randint(1,3)
+        return whole_number, Fraction(numerator, denominator)
+
+    def generate_same_denominator_fractions(self):
+        denominator = random.randint(2,9)
+        numerator1 = random.randint(1,denominator-1)
+        numerator2 = random.randint(1,denominator-1)
+        return Fraction(numerator1, denominator), Fraction(numerator2, denominator)
+
