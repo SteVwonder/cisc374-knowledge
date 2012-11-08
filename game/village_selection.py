@@ -30,7 +30,7 @@ class VillageSelection(spyral.Scene):
         #clicked, the method clicked is called, which points to this
         #lambda function.  As you can see, I'm using this button to push
         #a new scene onto the stack
-        fraction_game_button.clicked = lambda: spyral.director.push(fraction_game.FractionGame())
+        fraction_game_button.clicked = lambda: spyral.director.push(fraction_game.FractionGame(1))
         
         #Add text over the button, notice how I set the layer
         fraction_game_text = extras.Text("Fraction Game", (200, 50), (WIDTH/2, HEIGHT/2), layer='top')

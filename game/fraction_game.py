@@ -17,69 +17,19 @@ RESULTS_TIME_ON_SCREEN = 3
 # scene, where you can visulaize the fractional problem using
 # the widgets in the scene
 
-class Fraction():
-    def __init__(self, numerator, denominator):
-        self.numerator = numerator
-        self.denominator = denominator
-
-    def gcd(self):
-        d = self.denominator
-        n = self.numerator
-        while d:
-            d, n = n%d, d
-        return n
-        
-    def reduce(self):
-        if (self.denominator != 0) and (self.numerator != 1):
-            greatest = self.gcd()
-            n = self.numerator / greatest
-            d = self.denominator / greatest
-            return Fraction(n, d)
-        else:
-            return self
-
-    def __str__(self):
-        temp_fraction = self.reduce()
-        if(temp_fraction.denominator != 1):
-            return str(temp_fraction.numerator) + "/" + str(temp_fraction.denominator)
-        else:
-            return str(temp_fraction.numerator)
-
-    def add(self, other_fraction):
-        if self.denominator == other_fraction.denominator:
-            return Fraction(self.numerator + other_fraction.numerator, self.denominator)
-        else:
-            raise ValueError("Cannot add fractions with different denominators YET!")
-        
-    def sub(self, other_fraction):
-        if (self.denominator == other_fraction.denominator):
-            return Fraction(self.numerator - other_fraction.numerator, self.denominator)
-        else:
-            raise ValueError("Cannot sub fractions with different denominators YET!")
-
-    def __cmp__(self, other):
-        if self.denominator == other.denominator:
-            if(self.numerator > other.numerator):
-                return 1
-            elif self.numerator == other.numerator:
-                return 0
-            else:
-                return -1
-        else:
-            raise ValueError("Cannot compare fractions with differenct denominators YET!")
-
 class FractionGame(spyral.Scene):
-    def __init__(self, *args, **kwargs):
-        super(FractionGame, self).__init__(*args, **kwargs)
-        
+    def __init__(self, difficulty):
+        super(FractionGame, self).__init__()
+
         self.camera = self.parent_camera.make_child(virtual_size = (WIDTH, HEIGHT), layers=['bottom', 'top', 'toptop'])
         self.buttons = spyral.Group(self.camera)
         self.texts = spyral.Group(self.camera)
-
+        self.others = spyral.Group(self.camera)
+        
         #Some variables used in the game
         self.water_in_bucket = Fraction(0,0)
         self.increment_bucket_by = 0
-        self.difficulty = 1
+        self.difficulty = difficulty
         self.problem_fractions = None
         self.results_timer = RESULTS_TIME_ON_SCREEN
         self.operation = None
@@ -87,11 +37,11 @@ class FractionGame(spyral.Scene):
         fraction_tools_button = extras.Button(image_size=(200, 50), position=(WIDTH-5, 5), anchor='topright', layer='bottom', fill=(194, 194, 194))
         increase_water_button = extras.Button(filename="images/red_button_300x300.png", position=(5, HEIGHT-5), anchor='bottomleft', layer='bottom')
         done_button = extras.Button(image_size=(200, 50), position=(WIDTH - 5, HEIGHT - 5), anchor='bottomright', layer='bottom', fill=(194, 194, 194))
-        self.results_button = extras.Button(image_size=(600,250), position=(WIDTH/2, HEIGHT/2), layer='top', fill=(255,255,255))
+        self.results_button = extras.Button(image_size=(600,250), position=(WIDTH/2, HEIGHT/2), layer='top', fill=(255,255,255), group=self.others)
         self.results_button.visible = False
         
         #Need to assign an action to the button for when it is clicked
-        fraction_tools_button.clicked = lambda: spyral.director.push(fraction_tools.FractionTools())
+        fraction_tools_button.clicked = lambda: spyral.director.push(fraction_tools.FractionTools(self.difficulty, self.problem_fractions, self.operation))
         increase_water_button.clicked = lambda: self.increase_water_in_bucket()
         done_button.clicked = lambda: self.check_answer()
         
@@ -107,7 +57,8 @@ class FractionGame(spyral.Scene):
         
         #Using two different groups for text and buttons
         #That way we only have to check for clicks on the buttons
-        self.buttons.add(fraction_tools_button, increase_water_button, done_button, self.results_button)
+        #Only put clickables in here
+        self.buttons.add(fraction_tools_button, increase_water_button, done_button)
         self.texts.add(fraction_tools_text, self.increase_water_text, done_text, self.great_job_text, self.try_again_text, self.operation_text)
 
         self.fractions_tuple = self.generate_problem()
@@ -141,6 +92,7 @@ class FractionGame(spyral.Scene):
     def render(self):
         self.buttons.draw()
         self.texts.draw()
+        self.others.draw()
         for fraction in self.fractions_tuple:
             fraction.draw(self.camera)
         
@@ -222,3 +174,55 @@ class FractionGame(spyral.Scene):
             self.water_in_bucket = Fraction(0, self.water_in_bucket.denominator)
             self.increase_water_text.set_text("Add Water (" + str(self.water_in_bucket) + ")")
             #show hint
+
+
+class Fraction():
+    def __init__(self, numerator, denominator):
+        self.numerator = numerator
+        self.denominator = denominator
+
+    def gcd(self):
+        d = self.denominator
+        n = self.numerator
+        while d:
+            d, n = n%d, d
+        return n
+        
+    def reduce(self):
+        if (self.denominator != 0) and (self.numerator != 1):
+            greatest = self.gcd()
+            n = self.numerator / greatest
+            d = self.denominator / greatest
+            return Fraction(n, d)
+        else:
+            return self
+
+    def __str__(self):
+        temp_fraction = self.reduce()
+        if(temp_fraction.denominator != 1):
+            return str(temp_fraction.numerator) + "/" + str(temp_fraction.denominator)
+        else:
+            return str(temp_fraction.numerator)
+
+    def add(self, other_fraction):
+        if self.denominator == other_fraction.denominator:
+            return Fraction(self.numerator + other_fraction.numerator, self.denominator)
+        else:
+            raise ValueError("Cannot add fractions with different denominators YET!")
+        
+    def sub(self, other_fraction):
+        if (self.denominator == other_fraction.denominator):
+            return Fraction(self.numerator - other_fraction.numerator, self.denominator)
+        else:
+            raise ValueError("Cannot sub fractions with different denominators YET!")
+
+    def __cmp__(self, other):
+        if self.denominator == other.denominator:
+            if(self.numerator > other.numerator):
+                return 1
+            elif self.numerator == other.numerator:
+                return 0
+            else:
+                return -1
+        else:
+            raise ValueError("Cannot compare fractions with differenct denominators YET!")
