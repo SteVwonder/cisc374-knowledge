@@ -28,6 +28,7 @@ class FractionTools(spyral.Scene):
         box_right = box_left + BOX_W
         self.bb = box_bottom
         self.bl = box_left
+        self.bt = box_top
         d = fractions[0].denominator
         #Horizontal Lines and Vertical Slider
         for x in xrange(0, d+1):
@@ -44,6 +45,9 @@ class FractionTools(spyral.Scene):
 
         self.shaded_box = spyral.Sprite(self.main_group)
         self.shaded_box.image = spyral.Image(size=(0,0))
+        self.shaded_box.anchor = 'bottomleft'
+        self.shaded_box.position = (box_left, box_bottom)
+        self.shaded_box.layer = 'shaded'
 
         self.vertical_slider = extras.Button((box_left - 80, box_bottom), image_size=(48,24), group=self.buttons)
         self.vertical_slider.dragging = False
@@ -54,7 +58,6 @@ class FractionTools(spyral.Scene):
         self.horizontal_slider.clicked = lambda: self.dragging(self.horizontal_slider)
 
     def update(self, dt):
-        
         #Check for any new/relevant events
         for event in self.event_handler.get():
             #Check to see if they clicked a button or slider
@@ -74,7 +77,6 @@ class FractionTools(spyral.Scene):
                 return
 
     def on_enter(self):
-        
         background = spyral.Image(size=(WIDTH, HEIGHT))
         background.fill((194,194,194))
         self.camera.set_background(background)
@@ -99,9 +101,6 @@ class FractionTools(spyral.Scene):
             elif (slider == self.vertical_slider) and (line.orientation == 'horizontal'):
                 lines.append(line.y)
         lines.sort()
-        print "Left", self.bl, "Bottom", self.bb
-        print "Mouse", position
-        print lines
         x = 0
         if (slider == self.horizontal_slider):
             mouse_position = self.camera.world_to_local(position)[0]
@@ -118,8 +117,14 @@ class FractionTools(spyral.Scene):
             
         if slider == self.horizontal_slider and slider.x != lines[x-1]:
             slider.x = lines[x-1]
+            old_height = self.shaded_box.get_rect()._h
+            self.shaded_box.image = spyral.Image(size=(lines[x-1]-self.bl, old_height))
+            self.shaded_box.image.fill((135,206,250))
         elif slider == self.vertical_slider and slider.y != lines[x-1]:
             slider.y = lines[x-1]
+            old_width = self.shaded_box.get_rect()._w
+            self.shaded_box.image = spyral.Image(size=(old_width, BOX_H - (lines[x-1]-self.bt)))
+            self.shaded_box.image.fill((135,206,250))
 
     def dragging(self, slider):
         slider.dragging = True
