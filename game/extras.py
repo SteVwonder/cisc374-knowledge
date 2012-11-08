@@ -1,6 +1,6 @@
 import spyral
 
-FONT_PATH = "fonts/bertoltbrecht.ttf"
+FONT_PATH = "fonts/00TT.TTF"
 
 #Essentially just a wrapper for a rectangle with click detection.
 #I have been using it as the base for a button.  Once you make one of these,

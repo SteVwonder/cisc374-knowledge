@@ -525,9 +525,10 @@ class AggregateSprite(Sprite):
         Draws this sprite and all children to the camera. Should be
         overridden only in extreme circumstances.
         """
-        if self._age == 0:
-            for sprite in self._internal_group.sprites():
-                sprite._expire_static()
+        #if self._age == 0:
+        for sprite in self._internal_group.sprites():
+            sprite._expire_static()
+
         Sprite.draw(self, camera)
         if not self.visible:
             return
