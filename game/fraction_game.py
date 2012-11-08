@@ -8,6 +8,7 @@ WIDTH = 1200
 HEIGHT = 900
 FRACTION_SIZE = (50,150)
 RESULTS_TIME_ON_SCREEN = 3
+NUMBER_TO_COMPLETE = 3
 
 # The Fraction Mini-Game
 # The farmer pulls a lever to dispense water into a bucket
@@ -33,6 +34,7 @@ class FractionGame(spyral.Scene):
         self.problem_fractions = None
         self.results_timer = RESULTS_TIME_ON_SCREEN
         self.operation = None
+        self.completed = 0
         #Button to move to the fractional tools scene
         fraction_tools_button = extras.Button(image_size=(200, 50), position=(WIDTH-5, 5), anchor='topright', layer='bottom', fill=(194, 194, 194))
         increase_water_button = extras.Button(filename="images/red_button_300x300.png", position=(5, HEIGHT-5), anchor='bottomleft', layer='bottom')
@@ -47,7 +49,7 @@ class FractionGame(spyral.Scene):
         
         #Add text over the button, notice how I set the layer
         fraction_tools_text = extras.Text("Fraction Tools", (200, 50), (WIDTH-105, 30), layer='top')
-        self.increase_water_text = extras.Text("Add Water (0)", (150,150), (75, HEIGHT-75), layer='top')
+        self.increase_water_text = extras.Text("Add Water (0)", (150,150), (150, HEIGHT-150), layer='top', font_size=30)
         done_text = extras.Text("Done!", (200, 50), (WIDTH - 105, HEIGHT - 30), layer='top')
         self.great_job_text = extras.Text("Great Job!", (600, 450), (WIDTH/2, HEIGHT/2), layer='toptop', font_size=110)
         self.great_job_text.visible = False
@@ -159,16 +161,18 @@ class FractionGame(spyral.Scene):
 
     def check_answer(self):
         if self.water_in_bucket == self.answer:
+            self.try_again_text.visible = False
+            self.try_again_text._expire_static()
             self.great_job_text.visible = True
             self.results_button.visible = True
-            #increment number completed
-            #if completed < # of problems per level
-               #generate new job
-            self.fractions_tuple = self.generate_problem()
-            self.increase_water_text.set_text("Add Water (" + str(self.water_in_bucket) + ")")
-            #else
-               #director.pop()
+            self.completed += 1
+            if self.completed >= NUMBER_TO_COMPLETE:
+                spyral.director.pop()
+            else:
+                self.fractions_tuple = self.generate_problem()
+                self.increase_water_text.set_text("Add Water (" + str(self.water_in_bucket) + ")")
         else:
+            self.great_job_text.visible = False
             self.try_again_text.visible = True
             self.results_button.visible = True
             self.water_in_bucket = Fraction(0, self.water_in_bucket.denominator)
