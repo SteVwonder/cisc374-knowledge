@@ -1,0 +1,11 @@
+' Vocab List '
+blue : The color of the sky
+green : The color of grass and evil
+red : The color of Rudolfs nose
+yellow : The color of the sun
+boat : An aquatic transport vehical
+news : Biased broadcasted information on current events
+homework : That thing no one likes
+paper : That thing you write your homework on
+letter : A character of the alphabet
+' End of List '

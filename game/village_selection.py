@@ -1,5 +1,6 @@
 import spyral
 import fraction_game
+import vocab_search
 import extras
 
 WIDTH = 1200
@@ -24,21 +25,24 @@ class VillageSelection(spyral.Scene):
 
         #Add in our button for the fraction game, notice how I set the layer
         fraction_game_button = extras.Button(image_size=(200, 50), position=(WIDTH/2, HEIGHT/2), layer='bottom')
-        
+	vocab_search_button = extras.Button(image_size=(200, 50), position=(WIDTH/2, HEIGHT/2 + 75), layer='bottom')        
+
         #Need to assign an action to the button for when it is clicked
         #We do this by using lambda functions.  So when the button is
         #clicked, the method clicked is called, which points to this
         #lambda function.  As you can see, I'm using this button to push
         #a new scene onto the stack
         fraction_game_button.clicked = lambda: spyral.director.push(fraction_game.FractionGame(1))
+	vocab_search_button.clicked = lambda: spyral.director.push(vocab_search.VocabScene())
         
         #Add text over the button, notice how I set the layer
         fraction_game_text = extras.Text("Fraction Game", (200, 50), (WIDTH/2, HEIGHT/2), layer='top')
+	vocab_search_text = extras.Text("Vocabulary Search", (200, 50), (WIDTH/2, HEIGHT/2 + 75), layer='top')
 
         #Using two different groups for text and buttons
         #That way we only have to check for clicks on the buttons
-        self.buttons.add(fraction_game_button)
-        self.texts.add(fraction_game_text)
+        self.buttons.add(fraction_game_button, vocab_search_button)
+        self.texts.add(fraction_game_text, vocab_search_text)
 
     #Converts the position of the click from real to virtual
     #Then checks to see if any of the sprites in the button

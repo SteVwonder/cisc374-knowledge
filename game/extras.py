@@ -1,16 +1,14 @@
 import spyral
-import math
 
-FONT_PATH = "fonts/00TT.TTF"
+FONT_PATH = "fonts/bertoltbrecht.ttf"
 
 #Essentially just a wrapper for a rectangle with click detection.
 #I have been using it as the base for a button.  Once you make one of these,
 #just make some Text and layer the Text on top of the Button
 class Button(spyral.Sprite):
-    def __init__(self, position, image_size=None, filename=None, anchor='center', layer='all', fill=(255,255,255), group=None):
+    def __init__(self, position, image_size=None, filename=None, anchor='center', layer='all', fill=(255,255,255)):
 
-        super(Button, self).__init__(group)
-            
+        super(Button, self).__init__()
         if filename == None and image_size != None:
             self.image = spyral.Image(size=image_size)
             self.image.fill(fill)
@@ -30,9 +28,9 @@ class Button(spyral.Sprite):
 #Generates a sprite from some text, size and position. Currenlty defaults to the font constant,
 #but that can easily be changed to support multiple fonts
 class Text(spyral.Sprite):
-    def __init__(self, text, image_size, position, anchor='center', layer='all', font_size=14, color=(0,0,0), group=None):
+    def __init__(self, text, image_size, position, anchor='center', layer='all', font_size=14, color=(0,0,0)):
 
-        super(Text, self).__init__(group)
+        super(Text, self).__init__()
         #self.image = spyral.Image(size=image_size)
         self.font_size = font_size
         self.color = color
@@ -40,42 +38,68 @@ class Text(spyral.Sprite):
         self.layer = layer
         self.anchor = anchor
         self.pos = position
+        self.text = text
 
     def set_text(self, text):
         self.image = spyral.Font(FONT_PATH, self.font_size, self.color).render(text)
+        self.text = text
+    def get_text(self):
+        return self.text
 
-#class DottedLine(spyral.AggregateSprite):
-    # def __init__(self, image_size, dot_length, position, group, fill=(0,0,0), layer='grid_lines'):
+class TextBox(spyral.Sprite):
+    def __init__(self,dtext,position,answer, button_image="",width=200,height=20,anchor='topleft',layer='all',font_size=14,dcolor=(255,255,255),tcolor=(255,255,0)):
 
-    #     super(DottedLine, self).__init__(group)
+        super(TextBox,self).__init__()
+        self.answer = answer
+        self.selected = 0
+
+        self.dtext = dtext
+        self.position = position
+        self.button_image = button_image
+        self.anchor = anchor
+        self.font_size = font_size
+        self.tcolor = tcolor
+        self.dcolor = dcolor
+
+        self.description = Text(dtext,64,(position[0],position[1]-30),anchor=self.anchor,color=self.dcolor,font_size=self.font_size)
         
-    #     self.image = spyral.Image(size=image_size)
-    #     self.pos = position
-    #     self.layer = layer
+        self.button = spyral.Sprite()
+        self.button.image = spyral.Image(size = (width,height))
+        self.button.image.fill((0,0,255))
+        self.button.anchor = self.anchor
+        self.button.pos = (self.position[0],self.position[1]-5)
 
-    #     if(image_size[0] >= image_size[1]):
-    #         line_length = image_size[0]
-    #         direction = 'horizontal'
-    #     else:
-    #         line_length = image_size[1]
-    #         direction = 'vertical'
+        self.btext = Text("",64,position,layer=100,anchor=self.anchor,color=self.tcolor,font_size=self.font_size)
+        
+        if(button_image != ""):
+            self.button.image = spyral.Image(filename=self.button_image)
             
-    #     number_of_dots = math.floor(line_length/dot_length/2)
-    #     number_of_dots = int(number_of_dots)
-        
-    #     if direction == 'horizontal':
-    #         for x in xrange(number_of_dots):
-    #             temp_sprite = spyral.Sprite()
-    #             temp_sprite.image = spyral.Image(size=(dot_length/(number_of_dots * 2), image_size[1]))
-    #             temp_sprite.image.fill(fill)
-    #             temp_sprite.position = (position[0] + (x * 2 * dot_length), position[1])
-    #             temp_sprite.layer = layer
-    #             self.add_child(temp_sprite)
-    #     elif direction == 'vertical':
-    #         for x in xrange(number_of_dots):
-    #             temp_sprite = spyral.Sprite()
-    #             temp_sprite.image = spyral.Image(size=(image_size[0], dot_length/(number_of_dots * 2)))
-    #             temp_sprite.image.fill(fill)
-    #             temp_sprite.position = (position[0], position[1] + (x * 2 * dot_length))
-    #             temp_sprite.layer = layer
-    #             self.add_child(temp_sprite)
+    def set_text(self, text):
+        self.btext.image = spyral.Font(FONT_PATH, self.font_size, self.tcolor).render(text)
+        self.btext.text = text
+    def get_text(self):
+        return self.btext.text
+
+    def check_click(self, position):
+        self.ret = self.button.get_rect().collide_point(position)
+        return self.ret
+    def select(self,tpe):
+        tpe.type = self
+    def deselect(self):
+        return 0
+    def move(self,pos):
+        return 0
+    def get_answer(self):
+        self.set_text(filter(lambda x: x.isdigit(), self.get_text()))
+        if(self.get_text() == ""):
+            self.set_text("-1")
+        print "Converted to Integer: "+self.get_text()
+        if(int(self.get_text()) == self.answer):
+            self.set_text("Correct")
+            self.btext.text = ""
+            print "Correct"
+        else:
+            self.set_text("Wrong - Correct Answer: "+str(self.answer))
+            self.btext.text = ""
+            print "Wrong"
+            return

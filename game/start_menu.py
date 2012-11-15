@@ -1,7 +1,7 @@
 import spyral
 import extras
 import village_selection
-#import character_selection
+import character_choice
 #import vocab_input
 #import high_score_display
 
@@ -25,24 +25,24 @@ class StartMenu(spyral.Scene):
 	self.texts = spyral.Group(self.camera)
 
 	#The play, vocab input, high score, and quit buttons to be used, layer = 'bottom'
-	play_button = extras.Button(image_size=(200, 50), position=(WIDTH/2, HEIGHT/2), layer = 'bottom')
-	vocab_input_button = extras.Button(image_size=(200, 50), position=(WIDTH/2, HEIGHT/2 - 75), layer = 'bottom')
-	high_score_button = extras.Button(image_size=(200, 50), position=(WIDTH/2, HEIGHT/2 - 150), layer = 'bottom')
-	quit_button = extras.Button(image_size=(200, 50), position=(WIDTH/2, HEIGHT/2 - 225), layer = 'bottom')
+	play_button = extras.Button(image_size=(200, 50), position=(WIDTH/2, HEIGHT/2 - 75), layer = 'bottom')
+	vocab_input_button = extras.Button(image_size=(200, 50), position=(WIDTH/2, HEIGHT/2), layer = 'bottom')
+	high_score_button = extras.Button(image_size=(200, 50), position=(WIDTH/2, HEIGHT/2 + 75), layer = 'bottom')
+	quit_button = extras.Button(image_size=(200, 50), position=(WIDTH/2, HEIGHT/2 + 150), layer = 'bottom')
 
 	#Assigning the actions to be taken when each of the buttons are clicked
 	#using lambda functions.
 	#All but the quit pushes a new scene onto the stack
-	play_button.clicked = lambda: spyral.director.push(village_selection.VillageSelection())
+	play_button.clicked = lambda: spyral.director.push(character_choice.CharacterPick())
         vocab_input_button.clicked = lambda: spyral.director.push()#vocab_input.VocabInput())
         high_score_button.clicked = lambda: spyral.director.push()#high_score_display.HighScores())
         quit_button.clicked = lambda: spyral.director.pop()
 
         #Adding the text over the buttons, layer = 'top'
-        play_text = extras.Text("Play", (200, 50), (WIDTH/2, HEIGHT/2), layer = 'top')
-        vocab_input_text = extras.Text("Input Vocab", (200, 50), (WIDTH/2, HEIGHT/2 - 75), layer = 'top')
-        high_score_text = extras.Text("High Scores", (200, 50), (WIDTH/2, HEIGHT/2 - 150), layer = 'top')
-        quit_text = extras.Text("Quit", (200, 50), (WIDTH/2, HEIGHT/2 - 225), layer = 'top')
+        play_text = extras.Text("Play", (200, 50), (WIDTH/2, HEIGHT/2 - 75), layer = 'top')
+        vocab_input_text = extras.Text("Input Vocab", (200, 50), (WIDTH/2, HEIGHT/2), layer = 'top')
+        high_score_text = extras.Text("High Scores", (200, 50), (WIDTH/2, HEIGHT/2 + 75), layer = 'top')
+        quit_text = extras.Text("Quit", (200, 50), (WIDTH/2, HEIGHT/2 + 150), layer = 'top')
 
         #Adding the buttons and text to their respective groups
         self.buttons.add(play_button, vocab_input_button, high_score_button, quit_button)
