@@ -83,6 +83,11 @@ class FractionGame(spyral.Scene):
             #They clicked the OS exit button at the top of the frame
             if event['type'] == 'QUIT':
                 spyral.director.pop()
+    	    elif event['type'] == 'KEYDOWN':
+                #ascii 27 is escape key
+                if event['ascii'] == chr(27):
+                    spyral.director.pop()
+                    return
             #They clicked somewhere
             elif event['type'] == 'MOUSEBUTTONDOWN':
                 self.check_click(event['pos'], self.buttons.sprites())

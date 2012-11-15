@@ -72,6 +72,11 @@ class FractionTools(spyral.Scene):
             #Check to see if they clicked a button or slider
             if event['type'] == 'MOUSEBUTTONDOWN':
                 self.check_click(event['pos'], self.buttons.sprites())
+            elif event['type'] == 'KEYDOWN':
+                #ascii 27 is escape key
+                if event['ascii'] == chr(27):
+                    spyral.director.pop()
+                    return
             elif event['type'] == 'MOUSEBUTTONUP':
                 was_true = False
                 for button in self.buttons.sprites():

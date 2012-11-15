@@ -73,5 +73,10 @@ class StartMenu(spyral.Scene):
         for event in self.event_handler.get():
             if event['type'] == 'MOUSEBUTTONDOWN':
                 self.check_click(event['pos'], self.buttons.sprites())
+            elif event['type'] == 'KEYDOWN':
+                #ascii 27 is escape key
+                if event['ascii'] == chr(27):
+                    spyral.director.pop()
+                    return
             elif event['type'] == 'QUIT':
                 spyral.director.pop()
