@@ -30,8 +30,8 @@ class FractionGame(spyral.Scene):
         #Some variables used in the game
         self.water_in_bucket = extras.Fraction(0,0)
         self.increment_bucket_by = 0
-        self.difficulty = 4
-        #self.difficulty = difficulty
+        #self.difficulty = 4
+        self.difficulty = difficulty
         self.problem_fractions = None
         self.results_timer = RESULTS_TIME_ON_SCREEN
         self.operation = None
