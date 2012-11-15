@@ -14,9 +14,10 @@ class Rect(object):
     `x`, and `y`.
     """
     def __init__(self, *args):
-        # Again with the weird non-pythonic mess
-        if len(args) == 1: # copy another rect
-            return args[0].copy()
+        if len(args) == 1:
+            r = args[0]
+            self._x, self._y = r.x, r.y
+            self._w, self._h = r.w, r.h
         elif len(args) == 2:
             self._x, self._y = args[0]
             self._w, self._h = args[1]
@@ -24,7 +25,7 @@ class Rect(object):
             self.left, self.top, self.width, self.height = args
         else:
             raise ValueError("You done goofed.")
-            
+                
     def __getattr__(self, name):
         if name == "right":
             return self._x + self._w
@@ -141,7 +142,7 @@ class Rect(object):
         """
         c = self.center
         n = self.copy()
-        n.size = (self._w + x, self._h + y)
+        n.size = (self._w + width, self._h + height)
         n.center = c
         return n
         
@@ -150,7 +151,7 @@ class Rect(object):
         Inflates this rect by *width*, *height*.
         """
         c = self.center
-        self.size = (self._w + x, self._h + y)
+        self.size = (self._w + width, self._h + height)
         self.center = c
         
     def clip(self, r):

@@ -1,5 +1,6 @@
 import spyral
 import math
+pyFraction = __import__('fractions')
 
 FONT_PATH = "fonts/00TT.TTF"
 
@@ -44,38 +45,87 @@ class Text(spyral.Sprite):
     def set_text(self, text):
         self.image = spyral.Font(FONT_PATH, self.font_size, self.color).render(text)
 
-#class DottedLine(spyral.AggregateSprite):
-    # def __init__(self, image_size, dot_length, position, group, fill=(0,0,0), layer='grid_lines'):
-
-    #     super(DottedLine, self).__init__(group)
+class Fraction():
+    def __init__(self, numerator, denominator):
+        self.numerator = numerator
+        self.denominator = denominator
+    
+    def gcd(self):
+        d = self.denominator
+        n = self.numerator
+        while d:
+            d, n = n%d, d
+        return n
         
-    #     self.image = spyral.Image(size=image_size)
-    #     self.pos = position
-    #     self.layer = layer
+    def reduce(self):
+        if (self.denominator != 0) and (self.numerator != 1):
+            greatest = self.gcd()
+            n = self.numerator / greatest
+            d = self.denominator / greatest
+            return Fraction(n, d)
+        else:
+            return self
 
-    #     if(image_size[0] >= image_size[1]):
-    #         line_length = image_size[0]
-    #         direction = 'horizontal'
-    #     else:
-    #         line_length = image_size[1]
-    #         direction = 'vertical'
-            
-    #     number_of_dots = math.floor(line_length/dot_length/2)
-    #     number_of_dots = int(number_of_dots)
-        
-    #     if direction == 'horizontal':
-    #         for x in xrange(number_of_dots):
-    #             temp_sprite = spyral.Sprite()
-    #             temp_sprite.image = spyral.Image(size=(dot_length/(number_of_dots * 2), image_size[1]))
-    #             temp_sprite.image.fill(fill)
-    #             temp_sprite.position = (position[0] + (x * 2 * dot_length), position[1])
-    #             temp_sprite.layer = layer
-    #             self.add_child(temp_sprite)
-    #     elif direction == 'vertical':
-    #         for x in xrange(number_of_dots):
-    #             temp_sprite = spyral.Sprite()
-    #             temp_sprite.image = spyral.Image(size=(image_size[0], dot_length/(number_of_dots * 2)))
-    #             temp_sprite.image.fill(fill)
-    #             temp_sprite.position = (position[0], position[1] + (x * 2 * dot_length))
-    #             temp_sprite.layer = layer
-    #             self.add_child(temp_sprite)
+    def __str__(self):
+        temp_fraction = self.reduce()
+        if(temp_fraction.denominator != 1):
+            return str(temp_fraction.numerator) + "/" + str(temp_fraction.denominator)
+        else:
+            return str(temp_fraction.numerator)
+
+    def __add__(a, b):
+        if a.denominator == b.denominator:
+            return Fraction(a.numerator + b.numerator, a.denominator)
+        else:
+            return Fraction(a.numerator * b.denominator +
+                            b.numerator * a.denominator,
+                            a.denominator * b.denominator)
+   
+    def __sub__(a, b):
+        if (a.denominator == b.denominator):
+            return Fraction(a.numerator - b.numerator, a.denominator)
+        else:
+            temp =Fraction(a.numerator * b.denominator -
+                            b.numerator * a.denominator,
+                            a.denominator * b.denominator)
+            temp.reduce
+            return temp
+
+    def _richcmp(self, other, op):
+        return op(self.numerator * other.denominator,
+                  self.denominator * other.numerator)
+    #raise ValueError("Cannot compare fractions with differenct denominators YET!")
+
+    def __lt__(a, b):
+        """a < b"""
+        return a._richcmp(b, operator.lt)
+    
+    def __gt__(a, b):
+        """a > b"""
+        return a._richcmp(b, operator.gt)
+    
+    def __le__(a, b):
+        """a <= b"""
+        return a._richcmp(b, operator.le)
+    
+    def __ge__(a, b):
+        """a >= b"""
+        return a._richcmp(b, operator.ge)
+
+    def __eq__(a, b):
+        """a == b"""
+        c = a.reduce()
+        d = b.reduce()
+        return (c.numerator == d.numerator and
+                c.denominator == d.denominator)
+
+    def __mul__(a, b):
+        """a * b"""
+        return Fraction(a.numerator * b.numerator, a.denominator * b.denominator)
+    
+    def lcm(a, b):
+        def gcd(a, b):
+            while b:
+                b, a = a%b, b
+            return a
+        return ( a * b ) / gcd(a, b)
