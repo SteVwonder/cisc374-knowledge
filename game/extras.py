@@ -56,6 +56,9 @@ class TextBox(spyral.Sprite):
         self.answer = answer
         self.selected = 0
 
+        self.wdth = width
+        self.heght = height
+        
         self.dtext = dtext
         self.position = position
         self.button_image = button_image
@@ -68,7 +71,7 @@ class TextBox(spyral.Sprite):
         
         self.button = spyral.Sprite()
         self.button.image = spyral.Image(size = (width,height))
-        self.button.image.fill((0,0,255))
+        self.button.image.fill((255,0,255))
         self.button.anchor = self.anchor
         self.button.pos = (self.position[0],self.position[1]-5)
         self.button.layer = 1
@@ -91,7 +94,13 @@ class TextBox(spyral.Sprite):
         return self.ret
     def select(self,tpe):
         tpe.type = self
+        self.button.image = spyral.Image(size = (self.wdth,self.heght))
+        self.button.image.fill((0,0,255))
+        self.button.anchor = self.anchor
     def deselect(self):
+        self.button.image = spyral.Image(size = (self.wdth,self.heght))
+        self.button.image.fill((255,0,255))
+        self.button.anchor = self.anchor
         return 0
     def move(self,pos):
         return 0

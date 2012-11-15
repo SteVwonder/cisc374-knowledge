@@ -124,6 +124,7 @@ class MeanMedianMode(spyral.Scene):
     def check_click(self, position, group, select):
         local_position = self.camera.world_to_local(position)
         for sprite in group:
+            sprite.deselect()
             if sprite.check_click(local_position):
                 sprite.move(local_position)
                 if(select == 1)and(self.multiselect < self.multimax):
