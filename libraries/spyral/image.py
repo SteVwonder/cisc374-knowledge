@@ -24,7 +24,7 @@ class Image(object):
             raise ValueError("Must specify exactly one of size and filename.")
             
         if size is not None:
-            self._surf = pygame.Surface((int(size[0]), int(size[1])), pygame.SRCALPHA, 32)
+            self._surf = pygame.Surface((int(size[0]), int(size[1])), pygame.SRCALPHA, 32).convert_alpha()
             self._name = None
         else:
             self._surf = pygame.image.load(filename).convert_alpha()
@@ -44,14 +44,14 @@ class Image(object):
     
     def fill(self, color):
         """
-        Fills the entire surface with the specified color.
+        Fills the entire image with the specified color.
         """
         color = spyral.color._determine(color)
         self._surf.fill(color)
         
     def draw_rect(self, color, position, size, border_width = 0, anchor= 'topleft'):
         """
-        Draws a rectangle on this surface. position = (x, y) specifies 
+        Draws a rectangle on this image. position = (x, y) specifies 
         the top-left corner, and size = (width, height) specifies the
         width and height of the rectangle. border_width specifies the
         width of the border to draw. If it is 0, the rectangle is
@@ -66,7 +66,7 @@ class Image(object):
         
     def draw_lines(self, color, points, width = 1, closed = False):
         """
-        Draws a series of connected lines on a surface, with the
+        Draws a series of connected lines on a image, with the
         vertices specified by points. This does not draw any sort of
         end caps on lines.
         
@@ -78,7 +78,7 @@ class Image(object):
     
     def draw_circle(self, color, position, radius, width = 0, anchor= 'topleft'):
         """
-        Draws a circle on this surface. position = (x, y) specifies
+        Draws a circle on this image. position = (x, y) specifies
         the center of the circle, and radius the radius. If width is
         0, the circle is filled. The anchor parameter is an :ref:`anchor 
         position <anchors>`.
@@ -89,7 +89,7 @@ class Image(object):
         
     def draw_ellipse(self, color, position, size, border_width = 0, anchor= 'topleft'):
         """
-        Draws an ellipse on this surface. position = (x, y) specifies 
+        Draws an ellipse on this image. position = (x, y) specifies 
         the top-left corner, and size = (width, height) specifies the
         width and height of the ellipse. border_width specifies the
         width of the border to draw. If it is 0, the ellipse is
@@ -104,13 +104,27 @@ class Image(object):
     
     def draw_point(self, color, position, anchor= 'topleft'):
         """
-        Draws a point on this surface. position = (x, y) specifies
+        Draws a point on this image. position = (x, y) specifies
         the position of the point. The anchor parameter is an :ref:`anchor 
         position <anchors>`.
         """
         color = spyral.color._determine(color)
         offset = self._calculate_offset(anchor)
         self._surf.set_at(position + offset, color)
+    
+    def draw_arc(self, color, position, size, start_angle, end_angle, border_width = 0, anchor = 'topleft'):
+        """
+        Draws an elliptical arc on this surface. position = (x, y) specifies 
+        the top-left corner, and size = (width, height) specifies the
+        width and height of the ellipse. The start_angle and end_angle specify
+        the range of the arc to draw. border_width specifies the
+        width of the border to draw. If it is 0, the ellipse is
+        filled with the color specified. The anchor parameter is an :ref:`anchor 
+        position <anchors>`.
+        """
+        color = spyral.color._determine(color)
+        offset = self._calculate_offset(anchor, size)
+        pygame.draw.arc(self._surf, color, (position + offset, size), start_angle, end_angle, border_width)
         
     def draw_image(self, image, position = (0, 0), anchor= 'topleft'):
         """

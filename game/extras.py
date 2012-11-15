@@ -1,4 +1,9 @@
 import spyral
+<<<<<<< HEAD
+=======
+import math
+pyFraction = __import__('fractions')
+>>>>>>> 1f773ca9ef495be940c8996a88201e0a1e61393c
 
 FONT_PATH = "fonts/bertoltbrecht.ttf"
 
@@ -53,6 +58,7 @@ class TextBox(spyral.Sprite):
         self.answer = answer
         self.selected = 0
 
+<<<<<<< HEAD
         self.dtext = dtext
         self.position = position
         self.button_image = button_image
@@ -103,3 +109,89 @@ class TextBox(spyral.Sprite):
             self.btext.text = ""
             print "Wrong"
             return
+=======
+class Fraction():
+    def __init__(self, numerator, denominator):
+        self.numerator = numerator
+        self.denominator = denominator
+    
+    def gcd(self):
+        d = self.denominator
+        n = self.numerator
+        while d:
+            d, n = n%d, d
+        return n
+        
+    def reduce(self):
+        if (self.denominator != 0) and (self.numerator != 1):
+            greatest = self.gcd()
+            n = self.numerator / greatest
+            d = self.denominator / greatest
+            return Fraction(n, d)
+        else:
+            return self
+
+    def __str__(self):
+        temp_fraction = self.reduce()
+        if(temp_fraction.denominator != 1):
+            return str(temp_fraction.numerator) + "/" + str(temp_fraction.denominator)
+        else:
+            return str(temp_fraction.numerator)
+
+    def __add__(a, b):
+        if a.denominator == b.denominator:
+            return Fraction(a.numerator + b.numerator, a.denominator)
+        else:
+            return Fraction(a.numerator * b.denominator +
+                            b.numerator * a.denominator,
+                            a.denominator * b.denominator)
+   
+    def __sub__(a, b):
+        if (a.denominator == b.denominator):
+            return Fraction(a.numerator - b.numerator, a.denominator)
+        else:
+            temp =Fraction(a.numerator * b.denominator -
+                            b.numerator * a.denominator,
+                            a.denominator * b.denominator)
+            temp.reduce
+            return temp
+
+    def _richcmp(self, other, op):
+        return op(self.numerator * other.denominator,
+                  self.denominator * other.numerator)
+    #raise ValueError("Cannot compare fractions with differenct denominators YET!")
+
+    def __lt__(a, b):
+        """a < b"""
+        return a._richcmp(b, operator.lt)
+    
+    def __gt__(a, b):
+        """a > b"""
+        return a._richcmp(b, operator.gt)
+    
+    def __le__(a, b):
+        """a <= b"""
+        return a._richcmp(b, operator.le)
+    
+    def __ge__(a, b):
+        """a >= b"""
+        return a._richcmp(b, operator.ge)
+
+    def __eq__(a, b):
+        """a == b"""
+        c = a.reduce()
+        d = b.reduce()
+        return (c.numerator == d.numerator and
+                c.denominator == d.denominator)
+
+    def __mul__(a, b):
+        """a * b"""
+        return Fraction(a.numerator * b.numerator, a.denominator * b.denominator)
+    
+    def lcm(a, b):
+        def gcd(a, b):
+            while b:
+                b, a = a%b, b
+            return a
+        return ( a * b ) / gcd(a, b)
+>>>>>>> 1f773ca9ef495be940c8996a88201e0a1e61393c

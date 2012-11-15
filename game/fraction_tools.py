@@ -18,29 +18,30 @@ class FractionTools(spyral.Scene):
         self.camera = self.parent_camera.make_child(virtual_size = (WIDTH, HEIGHT), layers=['bottom', 'all', 'shaded', 'grid_lines'])
         
         self.main_group = spyral.Group(self.camera)
-        self.lines = spyral.Group(self.camera)
+        self.vertical_lines = spyral.Group(self.camera)
+        self.horizontal_lines = spyral.Group(self.camera)
         self.buttons = spyral.Group(self.camera)
-        main_box = extras.Button((WIDTH/2, HEIGHT/2-100), image_size=(BOX_W, BOX_H), layer='bottom', group=self.main_group)
+        main_box = extras.Button((WIDTH/3, HEIGHT/2-100), image_size=(BOX_W, BOX_H), layer='bottom', group=self.main_group)
 
         box_bottom = (HEIGHT/2-100) + (BOX_H/2)
         box_top = box_bottom - BOX_H
-        box_left = (WIDTH/2) - (BOX_W/2)
+        box_left = (WIDTH/3) - (BOX_W/2)
         box_right = box_left + BOX_W
         self.bb = box_bottom
         self.bl = box_left
         self.bt = box_top
         d = fractions[0].denominator
+        self.num_of_horizontal_lines = d + 1
         #Horizontal Lines and Vertical Slider
         for x in xrange(0, d+1):
-            temp_line = extras.Button((box_left, box_top+x*(BOX_H/d)), image_size=(BOX_W, 6), anchor='topleft', layer='grid_lines', fill=(0,0,0), group=self.lines)
-            temp_line.orientation = 'horizontal'
+            temp_line = extras.Button((box_left, box_top+x*(BOX_H/d)), image_size=(BOX_W, 6), anchor='topleft', layer='grid_lines', fill=(0,0,0), group=self.horizontal_lines)
             fraction_label = extras.Text(str(d-x) + "/" + str(d), (48, 24), (box_left - 23, box_top+x*(BOX_H/d)), group=self.main_group, font_size=20)
 
         #Vertical Lines and Horizontal Slider
         d = fractions[1].denominator
+        self.num_of_vertical_lines = d + 1
         for x in xrange(0, d+1):
-            temp_line = extras.Button((box_left+x*(BOX_W/d), box_bottom), image_size=(6, BOX_H), anchor='bottomleft', layer='grid_lines', fill=(0,0,0), group=self.lines)
-            temp_line.orientation = 'vertical'
+            temp_line = extras.Button((box_left+x*(BOX_W/d), box_bottom), image_size=(6, BOX_H), anchor='bottomleft', layer='grid_lines', fill=(0,0,0), group=self.vertical_lines)
             fraction_label = extras.Text(str(x) + "/" + str(d), (48, 24), (box_left+x*(BOX_W/d), box_bottom + 18), group=self.main_group, font_size=20)
 
         self.shaded_box = spyral.Sprite(self.main_group)
@@ -57,6 +58,14 @@ class FractionTools(spyral.Scene):
         self.horizontal_slider.dragging = False
         self.horizontal_slider.clicked = lambda: self.dragging(self.horizontal_slider)
 
+        #Large Fraction on Right Side
+        self.auto_fraction = self.generate_fraction_image(extras.Fraction(0,0), ((WIDTH-box_right)/2, HEIGHT/2),  (box_right + (WIDTH-box_right)/2, HEIGHT/2))
+
+        #Exit Button
+        exit_button = extras.Button(image_size=(200, 50), position=(WIDTH-5, HEIGHT-5), anchor='bottomright', layer='bottom', fill=(125,125,125), group=self.buttons)
+        done_text = extras.Text("Done!", (200, 50), (WIDTH - 105, HEIGHT - 30), layer='top', group=self.main_group)
+        exit_button.clicked = lambda: spyral.director.pop()
+        exit_button.dragging = False
     def update(self, dt):
         #Check for any new/relevant events
         for event in self.event_handler.get():
@@ -64,8 +73,12 @@ class FractionTools(spyral.Scene):
             if event['type'] == 'MOUSEBUTTONDOWN':
                 self.check_click(event['pos'], self.buttons.sprites())
             elif event['type'] == 'MOUSEBUTTONUP':
+                was_true = False
                 for button in self.buttons.sprites():
+                    was_true = was_true or button.dragging
                     button.dragging = False
+                if was_true:
+                    self.calculate_auto_fraction()
             if (event['type'] == 'MOUSEMOTION'):
                 if self.horizontal_slider.dragging:
                     self.check_drag(event['pos'], self.horizontal_slider)
@@ -83,8 +96,10 @@ class FractionTools(spyral.Scene):
 
     def render(self):
         self.main_group.draw()
-        self.lines.draw()
+        self.vertical_lines.draw()
+        self.horizontal_lines.draw()
         self.buttons.draw()
+        self.auto_fraction.draw(self.camera)
         
     def check_click(self, position, group):
         local_position = self.camera.world_to_local(position)
@@ -95,10 +110,13 @@ class FractionTools(spyral.Scene):
 
     def check_drag(self, position, slider):
         lines = []
-        for line in self.lines.sprites():
-            if (slider == self.horizontal_slider) and (line.orientation == 'vertical'):
+        if (slider == self.horizontal_slider):
+            temp_lines = self.vertical_lines.sprites()
+            for line in temp_lines:
                 lines.append(line.x)
-            elif (slider == self.vertical_slider) and (line.orientation == 'horizontal'):
+        elif (slider == self.vertical_slider):
+            temp_lines = self.horizontal_lines.sprites()
+            for line in temp_lines:
                 lines.append(line.y)
         lines.sort()
         x = 0
@@ -118,6 +136,7 @@ class FractionTools(spyral.Scene):
         if slider == self.horizontal_slider and slider.x != lines[x-1]:
             slider.x = lines[x-1]
             old_height = self.shaded_box.get_rect()._h
+            #old_height = self.shaded_box.height
             self.shaded_box.image = spyral.Image(size=(lines[x-1]-self.bl, old_height))
             self.shaded_box.image.fill((135,206,250))
         elif slider == self.vertical_slider and slider.y != lines[x-1]:
@@ -128,3 +147,33 @@ class FractionTools(spyral.Scene):
 
     def dragging(self, slider):
         slider.dragging = True
+
+    def generate_fraction_image(self, fraction, image_size, position, anchor='center', layer='all'):
+        group = spyral.Group(self.camera)
+        width = image_size[0]
+        height = image_size[1]
+        numerator =   extras.Text(str(fraction.numerator), (width, 3*height/8), (width/2,0), anchor='midtop', layer=layer, font_size=200)
+        middle_line = extras.Button((width/2, height/2), image_size=(width, height/12), anchor='center', layer=layer, fill=(0,0,0));
+        denominator = extras.Text(str(fraction.denominator), (width, 3*height/8), (width/2, height), anchor='midbottom', layer=layer, font_size=200)
+        agg_sprite = spyral.AggregateSprite(group)
+        agg_sprite.image = spyral.Image(size=image_size)
+        #agg_sprite.image.fill((255,255,255))
+        agg_sprite.pos = position
+        agg_sprite.layer = 'bottom'
+        agg_sprite.anchor = anchor
+        agg_sprite.add_child(numerator)
+        agg_sprite.add_child(middle_line)
+        agg_sprite.add_child(denominator)
+        return agg_sprite
+
+    def calculate_auto_fraction(self):
+        mini_box_width = BOX_W/(self.num_of_vertical_lines-1)
+        mini_box_height = BOX_H/(self.num_of_horizontal_lines-1)
+        num_of_shaded_boxes = (self.shaded_box.height / mini_box_height) * (self.shaded_box.width / mini_box_width)
+        num_of_total_boxes = (BOX_W / mini_box_width) * (BOX_H / mini_box_height)
+        fraction_to_draw = extras.Fraction(num_of_shaded_boxes, num_of_total_boxes)
+
+        for child in self.auto_fraction.get_children():
+            self.auto_fraction.remove_child(child)
+        self.auto_fraction = self.generate_fraction_image(fraction_to_draw, self.auto_fraction.image.get_size(), self.auto_fraction.position)
+

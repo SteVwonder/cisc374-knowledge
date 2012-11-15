@@ -47,6 +47,7 @@ class Vec2D(object):
     __slots__ = ['x', 'y']
     
     def __init__(self, *args):
+
         if len(args) == 1:
             self.x, self.y = args[0]
         elif len(args) == 2:
@@ -117,9 +118,6 @@ class Vec2D(object):
         
     def __pos__(self):
         return self
-        
-    def __contains__(self, item):
-        return item in (self.x, self.y)
             
     def get_length(self):
         """
@@ -207,3 +205,6 @@ class Vec2D(object):
         """
         v = Vec2D(*args)
         return Vec2D(v.x*math.cos(v.y), v.x*math.sin(v.y))
+        
+    def __hash__(self):
+        return self.x + self.y

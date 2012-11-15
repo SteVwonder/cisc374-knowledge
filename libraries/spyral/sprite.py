@@ -59,7 +59,7 @@ class Sprite(object):
         self._make_static = False
         self._pos = spyral.Vec2D(0, 0)
         self._blend_flags = 0
-        self.visible = True
+        self._visible = True
         self._anchor = 'topleft'
         self._offset = spyral.Vec2D(0, 0)
         self._scale = spyral.Vec2D(1.0, 1.0)
@@ -201,11 +201,11 @@ class Sprite(object):
 
     def _get_width(self):
         if self._transform_image:
-            return spyral.Vec2D(self._transform_image.get_width())
+            return self._transform_image.get_width()
 
     def _get_height(self):
         if self._transform_image:
-            return spyral.Vec2D(self._transform_image.get_height())
+            return self._transform_image.get_height()
 
     def _get_size(self):
         if self._transform_image:
@@ -270,6 +270,15 @@ class Sprite(object):
             return
         self._flip_y = flip_y
         self._recalculate_transforms()
+        
+    def _get_visible(self):
+        return self._visible
+        
+    def _set_visible(self, visible):
+        if self._visible == visible:
+            return
+        self._visible = visible
+        self._expire_static()
 
     position = property(_get_pos, _set_pos)
     pos = property(_get_pos, _set_pos)
@@ -288,6 +297,7 @@ class Sprite(object):
     angle = property(_get_angle, _set_angle)
     flip_x = property(_get_flip_x, _set_flip_x)
     flip_y = property(_get_flip_y, _set_flip_y)
+    visible = property(_get_visible, _set_visible)
 
     def get_rect(self):
         """
@@ -525,23 +535,22 @@ class AggregateSprite(Sprite):
         Draws this sprite and all children to the camera. Should be
         overridden only in extreme circumstances.
         """
-        #if self._age == 0:
-        for sprite in self._internal_group.sprites():
-            sprite._expire_static()
-
+        if self._age == 0:
+            for sprite in self._internal_group.sprites():
+                sprite._expire_static()
         Sprite.draw(self, camera)
         if not self.visible:
             return
         try:
             offset = getattr(self.get_rect(), self._child_anchor)
-        except TypeError, AttributeError:
+        except (TypeError, AttributeError):
             offset = self.pos - self._offset
         
         for sprite in self._internal_group.sprites():
             if not sprite.visible:
-                return
+                continue
             if sprite._static:
-                return
+                continue
             if sprite._make_static or sprite._age > 4:
                 camera._static_blit(sprite,
                                     sprite._transform_image,
@@ -550,7 +559,7 @@ class AggregateSprite(Sprite):
                                     sprite._blend_flags)
                 sprite._make_static = False
                 sprite._static = True
-                return
+                continue
             camera._blit(sprite._transform_image,
                             sprite._pos - sprite._offset + offset,
                             sprite._layer,
