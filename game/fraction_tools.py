@@ -61,6 +61,11 @@ class FractionTools(spyral.Scene):
         #Large Fraction on Right Side
         self.auto_fraction = self.generate_fraction_image(extras.Fraction(0,0), ((WIDTH-box_right)/2, HEIGHT/2),  (box_right + (WIDTH-box_right)/2, HEIGHT/2))
 
+        #Exit Button
+        exit_button = extras.Button(image_size=(200, 50), position=(WIDTH-5, HEIGHT-5), anchor='bottomright', layer='bottom', fill=(125,125,125), group=self.buttons)
+        done_text = extras.Text("Done!", (200, 50), (WIDTH - 105, HEIGHT - 30), layer='top', group=self.main_group)
+        exit_button.clicked = lambda: spyral.director.pop()
+        exit_button.dragging = False
     def update(self, dt):
         #Check for any new/relevant events
         for event in self.event_handler.get():

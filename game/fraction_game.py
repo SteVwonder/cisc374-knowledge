@@ -8,7 +8,7 @@ WIDTH = 1200
 HEIGHT = 900
 FRACTION_SIZE = (50,150)
 RESULTS_TIME_ON_SCREEN = 2
-NUMBER_TO_COMPLETE = 1
+NUMBER_TO_COMPLETE = 3
 
 # The Fraction Mini-Game
 # The farmer pulls a lever to dispense water into a bucket
@@ -30,8 +30,8 @@ class FractionGame(spyral.Scene):
         #Some variables used in the game
         self.water_in_bucket = extras.Fraction(0,0)
         self.increment_bucket_by = 0
-        #self.difficulty = 4
-        self.difficulty = difficulty
+        self.difficulty = 4
+        #self.difficulty = difficulty
         self.problem_fractions = None
         self.results_timer = RESULTS_TIME_ON_SCREEN
         self.operation = None
