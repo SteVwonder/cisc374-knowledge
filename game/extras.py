@@ -1,19 +1,17 @@
 import spyral
-<<<<<<< HEAD
-=======
 import math
 pyFraction = __import__('fractions')
->>>>>>> 1f773ca9ef495be940c8996a88201e0a1e61393c
 
-FONT_PATH = "fonts/bertoltbrecht.ttf"
+FONT_PATH = "fonts/00TT.TTF"
 
 #Essentially just a wrapper for a rectangle with click detection.
 #I have been using it as the base for a button.  Once you make one of these,
 #just make some Text and layer the Text on top of the Button
 class Button(spyral.Sprite):
-    def __init__(self, position, image_size=None, filename=None, anchor='center', layer='all', fill=(255,255,255)):
+    def __init__(self, position, image_size=None, filename=None, anchor='center', layer='all', fill=(255,255,255), group=None):
 
-        super(Button, self).__init__()
+        super(Button, self).__init__(group)
+            
         if filename == None and image_size != None:
             self.image = spyral.Image(size=image_size)
             self.image.fill(fill)
@@ -33,7 +31,7 @@ class Button(spyral.Sprite):
 #Generates a sprite from some text, size and position. Currenlty defaults to the font constant,
 #but that can easily be changed to support multiple fonts
 class Text(spyral.Sprite):
-    def __init__(self, text, image_size, position, anchor='center', layer='all', font_size=14, color=(0,0,0)):
+    def __init__(self, text, image_size, position, anchor='center', layer='all', font_size=14, color=(0,0,0), group=None):
 
         super(Text, self).__init__()
         #self.image = spyral.Image(size=image_size)
@@ -58,7 +56,6 @@ class TextBox(spyral.Sprite):
         self.answer = answer
         self.selected = 0
 
-<<<<<<< HEAD
         self.dtext = dtext
         self.position = position
         self.button_image = button_image
@@ -74,8 +71,10 @@ class TextBox(spyral.Sprite):
         self.button.image.fill((0,0,255))
         self.button.anchor = self.anchor
         self.button.pos = (self.position[0],self.position[1]-5)
+        self.button.layer = 1
 
         self.btext = Text("",64,position,layer=100,anchor=self.anchor,color=self.tcolor,font_size=self.font_size)
+        self.btext.layer = 10
         
         if(button_image != ""):
             self.button.image = spyral.Image(filename=self.button_image)
@@ -83,6 +82,7 @@ class TextBox(spyral.Sprite):
     def set_text(self, text):
         self.btext.image = spyral.Font(FONT_PATH, self.font_size, self.tcolor).render(text)
         self.btext.text = text
+        self.btext.layer = 10
     def get_text(self):
         return self.btext.text
 
@@ -109,7 +109,7 @@ class TextBox(spyral.Sprite):
             self.btext.text = ""
             print "Wrong"
             return
-=======
+
 class Fraction():
     def __init__(self, numerator, denominator):
         self.numerator = numerator
@@ -194,4 +194,3 @@ class Fraction():
                 b, a = a%b, b
             return a
         return ( a * b ) / gcd(a, b)
->>>>>>> 1f773ca9ef495be940c8996a88201e0a1e61393c
