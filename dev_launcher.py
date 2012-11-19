@@ -42,8 +42,6 @@ if __name__ == '__main__':
     (options, args) = parser.parse_args()
 
 
-    options.fullscreen = 1
-    
     languages = None
     if os.path.exists('./locale'):
         languages = [file for file in os.listdir('./locale') if os.path.isdir('./locale/%s' % file) and os.path.isfile('./locale/%s/activity.linfo' % file)]
