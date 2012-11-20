@@ -41,7 +41,6 @@ if __name__ == '__main__':
     parser.add_option("-g", "--graphviz", action="store_true", dest="graphviz", default=False, help="Use graphviz if available to generate png callgraphs if profiling is enabled.")
     (options, args) = parser.parse_args()
 
-
     languages = None
     if os.path.exists('./locale'):
         languages = [file for file in os.listdir('./locale') if os.path.isdir('./locale/%s' % file) and os.path.isfile('./locale/%s/activity.linfo' % file)]

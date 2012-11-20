@@ -115,11 +115,12 @@ class TextBox(spyral.Sprite):
             self.set_text("Correct")
             self.btext.text = ""
             print "Correct"
+            return 1
         else:
             self.set_text("Wrong - Correct Answer: "+str(self.answer))
             self.btext.text = ""
             print "Wrong"
-            return
+            return 0
 
 class Fraction():
     def __init__(self, numerator, denominator):

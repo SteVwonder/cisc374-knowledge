@@ -12,6 +12,10 @@ FONT_SIZE = 42
 BG_COLOR = (0, 0, 0)
 FG_COLOR = (255, 255, 255)
 
+RESULT_TIME = 10
+FINISH_TIME = 60
+FINISH = 3
+
 VILLAGERS = ["images/Villager.png"
     ]
     
@@ -47,14 +51,24 @@ class Villager(spyral.Sprite):
         self.layer = 1
         
 class MeanMedianMode(spyral.Scene):
-    def __init__(self, *args, **kwargs):
-        super(MeanMedianMode, self).__init__(*args, **kwargs)
+    def __init__(self,correct=0):
+        super(MeanMedianMode, self).__init__()
 
+        self.time_end = RESULT_TIME
+        self.timer = self.time_end+1
+        
+        self.correct = correct
+        print correct
         self.camera = self.parent_camera.make_child(virtual_size = (WIDTH, HEIGHT), layers=['bottom', 'top'])
 
         self.group = spyral.Group(self.camera)
         self.text = spyral.Group(self.camera)
 
+        self.Ftext = extras.Text("Great Job!", (600, 450), (WIDTH/2, HEIGHT/2), layer='toptop', font_size=110,color=(255,255,255))
+        self.group.add(self.Ftext)
+        if(self.correct < FINISH):
+            self.Ftext.visible = 0
+            
         self.multiselect = 0
         self.multimax = 1
         
@@ -144,8 +158,19 @@ class MeanMedianMode(spyral.Scene):
                 v.move(local_position)
     
     def update(self, dt):
+        #Restarting the game
+        if(self.timer < self.time_end):
+            self.timer += 1
+            print "Timer: "+str(self.timer)
+        if(self.timer == self.time_end):
+            print "Correct: "+str(self.correct)
+            if(self.correct == FINISH):
+                return spyral.director.pop()
+            return spyral.director.replace(MeanMedianMode(self.correct))
         #Check for any new/relevant events
         for event in self.event_handler.get():
+            if(self.correct >= FINISH):
+                break
             #They clicked the OS exit button at the top of the frame
             if event['type'] == 'QUIT':
                 spyral.director.pop()
@@ -160,8 +185,13 @@ class MeanMedianMode(spyral.Scene):
                     spyral.director.pop()
                     return
                 #ascii 13 is enter key
-                if event['ascii'] == chr(13):
-                    return self.type.get_answer()
+                if(event['ascii'] == chr(13))and(self.timer > RESULT_TIME):
+                    self.correct += self.type.get_answer()
+                    if(self.correct == FINISH):
+                        self.Ftext.visible = 1
+                        self.timer = 0
+                        self.time_end = FINISH_TIME
+                    self.timer = 0
                 #ascii 8 is backspace key
                 if event['ascii'] == chr(8):
                     txt = self.get_type(self.type)
