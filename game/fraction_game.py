@@ -74,8 +74,8 @@ class FractionGame(spyral.Scene):
         self.water_in_tower.anchor = 'midbottom'
         self.water_in_tower.layer = 'bottom'
 
-        sprinkler_head_1 = extras.Button(filename="images/sprinkler_head_short.png", position=(WIDTH/2-20, 715), layer='bottom', anchor='bottomright')
-        sprinkler_head_2 = extras.Button(filename="images/sprinkler_head_short.png", position=(WIDTH/2+20, 715), layer='bottom', anchor='bottomleft')
+        sprinkler_head_1 = extras.Button(filename="images/sprinkler_head_short.png", position=(WIDTH/2-20, 720), layer='bottom', anchor='bottomright')
+        sprinkler_head_2 = extras.Button(filename="images/sprinkler_head_short.png", position=(WIDTH/2+30, 720), layer='bottom', anchor='bottomleft')
 
         self.watering = spyral.Sprite()
         self.watering.position = (WIDTH/2+5, HEIGHT/2-20)
@@ -415,7 +415,7 @@ class FractionGame(spyral.Scene):
             self.water_in_bucket = extras.Fraction(0, self.water_in_bucket.denominator)
             self.update_user_answer_graphics()
             #show hint
-            if (self.difficulty == 3):
+            if (self.difficulty == 3) or (self.difficulty == 4):
                 self.hint_text.set_text("The least common multiple is: " + str(lcm(self.problem_fractions[0].denominator, self.problem_fractions[1].denominator)))
                 self.hint_text.visible = True
             else:
