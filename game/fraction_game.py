@@ -95,7 +95,7 @@ class FractionGame(spyral.Scene):
         #That way we only have to check for clicks on the buttons
         #Only put clickables in here
         self.buttons.add(fraction_tools_button, done_button, water_tower, increase_water_button, decrease_water_button)
-        self.texts.add(fraction_tools_text, done_text, self.great_job_text, self.try_again_text, self.operation_text, equal_sign_text)
+        self.texts.add(fraction_tools_text, done_text, self.operation_text, equal_sign_text)
         self.others.add(sprinkler_head_1, sprinkler_head_2, self.watering)
         self.fractions_tuple = self.generate_problem()
         
@@ -164,6 +164,7 @@ class FractionGame(spyral.Scene):
                     return {self.property: spyral.Image(size=(0,0))}
                 
         anim = myAnimator(4.0)
+        self.results_timer = 4.0
         self.watering.stop_all_animations()
         self.watering.animate(anim)
 
@@ -221,15 +222,12 @@ class FractionGame(spyral.Scene):
             elif event['type'] == 'MOUSEBUTTONDOWN':
                 self.check_click(event['pos'], self.buttons.sprites())
 
-        if self.watering.width > 0:
+        if self.completed >= NUMBER_TO_COMPLETE:
             self.results_timer -= dt
             if self.results_timer <= 0:
-                if self.completed >= NUMBER_TO_COMPLETE:
-                    village_selection_scene = spyral.director._stack[-2]
-                    village_selection_scene.fraction_difficulty = self.difficulty + 1
-                    spyral.director.pop()
-                else:
-                    self.results_timer = RESULTS_TIME_ON_SCREEN
+                village_selection_scene = spyral.director._stack[-2]
+                village_selection_scene.fraction_difficulty = self.difficulty + 1
+                spyral.director.pop()
 
     def render(self):
         self.buttons.draw()
@@ -398,6 +396,8 @@ class FractionGame(spyral.Scene):
             elif self.completed == NUMBER_TO_COMPLETE:
                 for sprite in self.user_answer.get_children():
                     self.user_answer.remove_child(sprite)
+                for sprite in self.texts.sprites():
+                    sprite.visible = False
             self.begin_growing()
         #INCORRECT ANSWER!
         else:

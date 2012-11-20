@@ -35,7 +35,7 @@ class Button(spyral.Sprite):
 class Text(spyral.Sprite):
     def __init__(self, text, image_size, position, anchor='center', layer='all', font_size=14, color=(0,0,0), group=None):
 
-        super(Text, self).__init__()
+        super(Text, self).__init__(group=group)
         #self.image = spyral.Image(size=image_size)
         self.font_size = font_size
         self.color = color

@@ -34,15 +34,15 @@ class FractionTools(spyral.Scene):
         self.num_of_horizontal_lines = d + 1
         #Horizontal Lines and Vertical Slider
         for x in xrange(0, d+1):
-            temp_line = extras.Button((box_left, box_top+x*(BOX_H/d)), image_size=(BOX_W, 6), anchor='topleft', layer='grid_lines', fill=(0,0,0), group=self.horizontal_lines)
-            fraction_label = extras.Text(str(d-x) + "/" + str(d), (48, 24), (box_left - 23, box_top+x*(BOX_H/d)), group=self.main_group, font_size=20)
+            extras.Button((box_left, box_top+x*(BOX_H/d)), image_size=(BOX_W, 6), anchor='topleft', layer='grid_lines', fill=(0,0,0), group=self.horizontal_lines)
+            extras.Text(str(d-x) + "/" + str(d), (48, 24), (box_left - 23, box_top+x*(BOX_H/d)), group=self.main_group, font_size=20, layer='all')
 
         #Vertical Lines and Horizontal Slider
         d = fractions[1].denominator
         self.num_of_vertical_lines = d + 1
         for x in xrange(0, d+1):
-            temp_line = extras.Button((box_left+x*(BOX_W/d), box_bottom), image_size=(6, BOX_H), anchor='bottomleft', layer='grid_lines', fill=(0,0,0), group=self.vertical_lines)
-            fraction_label = extras.Text(str(x) + "/" + str(d), (48, 24), (box_left+x*(BOX_W/d), box_bottom + 18), group=self.main_group, font_size=20)
+            extras.Button((box_left+x*(BOX_W/d), box_bottom), image_size=(6, BOX_H), anchor='bottomleft', layer='grid_lines', fill=(0,0,0), group=self.vertical_lines)
+            extras.Text(str(x) + "/" + str(d), (48, 24), (box_left+x*(BOX_W/d), box_bottom + 18), group=self.main_group, font_size=20, layer='all')
 
         self.shaded_box = spyral.Sprite(self.main_group)
         self.shaded_box.image = spyral.Image(size=(0,0))
