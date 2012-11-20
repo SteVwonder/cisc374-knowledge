@@ -124,7 +124,7 @@ class FractionGame(spyral.Scene):
 
     #Sets the background to an image file store in the repo
     def on_enter(self):
-        background = spyral.Image(filename="images/farmland.jpg")
+        background = spyral.Image(filename="images/farmland-short.jpg")
         self.camera.set_background(background)
 
     def generate_fraction_image(self, fraction, image_size, position, anchor='center', layer='all'):
@@ -248,6 +248,7 @@ class FractionGame(spyral.Scene):
 
     def check_answer(self):
         print self.answer, self.water_in_bucket
+        self.results_timer = RESULTS_TIME_ON_SCREEN
         if self.water_in_bucket == self.answer:
             self.try_again_text.visible = False
             self.great_job_text.visible = True
