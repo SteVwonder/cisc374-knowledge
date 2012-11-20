@@ -49,6 +49,9 @@ class Villager(spyral.Sprite):
     def deselect(self):
         self.selected = 0
         self.layer = 1
+    def set_number(self, number):
+        self.number = number
+        self.text = extras.Text(str(number),64,self.pos,color=(255,255,255))
         
 class MeanMedianMode(spyral.Scene):
     def __init__(self,correct=0):
@@ -56,6 +59,8 @@ class MeanMedianMode(spyral.Scene):
 
         self.time_end = RESULT_TIME
         self.timer = self.time_end+1
+        self.createmode = 0
+        self.modenum = 0
         
         self.correct = correct
         print correct
@@ -81,6 +86,12 @@ class MeanMedianMode(spyral.Scene):
         
         for count in range(2,random.randrange(5,12,2)):
             nvil = Villager(random.randrange(200+(WIDTH-400)),random.randrange(200+(HEIGHT-500)))
+            if(self.createmode > 0)and(self.createmode < random.randrange(2,4)):
+                nvil.set_number(self.modenum)
+                self.createmode += 1
+            if(self.createmode == 0)and(self.modenum == 0):
+                self.modenum = nvil.number
+                self.createmode += 1
             self.VillagerList.append(nvil)
             self.text.add(nvil.text)
             self.NumberList.append(nvil.number)
