@@ -31,8 +31,8 @@ class FractionGame(spyral.Scene):
         #Some variables used in the game
         self.water_in_bucket = extras.Fraction(0,0)
         self.increment_bucket_by = 0
-        #self.difficulty = 4
-        self.difficulty = difficulty
+        self.difficulty = 3
+        #self.difficulty = difficulty
         self.problem_fractions = None
         self.results_timer = RESULTS_TIME_ON_SCREEN
         self.operation = None
@@ -59,10 +59,8 @@ class FractionGame(spyral.Scene):
         fraction_tools_text = extras.Text("Fraction Tools", (200, 50), (WIDTH-105, 30), layer='top')
         #self.increase_water_text = extras.Text("Add Water (0)", (150,150), (150, HEIGHT-150), layer='top', font_size=30)
         done_text = extras.Text("Done!", (200, 50), (WIDTH - 105, HEIGHT - 30), layer='top')
-        self.great_job_text = extras.Text("Great Job!", (600, 450), (WIDTH/2, HEIGHT/2), layer='toptop', font_size=110)
-        self.great_job_text.visible = False
-        self.try_again_text = extras.Text("Try Again", (600, 450), (WIDTH/2, HEIGHT/2), layer='toptop', font_size=110)
-        self.try_again_text.visible = False
+        self.hint_text = extras.Text("This is the hint text", (600, 450), (WIDTH/2, 25), layer='toptop', font_size=60, group=self.texts, anchor='midtop')
+        self.hint_text.visible = False
         self.operation_text = extras.Text(self.operation, (50, 50), (2*WIDTH/6, FRACTION_SIZE[1] + 10), layer='bottom', font_size=70)
         equal_sign_text = extras.Text("=", (50,50), (4*WIDTH/6, FRACTION_SIZE[1] + 10), layer='bottom', font_size=70)
         self.user_answer = self.generate_fraction_image(self.water_in_bucket, FRACTION_SIZE, (5*WIDTH/6, FRACTION_SIZE[1] + 10), layer='bottom')
@@ -80,7 +78,7 @@ class FractionGame(spyral.Scene):
         sprinkler_head_2 = extras.Button(filename="images/sprinkler_head_short.png", position=(WIDTH/2+20, 715), layer='bottom', anchor='bottomleft')
 
         self.watering = spyral.Sprite()
-        self.watering.position = (WIDTH/2, HEIGHT/2)
+        self.watering.position = (WIDTH/2+5, HEIGHT/2-20)
         self.watering.anchor = 'center'
         self.watering.image = spyral.Image(size=(0,0))
         
@@ -380,6 +378,13 @@ class FractionGame(spyral.Scene):
         
         
     def check_answer(self):
+        def lcm(a, b):
+            def gcd(a, b):
+                while b:
+                    b, a = a%b, b
+                return a
+            return ( a * b ) / gcd(a, b)
+
         self.results_timer = RESULTS_TIME_ON_SCREEN
         if self.water_in_bucket == self.answer:
             #CORRECT ANSWER!
@@ -405,8 +410,13 @@ class FractionGame(spyral.Scene):
             if self.water_in_bucket > self.answer:
                 self.begin_puddles()
             else:
-                #TOO LITTLE
+            #TOO LITTLE
                 self.begin_watering()
             self.water_in_bucket = extras.Fraction(0, self.water_in_bucket.denominator)
             self.update_user_answer_graphics()
             #show hint
+            if (self.difficulty == 3):
+                self.hint_text.set_text("The least common multiple is: " + str(lcm(self.problem_fractions[0].denominator, self.problem_fractions[1].denominator)))
+                self.hint_text.visible = True
+            else:
+                self.hint_text.visible = False
