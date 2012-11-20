@@ -84,7 +84,7 @@ class FractionGame(spyral.Scene):
         self.watering.anchor = 'center'
         self.watering.image = spyral.Image(size=(0,0))
         
-        if self.difficulty < 3:
+        if self.difficulty == 1 or self.difficulty == 3:
             fraction_tools_button.visible = False
             fraction_tools_text.visible = False
         else:
@@ -128,12 +128,44 @@ class FractionGame(spyral.Scene):
                     return {self.property: spyral.Image(filename="images/animations/watering_5.png")}
                 else:
                     return {self.property: spyral.Image(size=(0,0))}
-        test = myAnimator(3.0)
+        anim = myAnimator(2.0)
         self.watering.stop_all_animations()
-        self.watering.animate(test)
+        self.watering.animate(anim)
 
     def begin_growing(self):
-        return None
+        class myAnimator(spyral.Animation):
+            def __init__(self, input_duration):
+                super(myAnimator, self).__init__('image', spyral.animator.Linear(), duration=input_duration, loop=False)
+
+            def evaluate(self, sprite, progress):
+                progress = progress / self.duration
+                value = self.animator(sprite, progress)
+                if (value >= 0) and (value < .1):
+                    return {self.property: spyral.Image(filename="images/animations/watering_1.png")}
+                elif (value >= .1) and (value < .2):
+                    return {self.property: spyral.Image(filename="images/animations/watering_2.png")}
+                elif (value >= .2) and (value < .3):
+                    return {self.property: spyral.Image(filename="images/animations/watering_3.png")}
+                elif (value >= .3) and (value < .4):
+                    return {self.property: spyral.Image(filename="images/animations/watering_4.png")}
+                elif (value >= .4) and (value < .5):
+                    return {self.property: spyral.Image(filename="images/animations/watering_5.png")}
+                elif (value >= .5) and (value < .6):
+                    return {self.property: spyral.Image(filename="images/animations/growing_sprout.png")}
+                elif (value >= .6) and (value < .7):
+                    return {self.property: spyral.Image(filename="images/animations/growing_sprout.png")}
+                elif (value >= .7) and (value < .8):
+                    return {self.property: spyral.Image(filename="images/animations/growing_full.png")}
+                elif (value >= .8) and (value < .9):
+                    return {self.property: spyral.Image(filename="images/animations/growing_full.png")}
+                elif (value >= .9) and (value < 1.0):
+                    return {self.property: spyral.Image(filename="images/animations/growing_full.png")}
+                else:
+                    return {self.property: spyral.Image(size=(0,0))}
+                
+        anim = myAnimator(4.0)
+        self.watering.stop_all_animations()
+        self.watering.animate(anim)
 
     def begin_withering(self):
         return None
@@ -159,7 +191,7 @@ class FractionGame(spyral.Scene):
             elif event['type'] == 'MOUSEBUTTONDOWN':
                 self.check_click(event['pos'], self.buttons.sprites())
 
-        if self.great_job_text.visible or self.try_again_text.visible:
+        if self.watering.width > 0:
             self.results_timer -= dt
             if self.results_timer <= 0:
                 if self.completed >= NUMBER_TO_COMPLETE:
@@ -167,9 +199,6 @@ class FractionGame(spyral.Scene):
                     village_selection_scene.fraction_difficulty = self.difficulty + 1
                     spyral.director.pop()
                 else:
-                    self.great_job_text.visible = False
-                    self.try_again_text.visible = False
-                    self.results_button.visible = False
                     self.results_timer = RESULTS_TIME_ON_SCREEN
 
     def render(self):
@@ -337,7 +366,7 @@ class FractionGame(spyral.Scene):
                 self.fractions_tuple = self.generate_problem()
                 self.update_user_answer_graphics()
                 #self.increase_water_text.set_text("Add Water (" + str(self.water_in_bucket) + ")")
-                self.begin_watering()
+                self.begin_growing()
         else:
             #INCORRECT ANSWER!
             self.water_in_bucket = extras.Fraction(0, self.water_in_bucket.denominator)
