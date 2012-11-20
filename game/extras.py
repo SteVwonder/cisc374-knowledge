@@ -117,7 +117,7 @@ class TextBox(spyral.Sprite):
             print "Correct"
             return 1
         else:
-            self.set_text("Wrong - Correct Answer: "+str(self.answer))
+            self.set_text(str(self.answer))
             self.btext.text = ""
             print "Wrong"
             return 0

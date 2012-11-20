@@ -1,0 +1,8 @@
+' High Scores '
+2500:Jason
+8000:Bob
+40:Jenn
+1:Steve
+1134:Joe
+16000:Heather
+' End '

@@ -16,7 +16,7 @@ class CharacterPick(spyral.Scene):
 	self.texts = spyral.Group(self.camera)
 	self.after = spyral.Group(self.camera)
 
-	self.name = 'Nice Name'
+	self.name = 'Hero'
 
 	self.textbox = extras.TextBox("Name:", (500, 800), self.name, width = 200, height = 50, font_size = 22)
 
@@ -73,8 +73,7 @@ class CharacterPick(spyral.Scene):
 		if event['ascii'] == chr(13):
 		    return self.textbox.get_answer()
 		if event['ascii'] == chr(8):
-                    txt = self.textbox.get_text() 
-		    txt = txt[:len(txt)-2]
+		    txt = self.textbox[:len(self.textbox)-2]
 		    self.textbox.set_text(txt)
 	    elif event['type'] == 'MOUSEBUTTONDOWN':
 		self.check_click(event['pos'], self.buttons.sprites())
