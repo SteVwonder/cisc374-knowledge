@@ -171,7 +171,37 @@ class FractionGame(spyral.Scene):
         return None
 
     def begin_puddles(self):
-        return None
+        class myAnimator(spyral.Animation):
+            def __init__(self, input_duration):
+                super(myAnimator, self).__init__('image', spyral.animator.Linear(), duration=input_duration, loop=False)
+
+            def evaluate(self, sprite, progress):
+                progress = progress / self.duration
+                value = self.animator(sprite, progress)
+                if (value >= 0) and (value < .1):
+                    return {self.property: spyral.Image(filename="images/animations/watering_1.png")}
+                elif (value >= .1) and (value < .2):
+                    return {self.property: spyral.Image(filename="images/animations/watering_2.png")}
+                elif (value >= .2) and (value < .3):
+                    return {self.property: spyral.Image(filename="images/animations/watering_3.png")}
+                elif (value >= .3) and (value < .4):
+                    return {self.property: spyral.Image(filename="images/animations/watering_4.png")}
+                elif (value >= .4) and (value < .5):
+                    return {self.property: spyral.Image(filename="images/animations/watering_5.png")}
+                elif (value >= .5) and (value < .6):
+                    return {self.property: spyral.Image(filename="images/animations/puddles_25.png")}
+                elif (value >= .6) and (value < .7):
+                    return {self.property: spyral.Image(filename="images/animations/puddles_50.png")}
+                elif (value >= .7) and (value < .8):
+                    return {self.property: spyral.Image(filename="images/animations/puddles_75.png")}
+                elif (value >= .8) and (value < 1.0):
+                    return {self.property: spyral.Image(filename="images/animations/puddles_full.png")}
+                else:
+                    return {self.property: spyral.Image(size=(0,0))}
+                
+        anim = myAnimator(4.0)
+        self.watering.stop_all_animations()
+        self.watering.animate(anim)
     
     def update(self, dt):
         self.others.update(dt)
@@ -352,24 +382,31 @@ class FractionGame(spyral.Scene):
         
         
     def check_answer(self):
-        print self.answer, self.water_in_bucket
         self.results_timer = RESULTS_TIME_ON_SCREEN
         if self.water_in_bucket == self.answer:
             #CORRECT ANSWER!
             self.completed += 1
-            if self.completed != NUMBER_TO_COMPLETE:
-                for fraction in self.fractions_tuple:
+            for fraction in self.fractions_tuple:
                     #fraction.visible = False
-                    for sprite in fraction.get_children():
-                        fraction.remove_child(sprite)
+                for sprite in fraction.get_children():
+                    fraction.remove_child(sprite)
                     #fraction.draw(self.camera)
+            if self.completed != NUMBER_TO_COMPLETE:
                 self.fractions_tuple = self.generate_problem()
                 self.update_user_answer_graphics()
                 #self.increase_water_text.set_text("Add Water (" + str(self.water_in_bucket) + ")")
-                self.begin_growing()
+            elif self.completed == NUMBER_TO_COMPLETE:
+                for sprite in self.user_answer.get_children():
+                    self.user_answer.remove_child(sprite)
+            self.begin_growing()
+        #INCORRECT ANSWER!
         else:
-            #INCORRECT ANSWER!
+            #TOO MUCH
+            if self.water_in_bucket > self.answer:
+                self.begin_puddles()
+            else:
+                #TOO LITTLE
+                self.begin_watering()
             self.water_in_bucket = extras.Fraction(0, self.water_in_bucket.denominator)
             self.update_user_answer_graphics()
-            self.begin_watering()
             #show hint

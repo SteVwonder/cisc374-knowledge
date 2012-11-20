@@ -1,5 +1,7 @@
 import spyral
 import math
+import operator
+
 pyFraction = __import__('fractions')
 
 FONT_PATH = "fonts/00TT.TTF"
