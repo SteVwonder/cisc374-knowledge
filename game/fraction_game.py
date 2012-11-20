@@ -52,7 +52,7 @@ class FractionGame(spyral.Scene):
         fraction_tools_button.clicked = lambda: spyral.director.push(fraction_tools.FractionTools(self.difficulty, self.problem_fractions, self.operation))
         increase_water_button.clicked = lambda: self.increase_water_in_bucket()
         decrease_water_button.clicked = lambda: self.decrease_water_in_bucket()
-        done_button.clicked = lambda: self.check_answer()
+        done_button.clicked = lambda: spyral.director.pop()
         water_tower.clicked = lambda: self.check_answer()
         
         #Add text over the button, notice how I set the layer
