@@ -4,6 +4,7 @@ import fraction_tools
 from fractions import Fraction
 import random
 import string
+import conversation
 
 WIDTH = 1200
 HEIGHT = 900
@@ -83,6 +84,15 @@ class MeanMedianMode(spyral.Scene):
 
         self.VillagerList = []
         self.NumberList = []
+        
+        self.ListofText = ["Hey this is a conversation Box.",
+                           "The problem is I cannot get more than one line to draw.",
+                           "Using multiline strings will not work so instead",
+                           "We should just use it like this."]
+        self.conversation = conversation.Conversation(self.ListofText,(0,HEIGHT),self,w=WIDTH,h=HEIGHT,tcolor=(0,0,0))
+        self.group.add(self.conversation.button)
+        self.text.add(self.conversation.next)
+        self.text.add(self.conversation.visibletext)
         
         for count in range(2,random.randrange(5,12,2)):
             nvil = Villager(random.randrange(200+(WIDTH-400)),random.randrange(200+(HEIGHT-500)))
@@ -169,6 +179,9 @@ class MeanMedianMode(spyral.Scene):
                 v.move(local_position)
     
     def update(self, dt):
+        #Updating Conversations
+        if(self.conversation != 0):
+            self.conversation.update_text()
         #Restarting the game
         if(self.timer < self.time_end):
             self.timer += 1
@@ -208,6 +221,16 @@ class MeanMedianMode(spyral.Scene):
                     txt = self.get_type(self.type)
                     txt = txt[:len(txt)-2]
                     self.set_type(txt,self.type)
+
+                #ascii 122 is the z key
+                if event['ascii'] == chr(122) or event['ascii'] == chr(13):
+                    if(self.conversation != 0):
+                        if(self.conversation.currentposition < len(self.conversation.ctext)-1):
+                            self.conversation.quick_end()
+                            return
+                        if(self.conversation.currentposition >= len(self.conversation.ctext)-1):
+                            self.conversation.to_next()
+                            return
             elif event['type'] == "MOUSEBUTTONDOWN":
                 self.check_click(event['pos'], self.Selectable,1)
             elif event['type'] == "MOUSEBUTTONUP":

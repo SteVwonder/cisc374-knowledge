@@ -57,6 +57,7 @@ class TextBox(spyral.Sprite):
         super(TextBox,self).__init__()
         self.answer = answer
         self.selected = 0
+        self.selecting = 0
 
         self.wdth = width
         self.heght = height
@@ -85,9 +86,10 @@ class TextBox(spyral.Sprite):
             self.button.image = spyral.Image(filename=self.button_image)
             
     def set_text(self, text):
-        self.btext.image = spyral.Font(FONT_PATH, self.font_size, self.tcolor).render(text)
-        self.btext.text = text
-        self.btext.layer = 10
+        if(self.selecting == 1):
+            self.btext.image = spyral.Font(FONT_PATH, self.font_size, self.tcolor).render(text)
+            self.btext.text = text
+            self.btext.layer = 10
     def get_text(self):
         return self.btext.text
 
@@ -99,28 +101,31 @@ class TextBox(spyral.Sprite):
         self.button.image = spyral.Image(size = (self.wdth,self.heght))
         self.button.image.fill((0,0,255))
         self.button.anchor = self.anchor
+        self.selecting = 1
     def deselect(self):
         self.button.image = spyral.Image(size = (self.wdth,self.heght))
         self.button.image.fill((255,0,255))
         self.button.anchor = self.anchor
+        self.selecting = 0
         return 0
     def move(self,pos):
         return 0
     def get_answer(self):
-        self.set_text(filter(lambda x: x.isdigit(), self.get_text()))
-        if(self.get_text() == ""):
-            self.set_text("-1")
-        print "Converted to Integer: "+self.get_text()
-        if(int(self.get_text()) == self.answer):
-            self.set_text("Correct")
-            self.btext.text = ""
-            print "Correct"
-            return 1
-        else:
-            self.set_text(str(self.answer))
-            self.btext.text = ""
-            print "Wrong"
-            return 0
+        if(self.selecting == 1):
+            self.set_text(filter(lambda x: x.isdigit(), self.get_text()))
+            if(self.get_text() == ""):
+                self.set_text("-1")
+            print "Converted to Integer: "+self.get_text()
+            if(int(self.get_text()) == self.answer):
+                self.set_text("Correct")
+                self.btext.text = ""
+                print "Correct"
+                return 1
+            else:
+                self.set_text(str(self.answer))
+                self.btext.text = ""
+                print "Wrong"
+                return 0
 
 class Fraction():
     def __init__(self, numerator, denominator):
