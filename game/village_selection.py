@@ -28,9 +28,9 @@ class VillageSelection(spyral.Scene):
         self.fraction_difficulty = 1
 
         #Add in our button for the fraction game, notice how I set the layer
-        fraction_game_button = extras.Button(image_size=(200, 50), position=(WIDTH/2, HEIGHT/2), layer='bottom')
-        play_MMM = extras.Button(image_size=(200, 50), position=(WIDTH/2, HEIGHT/2 - 75), layer = 'bottom')
-	vocab_search_button = extras.Button(image_size=(200, 50), position=(WIDTH/2, HEIGHT/2 + 75), layer='bottom')        
+        fraction_game_button = extras.Button(image_size=(200, 50), position=(522, 725), layer='bottom')
+        play_MMM = extras.Button(image_size=(200, 50), position=(304, 320), layer = 'bottom')
+	vocab_search_button = extras.Button(image_size=(200, 50), position=(629, 320), layer='bottom')        
 
         #Need to assign an action to the button for when it is clicked
         #We do this by using lambda functions.  So when the button is
@@ -42,9 +42,9 @@ class VillageSelection(spyral.Scene):
 	vocab_search_button.clicked = lambda: spyral.director.push(vocab_search.VocabScene())
         
         #Add text over the button, notice how I set the layer
-        self.fraction_game_text = extras.Text("Fraction Game - Level 1", (200, 50), (WIDTH/2, HEIGHT/2), layer='top')
-        play_MMMtext = extras.Text("Mean Median Mode", (200, 50), (WIDTH/2, HEIGHT/2 - 75), layer = 'top')
-	vocab_search_text = extras.Text("Vocabulary Search", (200, 50), (WIDTH/2, HEIGHT/2 + 75), layer='top')
+        self.fraction_game_text = extras.Text("Fraction Game - Level 1", (200, 50), (522, 725), layer='top')
+        play_MMMtext = extras.Text("Mean Median Mode", (200, 50), (304, 320), layer = 'top')
+	vocab_search_text = extras.Text("Vocabulary Search", (200, 50), (629, 320), layer='top')
 
         #Using two different groups for text and buttons
         #That way we only have to check for clicks on the buttons
@@ -74,8 +74,7 @@ class VillageSelection(spyral.Scene):
         else:
             self.fraction_game_text.image = extras.Text("Fraction Game - Level " + str(self.fraction_difficulty), (200, 50), (WIDTH/2, HEIGHT/6), anchor="midtop", color=(0,0,0), group=self.texts).image
         self.fraction_game_text._expire_static()
-        background = spyral.Image(size=(WIDTH, HEIGHT))
-        background.fill((0,0,0))
+        background = spyral.Image(filename="images/BG.png")
         self.camera.set_background(background)
 
     def render(self):
@@ -87,7 +86,6 @@ class VillageSelection(spyral.Scene):
     #Also check for mouse clicks, if you detect one, check if
     #the user clicked a button
     def update(self, dt):
-
         for event in self.event_handler.get():
             if event['type'] == 'QUIT':
                 spyral.director.pop()
@@ -99,3 +97,4 @@ class VillageSelection(spyral.Scene):
                     return
             elif event['type'] == 'MOUSEBUTTONDOWN':
                 self.check_click(event['pos'], self.buttons.sprites())
+                print event['pos']
