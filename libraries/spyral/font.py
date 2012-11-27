@@ -76,7 +76,7 @@ class Font(object):
         minimum x offset, maximum x offset, minimum y offset, maximum
         y offset, and the advance offset of the character.
         """
-        return self.font.get_metrics(text)
+        return self.font.metrics(text)
         
     def get_size(self, text):
         """

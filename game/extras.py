@@ -51,6 +51,58 @@ class Text(spyral.Sprite):
     def get_text(self):
         return self.text
 
+# Allows writing multiple lines of text to be much easier and only uses one image
+# by using a blank image with the size specifications and spyral.Image's draw_image
+# to draw each line of text onto the basic image. Takes a list of separate lines,
+# one string containing newlines or a plain string. Also includes text-wrapping
+#            spacing option : horizontal space between text lines, 0 spaces evenly
+class MultiLineText(spyral.Sprite):
+    def __init__(self, text, image_size, position, spacing=0, anchor='topleft', layer='all', font_size=14, color=(0,0,0), group=None):
+
+	super(MultiLineText, self).__init__(group=group)
+	self.font_size = font_size
+	self.color = color
+	self.layer = layer
+	self.anchor = anchor
+	self.pos = position
+	self.spacing = spacing
+	self.image = spyral.Image(size=image_size)
+	self.texts = []
+	self.text = []
+
+	if ('\n' in text):
+	    self.text = text.split('\n')
+	elif (isinstance(text, str)):
+	    self.text.append(text)
+	else:
+	    self.text = text
+
+	for line in self.text:
+	    nline = line
+	    while (True):
+		proj_width = spyral.Font(FONT_PATH, font_size, color).get_size(nline)[0]
+		end = image_size[0]*len(nline)/proj_width
+		start = 9*image_size[0]*len(nline)/proj_width/10
+		if (proj_width < image_size[0] or start < 0 ):
+		    break
+
+		space = nline.find(' ', start, end)
+		if (space < 0):
+		    start -= 10
+		    continue
+		
+		self.texts.append(spyral.Font(FONT_PATH, font_size, color).render(nline[:space]))
+		nline = nline[space+1:]
+
+	    self.texts.append(spyral.Font(FONT_PATH, font_size, color).render(nline))
+	
+	if (spacing == 0):
+	    self.spacing = (image_size[1] - (len(self.texts)*font_size))/len(self.texts)
+	offset = 0
+	for line in self.texts:
+	    self.image.draw_image(line, (0, offset))
+	    offset += self.spacing + font_size
+
 class TextBox(spyral.Sprite):
     def __init__(self,dtext,position,answer, button_image="",width=200,height=20,anchor='topleft',layer='all',font_size=14,dcolor=(255,255,255),tcolor=(255,255,0)):
 
@@ -77,16 +129,16 @@ class TextBox(spyral.Sprite):
         self.button.image.fill((255,0,255))
         self.button.anchor = self.anchor
         self.button.pos = (self.position[0],self.position[1]-5)
-        self.button.layer = 1
+        self.button.layer = "bottom"
 
         self.btext = Text("",64,position,layer=100,anchor=self.anchor,color=self.tcolor,font_size=self.font_size)
-        self.btext.layer = 10
+        self.btext.layer = "top"
         
         if(button_image != ""):
             self.button.image = spyral.Image(filename=self.button_image)
             
     def set_text(self, text):
-        if(self.selecting == 1):
+        if(self.selecting == 1) and (self.visible == 1):
             self.btext.image = spyral.Font(FONT_PATH, self.font_size, self.tcolor).render(text)
             self.btext.text = text
             self.btext.layer = 10
@@ -94,37 +146,40 @@ class TextBox(spyral.Sprite):
         return self.btext.text
 
     def check_click(self, position):
-        self.ret = self.button.get_rect().collide_point(position)
-        return self.ret
+	if(self.visible == 1):
+	    self.ret = self.button.get_rect().collide_point(position)
+	    return self.ret
     def select(self,tpe):
-        tpe.type = self
-        self.button.image = spyral.Image(size = (self.wdth,self.heght))
-        self.button.image.fill((0,0,255))
-        self.button.anchor = self.anchor
-        self.selecting = 1
+	if(self.visible == 1):
+	    tpe.type = self
+	    self.button.image = spyral.Image(size = (self.wdth,self.heght))
+	    self.button.image.fill((0,0,255))
+	    self.button.anchor = self.anchor
+	    self.selecting = 1
     def deselect(self):
-        self.button.image = spyral.Image(size = (self.wdth,self.heght))
-        self.button.image.fill((255,0,255))
-        self.button.anchor = self.anchor
-        self.selecting = 0
-        return 0
+	if(self.visible == 1):
+	    self.button.image = spyral.Image(size = (self.wdth,self.heght))
+	    self.button.image.fill((255,0,255))
+	    self.button.anchor = self.anchor
+	    self.selecting = 0
+	    return 0
     def move(self,pos):
         return 0
     def get_answer(self):
-        if(self.selecting == 1):
+        if(self.selecting == 1) and (sel.visible == 1):
             self.set_text(filter(lambda x: x.isdigit(), self.get_text()))
             if(self.get_text() == ""):
                 self.set_text("-1")
-            print "Converted to Integer: "+self.get_text()
+            #print "Converted to Integer: "+self.get_text()
             if(int(self.get_text()) == self.answer):
                 self.set_text("Correct")
                 self.btext.text = ""
-                print "Correct"
+                #print "Correct"
                 return 1
             else:
                 self.set_text(str(self.answer))
                 self.btext.text = ""
-                print "Wrong"
+                #print "Wrong"
                 return 0
 
 class Fraction():
