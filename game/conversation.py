@@ -23,7 +23,7 @@ class Conversation(spyral.Sprite):
         self.font_size = font_size
         self.tcolor = tcolor
         self.dcolor = dcolor
-        self.layer = 10
+        self.layer = "toptop"
 
         self.currentposition = 0
         self.currenttext = 0
@@ -37,7 +37,7 @@ class Conversation(spyral.Sprite):
         self.button.image.fill((0,255,0))
         self.button.anchor = self.anchor
         self.button.pos = (self.position[0],self.position[1]-5)
-        self.button.layer = 2
+        self.button.layer = "top"
         self.button.visible = 1
 
         self.next = extras.Text("Press Z",64,(self.wdth,self.position[1]-3),anchor='bottomright',color=self.tcolor,font_size=self.font_size,layer=self.layer)
@@ -51,8 +51,8 @@ class Conversation(spyral.Sprite):
             self.visibletext.set_text(self.ctext[:self.currentposition])
             self.visibletext.layer = self.layer
 
-            self.button.image = spyral.Image(size = (self.wdth,self.heght))
-            self.button.image.fill((0,255,0))
+            #self.button.image = spyral.Image(size = (self.wdth,self.heght))
+            #self.button.image.fill((0,255,0))
             
             print "Layers: "+str(self.visibletext.layer)+"/"+str(self.button.layer)
             print "Updating Text: "+self.ctext[:self.currentposition]

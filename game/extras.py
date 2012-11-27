@@ -77,16 +77,16 @@ class TextBox(spyral.Sprite):
         self.button.image.fill((255,0,255))
         self.button.anchor = self.anchor
         self.button.pos = (self.position[0],self.position[1]-5)
-        self.button.layer = 1
+        self.button.layer = "bottom"
 
         self.btext = Text("",64,position,layer=100,anchor=self.anchor,color=self.tcolor,font_size=self.font_size)
-        self.btext.layer = 10
+        self.btext.layer = "top"
         
         if(button_image != ""):
             self.button.image = spyral.Image(filename=self.button_image)
             
     def set_text(self, text):
-        if(self.selecting == 1):
+        if(self.selecting == 1)and(self.visible == 1):
             self.btext.image = spyral.Font(FONT_PATH, self.font_size, self.tcolor).render(text)
             self.btext.text = text
             self.btext.layer = 10
@@ -94,24 +94,27 @@ class TextBox(spyral.Sprite):
         return self.btext.text
 
     def check_click(self, position):
-        self.ret = self.button.get_rect().collide_point(position)
-        return self.ret
+        if(self.visible == 1):
+            self.ret = self.button.get_rect().collide_point(position)
+            return self.ret
     def select(self,tpe):
-        tpe.type = self
-        self.button.image = spyral.Image(size = (self.wdth,self.heght))
-        self.button.image.fill((0,0,255))
-        self.button.anchor = self.anchor
-        self.selecting = 1
+        if(self.visible == 1):
+            tpe.type = self
+            self.button.image = spyral.Image(size = (self.wdth,self.heght))
+            self.button.image.fill((0,0,255))
+            self.button.anchor = self.anchor
+            self.selecting = 1
     def deselect(self):
-        self.button.image = spyral.Image(size = (self.wdth,self.heght))
-        self.button.image.fill((255,0,255))
-        self.button.anchor = self.anchor
-        self.selecting = 0
-        return 0
+        if(self.visible == 1):
+            self.button.image = spyral.Image(size = (self.wdth,self.heght))
+            self.button.image.fill((255,0,255))
+            self.button.anchor = self.anchor
+            self.selecting = 0
+            return 0
     def move(self,pos):
         return 0
     def get_answer(self):
-        if(self.selecting == 1):
+        if(self.selecting == 1)and(self.visible == 1):
             self.set_text(filter(lambda x: x.isdigit(), self.get_text()))
             if(self.get_text() == ""):
                 self.set_text("-1")
