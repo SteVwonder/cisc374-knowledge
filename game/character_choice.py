@@ -51,9 +51,8 @@ class CharacterPick(spyral.Scene):
 		sprite.clicked()
 
     def on_enter(self):
-	background = spyral.Image(size=(WIDTH, HEIGHT))
-	background.fill((0,0,0))
-	self.camera.set_background(background)
+	background = spyral.Image(filename="images/Title Screen.png")
+        self.camera.set_background(background)
 
     def render(self):
 	self.buttons.draw()
@@ -65,7 +64,8 @@ class CharacterPick(spyral.Scene):
 		spyral.director.pop()
 		return
 	    elif event['type'] == 'KEYDOWN':
-		self.ntext = self.textbox.get_text()+event['ascii']
+                character = event['ascii']
+		self.ntext = self.textbox.get_text()+character
 		self.textbox.set_text(self.ntext)
                 #ascii 27 is escape key
                 if event['ascii'] == chr(27):

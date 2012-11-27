@@ -25,10 +25,10 @@ class StartMenu(spyral.Scene):
 	self.texts = spyral.Group(self.camera)
 
 	#The play, vocab input, high score, and quit buttons to be used, layer = 'bottom'
-	play_button = extras.Button(image_size=(200, 50), position=(WIDTH/2, HEIGHT/2 - 75), layer = 'bottom')
-	vocab_input_button = extras.Button(image_size=(200, 50), position=(WIDTH/2, HEIGHT/2), layer = 'bottom')
-	high_score_button = extras.Button(image_size=(200, 50), position=(WIDTH/2, HEIGHT/2 + 75), layer = 'bottom')
-	quit_button = extras.Button(image_size=(200, 50), position=(WIDTH/2, HEIGHT/2 + 150), layer = 'bottom')
+	play_button = extras.Button(image_size=(200, 50), position=(WIDTH/2, HEIGHT/2 - 75), layer = 'bottom',filename="images/Buttons/Start Game 1.png")
+	vocab_input_button = extras.Button(image_size=(200, 50), position=(WIDTH/2, HEIGHT/2), layer = 'bottom',filename="images/Buttons/Input Vocab 1.png")
+	high_score_button = extras.Button(image_size=(200, 50), position=(WIDTH/2, HEIGHT/2 + 75), layer = 'bottom',filename="images/Buttons/High Scores 1.png")
+	quit_button = extras.Button(image_size=(200, 50), position=(WIDTH/2, HEIGHT/2 + 150), layer = 'bottom',filename="images/Buttons/Quit 1.png")
 
 	#Assigning the actions to be taken when each of the buttons are clicked
 	#using lambda functions.
@@ -39,14 +39,14 @@ class StartMenu(spyral.Scene):
         quit_button.clicked = lambda: spyral.director.pop()
 
         #Adding the text over the buttons, layer = 'top'
-        play_text = extras.Text("Play", (200, 50), (WIDTH/2, HEIGHT/2 - 75), layer = 'top')
-        vocab_input_text = extras.Text("Input Vocab", (200, 50), (WIDTH/2, HEIGHT/2), layer = 'top')
-        high_score_text = extras.Text("High Scores", (200, 50), (WIDTH/2, HEIGHT/2 + 75), layer = 'top')
-        quit_text = extras.Text("Quit", (200, 50), (WIDTH/2, HEIGHT/2 + 150), layer = 'top')
+        #play_text = extras.Text("Play", (200, 50), (WIDTH/2, HEIGHT/2 - 75), layer = 'top')
+        #vocab_input_text = extras.Text("Input Vocab", (200, 50), (WIDTH/2, HEIGHT/2), layer = 'top')
+        #high_score_text = extras.Text("High Scores", (200, 50), (WIDTH/2, HEIGHT/2 + 75), layer = 'top')
+        #quit_text = extras.Text("Quit", (200, 50), (WIDTH/2, HEIGHT/2 + 150), layer = 'top')
 
         #Adding the buttons and text to their respective groups
         self.buttons.add(play_button, vocab_input_button, high_score_button, quit_button)
-        self.texts.add(play_text, vocab_input_text, high_score_text, quit_text)
+        #self.texts.add(play_text, vocab_input_text, high_score_text, quit_text)
 
     #Converts the position of the click from real to virtual
     #Then checks to see if any of the sprites in the button group have been clicked
@@ -59,8 +59,7 @@ class StartMenu(spyral.Scene):
                 
     #Sets the background, currently a blank fill
     def on_enter(self):
-        background = spyral.Image(size = (WIDTH, HEIGHT))
-        background.fill((0,0,0))
+        background = spyral.Image(filename="images/Title Screen.png")
         self.camera.set_background(background)
 
     #Draws the sprites, currently just the buttons and text
