@@ -29,7 +29,7 @@ class Conversation(spyral.Sprite):
         self.currenttext = 0
 
         self.ctext = self.tlist[self.currenttext]
-        self.visibletext = extras.Text(self.ctext[:self.currentposition],64,(self.position[0]+8,self.position[1]-(self.heght)+5),anchor='topleft',color=self.tcolor,font_size=self.font_size,layer=self.layer)
+        self.visibletext = extras.Text(self.ctext[:self.currentposition], 64, (self.position[0]+8,self.position[1]-(self.heght)+5),anchor='topleft',color=self.tcolor,font_size=self.font_size,layer=self.layer)
         self.visibletext.layer = self.layer
         
         self.button = spyral.Sprite()
@@ -48,20 +48,17 @@ class Conversation(spyral.Sprite):
     def update_text(self):
         if(self.currentposition < len(self.ctext)):
             self.currentposition += 1
-            self.visibletext.set_text(self.ctext[:self.currentposition])
+            #self.visibletext.set_text(self.ctext[:self.currentposition])
             self.visibletext.layer = self.layer
 
             #self.button.image = spyral.Image(size = (self.wdth,self.heght))
             #self.button.image.fill((0,255,0))
-            
-            print "Layers: "+str(self.visibletext.layer)+"/"+str(self.button.layer)
-            print "Updating Text: "+self.ctext[:self.currentposition]
             self.next.visible = 0
         if(self.currentposition >= len(self.ctext)):
             self.next.visible = 1
     def quick_end(self):
         self.currentposition = len(self.ctext)
-        self.visibletext.set_text(self.ctext[:self.currentposition])
+        #self.visibletext.set_text(self.ctext[:self.currentposition])
         self.visibletext.layer = self.layer
         print "Ending Text"
     def to_next(self):
@@ -69,7 +66,7 @@ class Conversation(spyral.Sprite):
             self.currentposition = 0
             self.currenttext += 1
             self.ctext = self.tlist[self.currenttext]
-            self.visibletext.set_text(self.ctext[:self.currentposition])
+            #self.visibletext.set_text(self.ctext[:self.currentposition])
             self.visibletext.layer = self.layer
             return
         if(self.currenttext >= len(self.tlist)-1):

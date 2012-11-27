@@ -40,7 +40,7 @@ class CharacterPick(spyral.Scene):
 	for sprite in self.texts.sprites():
 	    sprite.visible = False
 
-	name = self.textbox.get_text()
+	name = self.textbox.lastanswer
 	if (name):
 	    self.name = name
 

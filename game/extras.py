@@ -66,6 +66,7 @@ class MultiLineText(spyral.Sprite):
 	self.anchor = anchor
 	self.pos = position
 	self.spacing = spacing
+	self.image_size = image_size
 	self.image = spyral.Image(size=image_size)
 	self.texts = []
 	self.text = []
@@ -102,12 +103,17 @@ class MultiLineText(spyral.Sprite):
 	for line in self.texts:
 	    self.image.draw_image(line, (0, offset))
 	    offset += self.spacing + font_size
+    def set_text(self, text):
+        self.__init__(text, self.image_size, self.pos, self.spacing, self.anchor, self.layer, self.font_size, self.color)
+    def get_text(self):
+        return self.text
 
 class TextBox(spyral.Sprite):
-    def __init__(self,dtext,position,answer, button_image="",width=200,height=20,anchor='topleft',layer='all',font_size=14,dcolor=(255,255,255),tcolor=(255,255,0)):
+    def __init__(self,dtext,position,answer, button_image="",width=200,height=20,anchor='center',layer='all',font_size=14,dcolor=(0,0,0),tcolor=(255,255,0)):
 
         super(TextBox,self).__init__()
         self.answer = answer
+        self.lastanswer = ""
         self.selected = 0
         self.selecting = 0
 
@@ -122,7 +128,7 @@ class TextBox(spyral.Sprite):
         self.tcolor = tcolor
         self.dcolor = dcolor
 
-        self.description = Text(dtext,64,(position[0],position[1]-30),anchor=self.anchor,color=self.dcolor,font_size=self.font_size)
+        self.description = Text(dtext,64,(position[0],position[1]-30),anchor=self.anchor,color=self.dcolor,font_size=self.font_size+20)
         
         self.button = spyral.Sprite()
         self.button.image = spyral.Image(size = (width,height))
@@ -166,7 +172,8 @@ class TextBox(spyral.Sprite):
     def move(self,pos):
         return 0
     def get_answer(self):
-        if(self.selecting == 1) and (sel.visible == 1):
+        if(self.selecting == 1) and (self.visible == 1):
+            self.lastanswer = self.get_text()
             self.set_text(filter(lambda x: x.isdigit(), self.get_text()))
             if(self.get_text() == ""):
                 self.set_text("-1")
