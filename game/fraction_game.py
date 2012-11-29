@@ -31,18 +31,21 @@ class FractionGame(spyral.Scene):
         #Some variables used in the game
         self.water_in_bucket = extras.Fraction(0,0)
         self.increment_bucket_by = 0
-        #self.difficulty = 3
+        #self.difficulty = 2
         self.difficulty = difficulty
         self.problem_fractions = None
         self.results_timer = RESULTS_TIME_ON_SCREEN
         self.operation = None
         self.completed = 0
+        self.number_of_tries = 0
         
         #Button to move to the fractional tools scene
         fraction_tools_button = extras.Button(image_size=(200, 50), position=(WIDTH-5, 5), anchor='topright', layer='bottom', fill=(194, 194, 194))
         done_button = extras.Button(image_size=(200, 50), position=(WIDTH - 5, HEIGHT - 5), anchor='bottomright', layer='bottom', fill=(194, 194, 194))
         tower_position = (160,765)
         water_tower = extras.Button(filename="images/water_tower.png", position=tower_position, anchor='midbottom', layer='top')
+        self.water_tower_overflow = extras.Button(filename="images/water_tower.png", position=(tower_position[0]+water_tower.width+5, tower_position[1]), anchor='midbottom', layer='top')
+        self.water_tower_overflow.visible = False
         increase_water_button = extras.Button(filename="images/up_arrow.png", position=(tower_position[0]-water_tower.width, tower_position[1]-water_tower.height), anchor='midtop', layer='bottom')
         decrease_water_button = extras.Button(filename="images/down_arrow.png", position=(tower_position[0]-water_tower.width, tower_position[1]), anchor='midbottom', layer='bottom')
         self.results_button = extras.Button(image_size=(600,250), position=(WIDTH/2, HEIGHT/2), layer='top', fill=(255,255,255), group=self.others)
@@ -56,9 +59,9 @@ class FractionGame(spyral.Scene):
         water_tower.clicked = lambda: self.check_answer()
         
         #Add text over the button, notice how I set the layer
-        fraction_tools_text = extras.Text("Fraction Tools", (200, 50), (WIDTH-105, 30), layer='top')
+        fraction_tools_text = extras.Text("Help", (200, 50), (WIDTH-105, 30), layer='top')
         #self.increase_water_text = extras.Text("Add Water (0)", (150,150), (150, HEIGHT-150), layer='top', font_size=30)
-        done_text = extras.Text("Done!", (200, 50), (WIDTH - 105, HEIGHT - 30), layer='top')
+        done_text = extras.Text("Back", (200, 50), (WIDTH - 105, HEIGHT - 30), layer='top')
         self.hint_text = extras.Text("This is the hint text", (600, 450), (WIDTH/2, 25), layer='toptop', font_size=60, group=self.texts, anchor='midtop')
         self.hint_text.visible = False
         self.operation_text = extras.Text(self.operation, (50, 50), (2*WIDTH/6, FRACTION_SIZE[1] + 10), layer='bottom', font_size=70)
@@ -66,13 +69,10 @@ class FractionGame(spyral.Scene):
         self.user_answer = self.generate_fraction_image(self.water_in_bucket, FRACTION_SIZE, (5*WIDTH/6, FRACTION_SIZE[1] + 10), layer='bottom')
 
         #water in the water tower
-        self.water_column_size = (9,190)
-        self.water_in_tower = spyral.Sprite(group=self.others)
-        self.water_in_tower.image = spyral.Image(size=(0,0))
-        self.water_in_tower.image.fill((0,0,255))
-        self.water_in_tower.position = (tower_position[0], tower_position[1] - 3)
-        self.water_in_tower.anchor = 'midbottom'
-        self.water_in_tower.layer = 'bottom'
+        self.water_column_size = (15,190)
+        self.water_in_tower = extras.Button(image_size=(0,0), position=(tower_position[0], tower_position[1] - 3), anchor='midbottom', layer='bottom', fill=(0,0,255), group=self.others)
+        self.water_in_overflow =  extras.Button(image_size=self.water_column_size, position=(self.water_tower_overflow.position[0], self.water_tower_overflow.position[1]-2), anchor='midbottom', layer='bottom', fill=(0,0,255), group=self.others)
+        self.water_in_overflow.visible = False
 
         sprinkler_head_1 = extras.Button(filename="images/sprinkler_head_short.png", position=(WIDTH/2-20, 720), layer='bottom', anchor='bottomright')
         sprinkler_head_2 = extras.Button(filename="images/sprinkler_head_short.png", position=(WIDTH/2+30, 720), layer='bottom', anchor='bottomleft')
@@ -94,7 +94,7 @@ class FractionGame(spyral.Scene):
         #Only put clickables in here
         self.buttons.add(fraction_tools_button, done_button, water_tower, increase_water_button, decrease_water_button)
         self.texts.add(fraction_tools_text, done_text, self.operation_text, equal_sign_text)
-        self.others.add(sprinkler_head_1, sprinkler_head_2, self.watering)
+        self.others.add(sprinkler_head_1, sprinkler_head_2, self.watering, self.water_tower_overflow)
         self.fractions_tuple = self.generate_problem()
         
     def increase_water_in_bucket(self):
@@ -254,9 +254,9 @@ class FractionGame(spyral.Scene):
         group = spyral.Group(self.camera)
         width = image_size[0]
         height = image_size[1]
-        numerator =   extras.Text(str(fraction.numerator), (width, 3*height/8), (width/2,0), anchor='midtop', layer=layer, font_size=70)
+        numerator =   extras.Text(str(fraction.numerator), (width, 3*height/8), (width/2,0), anchor='midtop', layer=layer, font_size=65)
         middle_line = extras.Button((width/2, height/2), image_size=(width, height/12), anchor='center', layer=layer, fill=(0,0,0));
-        denominator = extras.Text(str(fraction.denominator), (width, 3*height/8), (width/2, height), anchor='midbottom', layer=layer, font_size=70)
+        denominator = extras.Text(str(fraction.denominator), (width, 3*height/8), (width/2, height), anchor='midbottom', layer=layer, font_size=65)
         agg_sprite = spyral.AggregateSprite(group)
         agg_sprite.image = spyral.Image(size=image_size)
         #agg_sprite.image.fill((255,255,255))
@@ -373,9 +373,59 @@ class FractionGame(spyral.Scene):
         for sprite in self.user_answer.get_children():
             self.user_answer.remove_child(sprite)
         self.user_answer = self.generate_fraction_image(self.water_in_bucket, FRACTION_SIZE, (5*WIDTH/6, FRACTION_SIZE[1] + 10))
-        self.water_in_tower.image = spyral.Image(size=(self.water_column_size[0], self.water_column_size[1] * (float(self.water_in_bucket.numerator)/float(self.water_in_bucket.denominator))))
-        self.water_in_tower.image.fill((0,0,255))
         
+        if self.water_in_bucket.numerator > self.water_in_bucket.denominator and self.water_in_bucket.numerator <= 2*self.water_in_bucket.denominator:
+            self.water_tower_overflow.visible = True
+            self.water_in_overflow.visible = True
+            self.water_in_tower.image =  spyral.Image(size=(self.water_column_size[0], self.water_column_size[1] * (float(self.water_in_bucket.numerator - self.water_in_bucket.denominator)/float(self.water_in_bucket.denominator))))
+            self.water_in_tower.image.fill((0,0,255))
+        elif self.water_in_bucket.numerator <= self.water_in_bucket.denominator:
+            if self.water_in_overflow.visible == True:
+                self.water_in_overflow.visible = False
+                self.water_tower_overflow.visible = False
+            self.water_in_tower.image = spyral.Image(size=(self.water_column_size[0], self.water_column_size[1] * (float(self.water_in_bucket.numerator)/float(self.water_in_bucket.denominator))))
+            self.water_in_tower.image.fill((0,0,255))
+        
+    def correct_answer(self):
+        #Reset hint stuff
+        self.number_of_tries = 0
+        self.hint_text.visible = False
+        
+        self.completed += 1
+        for fraction in self.fractions_tuple:
+            #fraction.visible = False
+            for sprite in fraction.get_children():
+                fraction.remove_child(sprite)
+                #fraction.draw(self.camera)
+        if self.completed != NUMBER_TO_COMPLETE:
+            self.fractions_tuple = self.generate_problem()
+            self.update_user_answer_graphics()
+                #self.increase_water_text.set_text("Add Water (" + str(self.water_in_bucket) + ")")
+        elif self.completed == NUMBER_TO_COMPLETE:
+            for sprite in self.user_answer.get_children():
+                self.user_answer.remove_child(sprite)
+            for sprite in self.texts.sprites():
+                sprite.visible = False
+        self.begin_growing()        
+
+    def incorrect_answer(self):
+        self.number_of_tries += 1
+        direction_of_answer = ""
+        #TOO MUCH
+        if self.water_in_bucket > self.answer:
+            self.begin_puddles()
+            direction_of_answer = "smaller"
+        else:
+        #TOO LITTLE
+            self.begin_watering()
+            direction_of_answer = "larger"
+        #show hint
+        if (self.number_of_tries > 2):
+            self.hint_text.set_text("Try something a little " + direction_of_answer)
+            self.hint_text.visible = True
+        else:
+            self.hint_text.visible = False
+
         
     def check_answer(self):
         def lcm(a, b):
@@ -387,36 +437,6 @@ class FractionGame(spyral.Scene):
 
         self.results_timer = RESULTS_TIME_ON_SCREEN
         if self.water_in_bucket == self.answer:
-            #CORRECT ANSWER!
-            self.completed += 1
-            for fraction in self.fractions_tuple:
-                    #fraction.visible = False
-                for sprite in fraction.get_children():
-                    fraction.remove_child(sprite)
-                    #fraction.draw(self.camera)
-            if self.completed != NUMBER_TO_COMPLETE:
-                self.fractions_tuple = self.generate_problem()
-                self.update_user_answer_graphics()
-                #self.increase_water_text.set_text("Add Water (" + str(self.water_in_bucket) + ")")
-            elif self.completed == NUMBER_TO_COMPLETE:
-                for sprite in self.user_answer.get_children():
-                    self.user_answer.remove_child(sprite)
-                for sprite in self.texts.sprites():
-                    sprite.visible = False
-            self.begin_growing()
-        #INCORRECT ANSWER!
+            self.correct_answer()
         else:
-            #TOO MUCH
-            if self.water_in_bucket > self.answer:
-                self.begin_puddles()
-            else:
-            #TOO LITTLE
-                self.begin_watering()
-            self.water_in_bucket = extras.Fraction(0, self.water_in_bucket.denominator)
-            self.update_user_answer_graphics()
-            #show hint
-            if (self.difficulty == 3) or (self.difficulty == 4):
-                self.hint_text.set_text("The least common multiple is: " + str(lcm(self.problem_fractions[0].denominator, self.problem_fractions[1].denominator)))
-                self.hint_text.visible = True
-            else:
-                self.hint_text.visible = False
+            self.incorrect_answer()

@@ -4,7 +4,7 @@ import operator
 
 pyFraction = __import__('fractions')
 
-FONT_PATH = "fonts/00TT.TTF"
+FONT_PATH = "fonts/cooper.ttf"
 
 #Essentially just a wrapper for a rectangle with click detection.
 #I have been using it as the base for a button.  Once you make one of these,

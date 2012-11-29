@@ -88,6 +88,7 @@ class MultiAnimation(Animation):
         clobbering_animations = [('scale', {'scale_x', 'scale_y'}),
                                  ('pos', {'x', 'y', 'position'}),
                                  ('position', {'x', 'y', 'pos'})]
+        print clobbering_animations
         for p, others in clobbering_animations:
             if p in self.properties and self.properties.intersection(others):
                 raise ValueError("Cannot animate on %s and %s in the same animation." % (p, str(self.properties.intersection(others).pop())))
