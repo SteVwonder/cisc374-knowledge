@@ -39,7 +39,7 @@ class Villager(spyral.Sprite):
         self.x = x
         self.y = y
 
-        self.number = random.randrange(10,50)
+        self.number = random.randrange(1,15)
         self.text = extras.Text(str(self.number),64,self.pos,color=(255,255,255))
         self.text.pos = (x,y+self.voff)
         self.text.anchor = 'center'
@@ -107,14 +107,15 @@ class MeanMedianMode(spyral.Scene):
         self.VillagerList = []
         self.NumberList = []
         
-        self.ListofText = ["Hey this is a conversation Box.",
-                           "The problem is I cannot get more than one line to draw.",
-                           "Using multiline strings will not work so instead",
-                           "We should just use it like this."]
-        self.conversation = conversation.Conversation(self.ListofText,(0,HEIGHT),self,w=WIDTH,h=HEIGHT,tcolor=(0,0,0))
-        self.group.add(self.conversation.button)
-        self.text.add(self.conversation.next)
-        self.text.add(self.conversation.visibletext)
+        #self.ListofText = ["Hey this is a conversation Box.",
+        #                   "The problem is I cannot get more than one line to draw.",
+        #                   "Using multiline strings will not work so instead",
+        #                   "We should just use it like this."]
+        #self.conversation = conversation.Conversation(self.ListofText,(0,HEIGHT),self,w=WIDTH,h=HEIGHT,tcolor=(0,0,0))
+        #self.group.add(self.conversation.button)
+        #self.text.add(self.conversation.next)
+        #self.text.add(self.conversation.visibletext)
+        self.conversation = 0
         
         for count in range(2,random.randrange(5,8,2)):
             nvil = Villager(random.randrange(200+(WIDTH-400)),random.randrange(200+(HEIGHT-500)))

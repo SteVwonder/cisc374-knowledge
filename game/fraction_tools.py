@@ -57,7 +57,7 @@ class FractionTools(spyral.Scene):
         self.horizontal_slider = extras.Button((box_left, box_bottom + 65), image_size=(24,48), group=self.buttons)
         self.horizontal_slider.dragging = False
         self.horizontal_slider.clicked = lambda: self.dragging(self.horizontal_slider)
-
+        
         #Large Fraction on Right Side
         self.auto_fraction = self.generate_fraction_image(extras.Fraction(0,0), ((WIDTH-box_right)/2, HEIGHT/2),  (box_right + (WIDTH-box_right)/2, HEIGHT/2))
 
@@ -66,6 +66,9 @@ class FractionTools(spyral.Scene):
         done_text = extras.Text("Done!", (200, 50), (WIDTH - 105, HEIGHT - 30), layer='top', group=self.main_group)
         exit_button.clicked = lambda: spyral.director.pop()
         exit_button.dragging = False
+
+        self.give_tutorial(operation, fractions)
+        
     def update(self, dt):
         #Check for any new/relevant events
         for event in self.event_handler.get():
@@ -182,3 +185,24 @@ class FractionTools(spyral.Scene):
             self.auto_fraction.remove_child(child)
         self.auto_fraction = self.generate_fraction_image(fraction_to_draw, self.auto_fraction.image.get_size(), self.auto_fraction.position)
 
+    def give_tutorial(self, operation, fractions):
+        problem_description = self.problem_description(operation, fractions)
+        
+
+    def problem_description(self, operation, fractions):
+        #Description of problem you are solving
+        if operation == '+':
+            operator = "add"
+            preposition = "to"
+        elif operation == '-':
+            operator = "subtract"
+            preposition = "from"
+        elif operation == '*':
+            operator = "multiply"
+            preposition = "with"
+        fraction_one = str(fractions[0].numerator) + "/" + str(fractions[0].denominator)
+        fraction_two = str(fractions[1].numerator) + "/" + str(fractions[1].denominator)
+        problem_description = extras.MultiLineText("You are trying to " + operator + " " + fraction_one + " " + preposition + " " + fraction_two + "\n"
+                                                   "So the first thing we need to do is drag the sliders to match the fractions in the equation", (700,150), (10,HEIGHT-10), font_size=30 ,anchor='bottomleft', group=self.main_group)
+        
+        return problem_description
