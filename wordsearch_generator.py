@@ -4,7 +4,7 @@ import random
 # for the generator
 def getvocab(filename = '/vocablist.txt'):
     words = []
-    definitions = []
+    definitionlist = []
     fd = open(filename, 'r')
     try:
 	for line in fd.readlines():
@@ -13,14 +13,22 @@ def getvocab(filename = '/vocablist.txt'):
 	    line = line.strip().lower()	    #change .lower()
 	    if ":" in line:
 		word, definition = line.split(' : ', 1)
-		words.append(word)
-		definitions.append(definition)
+		words.append(word.upper())
+		definition = definition.capitalize()
+		definitionlist.append(definition)
     finally:
 	fd.close()
+
+    definitions = []
+    number = 0
+    for defn in definitionlist:
+	number += 1
+	definitions.append("{0}. {1}".format(number, defn))
+
     return words, definitions
 
 # A few utilities to be used in positioning the words and making the grid
-alphabet = "abcdefghijklmnopqrstuvwxyz"
+alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 # Easy only has words going to the right and down
 # Medium has those of easy as well as reverse order words and forward diagonals up and down
@@ -113,13 +121,16 @@ class Grid(object):
 
 # Puts the grid together calling the function to lay the words on the grid
 # and then fills the rest of the grid with random letters, then returns grid
-def make_grid(difficulty = "medium", words = [], tries = 100, height = None, width = None):
+def make_grid(difficulty = "medium", words = [], tries = 100, height = 12, width = 12):
     
-    if height != None and width != None:
-	height = height
-	width = width
-    else:
-	width = height = len(max(words, key=len)) + 2
+    height = 9
+    width = 9
+    if (difficulty == "medium"):
+	height += 1
+	width += 1
+    elif (difficulty == "hard"):
+	height += 3
+	width += 3 
 
     # Makes a grid and tries up to 100 times to place the words
     while True:

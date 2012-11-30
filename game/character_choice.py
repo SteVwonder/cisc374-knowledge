@@ -18,21 +18,22 @@ class CharacterPick(spyral.Scene):
 
 	self.name = 'Hero'
 
-	self.textbox = extras.TextBox("Name:", (500, 800), "Nice name!", width = 200, height = 50, font_size = 22)
+	self.textbox = extras.TextBox("Name:", (500, 800), "Nice name!", width = 200, height = 50, font_size = 22, dcolor=(0,0,0), tcolor=(0,255,0))
 	self.textbox.selecting = 1
 
-	male_button = extras.Button(image_size = (350, 500), position = (WIDTH/4, 325), layer = 'bottom')
-	female_button = extras.Button(image_size = (350, 500), position = (3*WIDTH/4, 325), layer = 'bottom')
+	male_button = extras.Button(image_size = (350, 400), position = (WIDTH/4, 475), filename = "images/VikingMale.png", layer = 'bottom')
+	female_button = extras.Button(image_size = (350, 400), position = (3*WIDTH/4, 475), filename = "images/VikingFemale.png", layer = 'bottom')
 
-	male_text = extras.Text("Male", (350, 500), (WIDTH/4, 325), layer = 'top', font_size = 22)
-	female_text = extras.Text("Female", (350, 500), (3*WIDTH/4, 325), layer = 'top', font_size = 22)
+	title_text = extras.Text("Who is brave enough to save the village?", (1100, 150), (WIDTH/2, 50), layer = 'top', font_size = 36)
+	#male_text = extras.Text("Male", (350, 500), (WIDTH/4, 325), layer = 'top', font_size = 22)
+	#female_text = extras.Text("Female", (350, 500), (3*WIDTH/4, 325), layer = 'top', font_size = 22)
 
 	male_button.clicked = lambda: self.char_chosen()
 	female_button.clicked = lambda: self.char_chosen()
 	#self.textbox.button.clicked = lambda: self.textbox.button.select(self)
 
-	self.buttons.add(male_button, female_button)#, self.textbox.button)
-	self.texts.add(male_text, female_text, self.textbox.description, self.textbox.btext)
+	self.buttons.add(male_button, female_button)
+	self.texts.add(self.textbox.description, self.textbox.btext, title_text)
 
     def char_chosen(self):
 	for sprite in self.buttons.sprites():
@@ -45,8 +46,7 @@ class CharacterPick(spyral.Scene):
 	    self.name = name
 
 	move_on_text = extras.Text("< Yes >", (150, 100), (975, 650), layer = 'top', font_size = 22, color = (0,0,0))
-	chosen_text = extras.MultiLineText(["Congratulation {0}!".format(self.name), "You have been chosen to save the kingdom", "Are you ready?"], (850, 400), (WIDTH/2, 450), 1, anchor='center', layer = 'top', font_size = 34)
-	#chosen_text = extras.MultiLineText("Congratulations {0}! You have been chosen to save the kingdom, Are you ready? Also lets test this whole text wrapping thing. I think it could be neat if I get it working".format(self.name), (850, 400), (WIDTH/2, 450), anchor='center', layer = 'top', font_size = 20)
+	chosen_text = extras.MultiLineText(["Congratulations, {0}!".format(self.name), "You have been chosen to save the kingdom", "Are you ready?"], (850, 400), (WIDTH/2, 450), anchor='center', layer = 'top', font_size = 34)
 
 	move_on_button = extras.Button(image_size = (900, 500), position = (WIDTH/2, HEIGHT/2), anchor = 'center', layer = 'bottom')
 	move_on_button.clicked = lambda: spyral.director.push(village_selection.VillageSelection())
@@ -62,7 +62,10 @@ class CharacterPick(spyral.Scene):
 		sprite.clicked()
 	
     def on_enter(self):
-	background = spyral.Image(filename="images/Title Screen.png")
+	background = spyral.Image(size=(WIDTH,HEIGHT))
+	background.fill((255,255,255))
+	bg_img = spyral.Image(filename="images/BB_who_resize.png")
+	background.draw_image(bg_img, ((WIDTH-bg_img.get_width())/2,(HEIGHT-bg_img.get_height())/5))
 	self.camera.set_background(background)
 
     def render(self):

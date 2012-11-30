@@ -4,7 +4,7 @@ import operator
 
 pyFraction = __import__('fractions')
 
-FONT_PATH = "fonts/00TT.TTF"
+FONT_PATH = "cooper.ttf"
 
 #Essentially just a wrapper for a rectangle with click detection.
 #I have been using it as the base for a button.  Once you make one of these,
@@ -55,9 +55,12 @@ class Text(spyral.Sprite):
 # by using a blank image with the size specifications and spyral.Image's draw_image
 # to draw each line of text onto the basic image. Takes a list of separate lines,
 # one string containing newlines or a plain string. Also includes text-wrapping
-#            spacing option : horizontal space between text lines, 0 spaces evenly
+#   -- spacing : vertical space between text lines, 0 spaces evenly over the height
+#   -- columns : allows formatting with columns, following argument is an option
+#   -- order   : "topdown" fills the first column first, second column second, etc.
+#		 "leftright" fills the first row first, second row second, etc.
 class MultiLineText(spyral.Sprite):
-    def __init__(self, text, image_size, position, spacing=0, anchor='topleft', layer='all', font_size=14, color=(0,0,0), group=None):
+    def __init__(self, text, image_size, position, spacing=0, columns=1, order="topdown", alignment='left', anchor='topleft', layer='all', font_size=14, color=(0,0,0), group=None):
 
 	super(MultiLineText, self).__init__(group=group)
 	self.font_size = font_size
@@ -66,7 +69,11 @@ class MultiLineText(spyral.Sprite):
 	self.anchor = anchor
 	self.pos = position
 	self.spacing = spacing
+	self.columns = columns
+	self.order = order
+	self.alignment = alignment
 	self.image = spyral.Image(size=image_size)
+	self.wdth = (image_size[0]/columns)
 	self.texts = []
 	self.text = []
 
@@ -81,9 +88,9 @@ class MultiLineText(spyral.Sprite):
 	    nline = line
 	    while (True):
 		proj_width = spyral.Font(FONT_PATH, font_size, color).get_size(nline)[0]
-		end = image_size[0]*len(nline)/proj_width
-		start = 9*image_size[0]*len(nline)/proj_width/10
-		if (proj_width < image_size[0] or start < 0 ):
+		end = self.wdth*len(nline)/proj_width
+		start = 9*self.wdth*len(nline)/proj_width/10
+		if ((proj_width < self.wdth) or (start < 0 )):
 		    break
 
 		space = nline.find(' ', start, end)
@@ -93,15 +100,26 @@ class MultiLineText(spyral.Sprite):
 		
 		self.texts.append(spyral.Font(FONT_PATH, font_size, color).render(nline[:space]))
 		nline = nline[space+1:]
-
+		
 	    self.texts.append(spyral.Font(FONT_PATH, font_size, color).render(nline))
 	
 	if (spacing == 0):
-	    self.spacing = (image_size[1] - (len(self.texts)*font_size))/len(self.texts)
+	    self.spacing = (((image_size[1]*self.columns) - (len(self.texts)*font_size))/len(self.texts))
+
 	offset = 0
+	column_pos = 0
 	for line in self.texts:
-	    self.image.draw_image(line, (0, offset))
-	    offset += self.spacing + font_size
+	    self.image.draw_image(line, (column_pos, offset))
+	    if (self.columns > 1) and (self.order == "leftright"):
+		column_pos += self.wdth
+		if (column_pos >= image_size[0]):
+		    column_pos = 0
+		    offset += (self.spacing + font_size)
+	    else:
+		offset += (self.spacing + font_size)
+		if (self.columns > 1) and (offset >= image_size[1]):
+		    offset = 0
+		    column_pos += self.wdth
 
 class TextBox(spyral.Sprite):
     def __init__(self,dtext,position,answer, button_image="",width=200,height=20,anchor='topleft',layer='all',font_size=14,dcolor=(255,255,255),tcolor=(255,255,0)):
@@ -266,3 +284,11 @@ class Fraction():
                 b, a = a%b, b
             return a
         return ( a * b ) / gcd(a, b)
+
+class OverGrid(spyral.Sprite):
+    def __init__(self, width, height):
+	self.width = width
+	self.height = height
+	self.data = ['.'] * (width * height)
+	self.choices = ['0'] * (width * height)
+	self.words = []
