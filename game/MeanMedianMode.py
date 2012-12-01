@@ -116,13 +116,13 @@ class MeanMedianMode(spyral.Scene):
         #self.text.add(self.conversation.next)
         #self.text.add(self.conversation.visibletext)
         self.conversation = 0
-        
-        for count in range(2,random.randrange(5,8,2)):
+        self.totalnumber = random.randrange(5,8,2)
+        for count in range(2,self.totalnumber):
             nvil = Villager(random.randrange(200+(WIDTH-400)),random.randrange(200+(HEIGHT-500)))
-            if(self.createmode > 0)and(self.createmode < random.randrange(2,4)):
+            if(self.createmode > 0)and(self.createmode < random.randrange(2,4))and(self.totalnumber != 5):
                 nvil.set_number(self.modenum)
                 self.createmode += 1
-            if(self.createmode == 0)and(self.modenum == 0):
+            if(self.createmode == 0)and(self.modenum == 0)and(self.totalnumber != 5):
                 self.modenum = nvil.number
                 self.createmode += 1
             self.VillagerList.append(nvil)
@@ -151,7 +151,7 @@ class MeanMedianMode(spyral.Scene):
         self.modetext = extras.TextBox("Enter Mode",(WIDTH/2,HEIGHT-140),self.get_mode(self.NumberList))
 
         rnd = random.randrange(0,100)            
-        if(len(self.VillagerList) <= 4):
+        if(len(self.VillagerList) <= 3):
             if(rnd < 90):
                 self.meantext.visible = 1
                 self.mediantext.visible = 0
