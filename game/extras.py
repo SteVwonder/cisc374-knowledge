@@ -184,7 +184,7 @@ class TextBox(spyral.Sprite):
     def move(self,pos):
         return 0
     def get_answer(self):
-        if(self.selecting == 1) and (sel.visible == 1):
+        if(self.selecting == 1) and (self.visible == 1):
             self.set_text(filter(lambda x: x.isdigit(), self.get_text()))
             if(self.get_text() == ""):
                 self.set_text("-1")
