@@ -109,15 +109,20 @@ class MeanMedianMode(spyral.Scene):
         self.VillagerList = []
         self.NumberList = []
         
-        #self.ListofText = ["Hey this is a conversation Box.",
-        #                   "The problem is I cannot get more than one line to draw.",
-        #                   "Using multiline strings will not work so instead",
-        #                   "We should just use it like this."]
-        #self.conversation = conversation.Conversation(self.ListofText,(0,HEIGHT),self,w=WIDTH,h=HEIGHT,tcolor=(0,0,0))
-        #self.group.add(self.conversation.button)
-        #self.text.add(self.conversation.next)
-        #self.text.add(self.conversation.visibletext)
-        self.conversation = 0
+        self.ListofText = ["Hey this is a conversation Box.",
+                           "The problem is I cannot get more than one line to draw.",
+                           "Using multiline strings will not work so instead",
+                           "We should just use it like this."]
+        self.ListofNames = ["Random Villager #1",
+                           "Mohamed Dicko",
+                           "Super Grandiose Man of Infinite Wisdom",
+                           "A Pair of Pants"]
+        self.conversation = conversation.Conversation([self.ListofNames,self.ListofText],(0,HEIGHT+10),self,w=WIDTH,h=HEIGHT,tcolor=(0,0,0))
+        self.group.add(self.conversation.button)
+        self.text.add(self.conversation.next)
+        self.text.add(self.conversation.visibletext)
+        self.text.add(self.conversation.nametext)
+
         self.totalnumber = random.randrange(5,8,2)
         for count in range(2,self.totalnumber):
             nvil = Villager(random.randrange(200+(WIDTH-400)),random.randrange(200+(HEIGHT-500)))

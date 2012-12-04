@@ -14,9 +14,10 @@ class Conversation(spyral.Sprite):
         self.tlist = tlist
 
         self.wdth = w
-        self.heght = h/6
-        
-        self.tlist = tlist
+        self.heght = (h/6)+10
+
+        self.namelist = tlist[0]
+        self.tlist = tlist[1]
         self.position = position
         self.button_image = button_image
         self.anchor = anchor
@@ -29,7 +30,8 @@ class Conversation(spyral.Sprite):
         self.currenttext = 0
 
         self.ctext = self.tlist[self.currenttext]
-        self.visibletext = extras.Text(self.ctext[:self.currentposition], 64, (self.position[0]+8,self.position[1]-(self.heght)+5),anchor='topleft',color=self.tcolor,font_size=self.font_size,layer=self.layer)
+        self.visibletext = extras.Text(self.ctext[:self.currentposition], 64, (self.position[0]+8,self.position[1]-(self.heght)+35),anchor='topleft',color=self.tcolor,font_size=self.font_size,layer=self.layer)
+        self.nametext = extras.Text(self.namelist[self.currenttext]+":",64,(self.position[0]+8,self.position[1]-(self.heght)+5),anchor='topleft',color=self.tcolor,font_size=self.font_size,layer=self.layer)
         self.visibletext.layer = self.layer
         
         self.button = spyral.Sprite()
@@ -40,7 +42,7 @@ class Conversation(spyral.Sprite):
         self.button.layer = "top"
         self.button.visible = 1
 
-        self.next = extras.Text("Press Z",64,(self.wdth,self.position[1]-3),anchor='bottomright',color=self.tcolor,font_size=self.font_size,layer=self.layer)
+        self.next = extras.Text("Press Z",64,(self.wdth,self.position[1]-8),anchor='bottomright',color=self.tcolor,font_size=self.font_size,layer=self.layer)
         self.next.visible = 0
         
         if(button_image != ""):
@@ -48,17 +50,17 @@ class Conversation(spyral.Sprite):
     def update_text(self):
         if(self.currentposition < len(self.ctext)):
             self.currentposition += 1
-            #self.visibletext.set_text(self.ctext[:self.currentposition])
+            self.visibletext.set_text(self.ctext[:self.currentposition])
             self.visibletext.layer = self.layer
 
-            #self.button.image = spyral.Image(size = (self.wdth,self.heght))
-            #self.button.image.fill((0,255,0))
+            self.button.image = spyral.Image(size = (self.wdth,self.heght))
+            self.button.image.fill((0,255,0))
             self.next.visible = 0
         if(self.currentposition >= len(self.ctext)):
             self.next.visible = 1
     def quick_end(self):
         self.currentposition = len(self.ctext)
-        #self.visibletext.set_text(self.ctext[:self.currentposition])
+        self.visibletext.set_text(self.ctext[:self.currentposition])
         self.visibletext.layer = self.layer
         print "Ending Text"
     def to_next(self):
@@ -66,7 +68,8 @@ class Conversation(spyral.Sprite):
             self.currentposition = 0
             self.currenttext += 1
             self.ctext = self.tlist[self.currenttext]
-            #self.visibletext.set_text(self.ctext[:self.currentposition])
+            self.visibletext.set_text(self.ctext[:self.currentposition])
+            self.nametext.set_text(self.namelist[self.currenttext]+":")
             self.visibletext.layer = self.layer
             return
         if(self.currenttext >= len(self.tlist)-1):
