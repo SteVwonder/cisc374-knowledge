@@ -24,13 +24,33 @@ class VillageSelection(spyral.Scene):
         #Do not draw this layer, just used to group together clickable buttons
         self.buttons = spyral.Group(self.camera)
         self.texts = spyral.Group(self.camera)
+        self.stars = spyral.Group(self.camera)
+        
         self.main_group = spyral.Group(self.camera)
+        
         self.fraction_difficulty = 1
+        self.MMM_difficulty = 1
+        self.Vocab_difficulty = 1
+
+        self.fstars = []
+        self.mstars = []
+        self.vstars = []
+        
+        #Add stars under Buttons
+        for x in range(0,self.fraction_difficulty):
+            self.fstars.append(extras.Button(filename="images/Star.png",layer='bottom',position=(430+(90*x),775)))
+            self.stars.add(self.fstars[x])
+        for x in range(0,self.MMM_difficulty):
+            self.mstars.append(extras.Button(filename="images/Star.png",layer='bottom',position=(212+(90*x),370)))
+            self.stars.add(self.mstars[x])
+        for x in range(0,self.Vocab_difficulty):
+            self.vstars.append(extras.Button(filename="images/Star.png",layer='bottom',position=(537+(90*x),370)))
+            self.stars.add(self.vstars[x])
 
         #Add in our button for the fraction game, notice how I set the layer
         fraction_game_button = extras.Button(image_size=(200, 50), position=(522, 725), layer='bottom',filename="images/Buttons/Fraction Game 1.png")
         play_MMM = extras.Button(image_size=(200, 50), position=(304, 320), layer = 'bottom',filename="images/Buttons/Mean Median Mode 1.png")
-	vocab_search_button = extras.Button(image_size=(200, 50), position=(629, 320), layer='bottom',filename="images/Buttons/Vocab Search 1.png")        
+	vocab_search_button = extras.Button(image_size=(200, 50), position=(629, 320), layer='bottom',filename="images/Buttons/Vocab Search 1.png")
 
         #Need to assign an action to the button for when it is clicked
         #We do this by using lambda functions.  So when the button is
@@ -81,6 +101,7 @@ class VillageSelection(spyral.Scene):
         self.main_group.draw()
         self.buttons.draw()
         self.texts.draw()
+        self.stars.draw()
 
     #Check for someone trying to quit
     #Also check for mouse clicks, if you detect one, check if

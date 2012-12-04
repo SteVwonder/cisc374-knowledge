@@ -39,7 +39,7 @@ class Text(spyral.Sprite):
         #self.image = spyral.Image(size=image_size)
         self.font_size = font_size
         self.color = color
-        self.image = spyral.Font(FONT_PATH, font_size, color).render(text)
+        self.image = spyral.Font(FONT_PATH, self.font_size, color).render(text)
         self.layer = layer
         self.anchor = anchor
         self.pos = position
@@ -122,7 +122,7 @@ class MultiLineText(spyral.Sprite):
 		    column_pos += self.wdth
 
 class TextBox(spyral.Sprite):
-    def __init__(self,dtext,position,answer, button_image="",width=200,height=20,anchor='topleft',layer='all',font_size=14,dcolor=(255,255,255),tcolor=(255,255,0)):
+    def __init__(self,dtext,position,answer, button_image="",width=200,height=30,anchor='center',layer='all',font_size=24,dcolor=(0,0,0),tcolor=(255,255,0)):
 
         super(TextBox,self).__init__()
         self.answer = answer
@@ -146,7 +146,7 @@ class TextBox(spyral.Sprite):
         self.button.image = spyral.Image(size = (width,height))
         self.button.image.fill((255,0,255))
         self.button.anchor = self.anchor
-        self.button.pos = (self.position[0],self.position[1]-5)
+        self.button.pos = (self.position[0],self.position[1]+1)
         self.button.layer = "bottom"
 
         self.btext = Text("",64,position,layer=100,anchor=self.anchor,color=self.tcolor,font_size=self.font_size)

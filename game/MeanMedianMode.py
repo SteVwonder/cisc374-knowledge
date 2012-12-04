@@ -35,17 +35,19 @@ class Villager(spyral.Sprite):
             fle = "images/Character Horn Girl.png"
         self.image = spyral.Image(filename=fle)
         self.anchor = 'center'
+        self.layer = 'bottom'
         self.pos = (x,y)
         self.x = x
         self.y = y
 
         self.number = random.randrange(1,15)
-        self.text = extras.Text(str(self.number),64,self.pos,color=(255,255,255))
-        self.text.pos = (x,y+self.voff)
+        self.text = extras.Text(str(self.number),64,(x,y+self.voff),color=(255,255,255),font_size=24)
+        self.text.font_size = 24
         self.text.anchor = 'center'
-        self.text.layer = 100
+        self.text.layer = "top"
         self.text.x = x
         self.text.y = y+self.voff
+        self.text.pos = (x,y+self.voff)
 
         self.billboard = spyral.Sprite()
         self.billboard.image = spyral.Image(filename="images/Billboard.png")
@@ -53,7 +55,7 @@ class Villager(spyral.Sprite):
         self.billboard.pos = (x,y)
         self.billboard.x = x
         self.billboard.y = y+self.voff
-        self.billboard.layer = 'top'
+        self.billboard.layer = 'middle'
 
         if(self.text.y != y):
             print "Not ON TOp Of Head!"
@@ -74,7 +76,7 @@ class Villager(spyral.Sprite):
         self.selected = 0
     def set_number(self, number):
         self.number = number
-        self.text = extras.Text(str(number),64,self.pos,color=(255,255,255))
+        self.text = extras.Text(str(number),64,(self.x,self.y+self.voff),color=(255,255,255))
         
 class MeanMedianMode(spyral.Scene):
     def __init__(self,correct=0):
@@ -87,7 +89,7 @@ class MeanMedianMode(spyral.Scene):
         
         self.correct = correct
         print correct
-        self.camera = self.parent_camera.make_child(virtual_size = (WIDTH, HEIGHT), layers=['bottom', 'top'])
+        self.camera = self.parent_camera.make_child(virtual_size = (WIDTH, HEIGHT), layers=['bottom', 'middle','top'])
 
         self.group = spyral.Group(self.camera)
         self.text = spyral.Group(self.camera)
