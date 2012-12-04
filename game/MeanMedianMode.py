@@ -76,7 +76,7 @@ class Villager(spyral.Sprite):
         self.selected = 0
     def set_number(self, number):
         self.number = number
-        self.text = extras.Text(str(number),64,(self.x,self.y+self.voff),color=(255,255,255))
+        self.text = extras.Text(str(number),64,(self.x,self.y+self.voff),color=(255,255,255), font_size=24)
         
 class MeanMedianMode(spyral.Scene):
     def __init__(self,correct=0):
