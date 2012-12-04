@@ -56,7 +56,7 @@ class Conversation(spyral.Sprite):
             self.button.image = spyral.Image(size = (self.wdth,self.heght))
             self.button.image.fill((0,255,0))
             self.next.visible = 0
-        if(self.currentposition >= len(self.ctext)):
+        if(self.currentposition >= len(self.ctext)) and(self.button.visible == 1):
             self.next.visible = 1
     def quick_end(self):
         self.currentposition = len(self.ctext)
@@ -76,6 +76,8 @@ class Conversation(spyral.Sprite):
             self.visible = 0
             self.visibletext.visible = 0
             self.button.visible = 0
+            self.next.visible = 0
+            self.nametext.visible = 0
             return
         print "Going to next text"
     def set_text(self, tlist):
