@@ -35,17 +35,8 @@ class VillageSelection(spyral.Scene):
         self.fstars = []
         self.mstars = []
         self.vstars = []
-        
-        #Add stars under Buttons
-        for x in range(0,self.fraction_difficulty):
-            self.fstars.append(extras.Button(filename="images/Star.png",layer='bottom',position=(430+(90*x),775)))
-            self.stars.add(self.fstars[x])
-        for x in range(0,self.MMM_difficulty):
-            self.mstars.append(extras.Button(filename="images/Star.png",layer='bottom',position=(212+(90*x),370)))
-            self.stars.add(self.mstars[x])
-        for x in range(0,self.Vocab_difficulty):
-            self.vstars.append(extras.Button(filename="images/Star.png",layer='bottom',position=(537+(90*x),370)))
-            self.stars.add(self.vstars[x])
+
+        self.setupstars()
 
         #Add in our button for the fraction game, notice how I set the layer
         fraction_game_button = extras.Button(image_size=(200, 50), position=(522, 725), layer='bottom',filename="images/Buttons/Fraction Game 1.png")
@@ -86,7 +77,25 @@ class VillageSelection(spyral.Scene):
             if sprite.check_click(local_position):
                 #This method needs to be set with a lambda function
                 sprite.clicked()
-                
+
+    def setupstars(self):
+        #Add stars under Buttons
+        for x in range(self.fraction_difficulty):
+            self.fstars.append(extras.Button(filename="images/Star.png",layer='bottom',position=(430+(90*x),775)))
+            self.stars.add(self.fstars[x])
+        for x in range(0,self.MMM_difficulty):
+            self.mstars.append(extras.Button(filename="images/Star.png",layer='bottom',position=(212+(90*x),370)))
+            self.stars.add(self.mstars[x])
+        for x in range(0,self.Vocab_difficulty):
+            self.vstars.append(extras.Button(filename="images/Star.png",layer='bottom',position=(537+(90*x),370)))
+            self.stars.add(self.vstars[x])
+
+    def purgestars(self):
+        self.fstars = []
+        self.mstars = []
+        self.vstars = []
+        self.stars.empty()
+        
     #Set the background of the scene
     def on_enter(self):
         #if self.fraction_difficulty > 4:
@@ -96,6 +105,8 @@ class VillageSelection(spyral.Scene):
         self.fraction_game_text._expire_static()
         background = spyral.Image(filename="images/BG.png")
         self.camera.set_background(background)
+        self.purgestars()
+        self.setupstars()
 
     def render(self):
         self.main_group.draw()
@@ -118,4 +129,4 @@ class VillageSelection(spyral.Scene):
                     return
             elif event['type'] == 'MOUSEBUTTONDOWN':
                 self.check_click(event['pos'], self.buttons.sprites())
-                print event['pos']
+                #print event['pos']
