@@ -7,14 +7,14 @@ FONT_PATH = "fonts/00TT.TTF"
 
 
 class Conversation(spyral.Sprite):
-    def __init__(self,tlist,position,scene,w=1200,h=900,button_image="",anchor='bottomleft',layer=100,font_size=24,dcolor=(255,255,255),tcolor=(255,0,255)):
+    def __init__(self,tlist,position,scene,w=1200,h=900,button_image="images/Button.png",anchor='bottomleft',layer=100,font_size=24,dcolor=(255,255,255),tcolor=(255,0,255),filename="images/Button.png"):
 
         super(Conversation,self).__init__()
         self.scene = scene
         self.tlist = tlist
 
         self.wdth = w
-        self.heght = (h/6)+10
+        self.heght = (h/6)+40
 
         self.namelist = tlist[0]
         self.tlist = tlist[1]
@@ -37,6 +37,7 @@ class Conversation(spyral.Sprite):
         self.button = spyral.Sprite()
         self.button.image = spyral.Image(size = (self.wdth,self.heght))
         self.button.image.fill((0,255,0))
+        self.button.image = spyral.Image(filename)
         self.button.anchor = self.anchor
         self.button.pos = (self.position[0],self.position[1]-5)
         self.button.layer = "top"
@@ -53,8 +54,7 @@ class Conversation(spyral.Sprite):
             self.visibletext.set_text(self.ctext[:self.currentposition])
             self.visibletext.layer = self.layer
 
-            self.button.image = spyral.Image(size = (self.wdth,self.heght))
-            self.button.image.fill((0,255,0))
+            self.button.image = spyral.Image(filename=self.button_image)
             self.next.visible = 0
         if(self.currentposition >= len(self.ctext)) and(self.button.visible == 1):
             self.next.visible = 1

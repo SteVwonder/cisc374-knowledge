@@ -40,8 +40,19 @@ class VillageSelection(spyral.Scene):
 
         #Add in our button for the fraction game, notice how I set the layer
         fraction_game_button = extras.Button(image_size=(200, 50), position=(522, 725), layer='bottom',filename="images/Buttons/Fraction Game 1.png")
+        fraction_game_button2 = extras.Button(image_size=(200, 50), position=(522, 725-168), layer='bottom',filename="images/town3.png")
         play_MMM = extras.Button(image_size=(200, 50), position=(304, 320), layer = 'bottom',filename="images/Buttons/Mean Median Mode 1.png")
+        play_MMM2 = extras.Button(image_size=(200, 50), position=(316, 320-156), layer = 'bottom',filename="images/town1.png")
 	vocab_search_button = extras.Button(image_size=(200, 50), position=(629, 320), layer='bottom',filename="images/Buttons/Vocab Search 1.png")
+	vocab_search_button2 = extras.Button(image_size=(200, 50), position=(623, 320-162), layer='bottom',filename="images/town2.png")
+
+        fraction_game_button.layer = 'top'
+        play_MMM.layer = 'top'
+        vocab_search_button.layer = 'top'
+        
+	fraction_game_button2.layer = 'bottom'
+	play_MMM2.layer = 'bottom'
+	vocab_search_button2.layer = 'bottom'
 
         #Need to assign an action to the button for when it is clicked
         #We do this by using lambda functions.  So when the button is
@@ -59,14 +70,18 @@ class VillageSelection(spyral.Scene):
 
         #Using two different groups for text and buttons
         #That way we only have to check for clicks on the buttons
-        self.buttons.add(fraction_game_button, vocab_search_button,play_MMM)
+        self.buttons.add(fraction_game_button, fraction_game_button2,vocab_search_button,play_MMM)
 
         fraction_game_button.clicked = lambda: spyral.director.push(fraction_game.FractionGame(self.fraction_difficulty))
+        play_MMM.clicked = lambda: spyral.director.push(MeanMedianMode.MeanMedianMode(self.MMM_difficulty))
+
+        fraction_game_button2.clicked = lambda: spyral.director.push(fraction_game.FractionGame(self.fraction_difficulty))
+        play_MMM2.clicked = lambda: spyral.director.push(MeanMedianMode.MeanMedianMode(self.MMM_difficulty))
         
         #Using two different groups for text and buttons
         #That way we only have to check for clicks on the buttons
         
-        self.buttons.add(fraction_game_button, vocab_search_button, play_MMM)
+        self.buttons.add(fraction_game_button, fraction_game_button2,vocab_search_button,vocab_search_button2, play_MMM,play_MMM2)
         self.texts.add(self.fraction_game_text, vocab_search_text, play_MMMtext)
     #Converts the position of the click from real to virtual
     #Then checks to see if any of the sprites in the button
@@ -76,19 +91,38 @@ class VillageSelection(spyral.Scene):
         for sprite in group:
             if sprite.check_click(local_position):
                 #This method needs to be set with a lambda function
-                sprite.clicked()
+                return sprite.clicked()
+        for sprite in self.fstars:
+            if sprite.check_click(local_position):
+                #This method needs to be set with a lambda function
+                return sprite.clicked()
+        for sprite in self.mstars:
+            if sprite.check_click(local_position):
+                #This method needs to be set with a lambda function
+                return sprite.clicked()
+        for sprite in self.vstars:
+            if sprite.check_click(local_position):
+                #This method needs to be set with a lambda function
+                return sprite.clicked()
 
     def setupstars(self):
         #Add stars under Buttons
+        self.cbutton = 0
         for x in range(self.fraction_difficulty):
-            self.fstars.append(extras.Button(filename="images/Star.png",layer='bottom',position=(430+(90*x),775)))
+            self.cbutton = extras.Button(filename="images/Star.png",layer='bottom',position=(430+(90*x),775))
+            self.fstars.append(self.cbutton)
             self.stars.add(self.fstars[x])
+            self.cbutton.clicked = lambda: spyral.director.push(fraction_game.FractionGame(x+1))
         for x in range(0,self.MMM_difficulty):
-            self.mstars.append(extras.Button(filename="images/Star.png",layer='bottom',position=(212+(90*x),370)))
+            self.cbutton = extras.Button(filename="images/Star.png",layer='bottom',position=(212+(90*x),370))
+            self.mstars.append(self.cbutton)
             self.stars.add(self.mstars[x])
+            self.cbutton.clicked = lambda: spyral.director.push(MeanMedianMode.MeanMedianMode(x+1))
         for x in range(0,self.Vocab_difficulty):
-            self.vstars.append(extras.Button(filename="images/Star.png",layer='bottom',position=(537+(90*x),370)))
+            self.cbutton = extras.Button(filename="images/Star.png",layer='bottom',position=(537+(90*x),370))
+            self.vstars.append(self.cbutton)
             self.stars.add(self.vstars[x])
+            self.cbutton.clicked = lambda: spyral.director.push(vocab_search.VocabScene(x+1))
 
     def purgestars(self):
         self.fstars = []

@@ -141,6 +141,7 @@ class TextBox(spyral.Sprite):
         self.dcolor = dcolor
 
         self.description = Text(dtext,64,(position[0],position[1]-30),anchor=self.anchor,color=self.dcolor,font_size=self.font_size)
+        self.description.layer = "bottom"
         
         self.button = spyral.Sprite()
         self.button.image = spyral.Image(size = (width,height))
