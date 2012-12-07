@@ -44,6 +44,9 @@ class VillageSelection(spyral.Scene):
 	vocab_search_button = extras.Button(image_size=(200, 50), position=(629, 320), layer='bottom',filename="images/Buttons/Vocab Search 1.png")
 	vocab_search_button2 = extras.Button(image_size=(200, 50), position=(623, 320-162), layer='bottom',filename="images/town2.png")
 
+        play_MMM.layer = 'top'
+        vocab_search_button.layer = 'top'
+        
         fraction_game_button.layer = 'top'
         play_MMM.layer = 'top'
         vocab_search_button.layer = 'top'
@@ -96,22 +99,35 @@ class VillageSelection(spyral.Scene):
 
     def setupstars(self):
         #Add stars under Buttons
-        self.cbutton = 0
+        self.cbutton = []
         for x in range(self.fraction_difficulty):
-            self.cbutton = extras.Button(filename="images/Star.png",layer='bottom',position=(430+(90*x),775))
-            self.fstars.append(self.cbutton)
+            self.cbutton.append(extras.Button(filename="images/Star.png",layer='bottom',position=(430+(90*x),775)))
+            self.fstars.append(self.cbutton[-1])
+            self.cbutton[-1].text = extras.Text(str(x+1),64,(430+(90*x),782),color=(255,0,255),font_size=24)
+            self.cbutton[-1].text.layer = "all"
+            self.fstars[-1].layer = 'top'
             self.stars.add(self.fstars[x])
-            self.cbutton.clicked = lambda: spyral.director.push(fraction_game.FractionGame(x+1))
+            self.texts.add(self.cbutton[-1].text)
+            self.cbutton[-1].clicked = lambda: spyral.director.push(fraction_game.FractionGame(x+1))
         for x in range(0,self.MMM_difficulty):
-            self.cbutton = extras.Button(filename="images/Star.png",layer='bottom',position=(212+(90*x),370))
-            self.mstars.append(self.cbutton)
+            self.cbutton.append(extras.Button(filename="images/Star.png",layer='bottom',position=(212+(90*x),370)))
+            self.mstars.append(self.cbutton[-1])
+            self.cbutton[-1].text = extras.Text(str(x+1),64,(212+(90*x),378),color=(255,0,255),font_size=24)
+            self.cbutton[-1].text.layer = "all"
+            self.mstars[-1].layer = 'top'
             self.stars.add(self.mstars[x])
-            self.cbutton.clicked = lambda: spyral.director.push(MeanMedianMode.MeanMedianMode(x+1))
+            self.texts.add(self.cbutton[-1].text)
+            self.cbutton[-1].clicked = lambda: spyral.director.push(MeanMedianMode.MeanMedianMode(x+1))
         for x in range(0,self.Vocab_difficulty):
-            self.cbutton = extras.Button(filename="images/Star.png",layer='bottom',position=(537+(90*x),370))
-            self.vstars.append(self.cbutton)
+            self.cbutton.append(extras.Button(filename="images/Star.png",layer='bottom',position=(537+(90*x),370)))
+            self.vstars.append(self.cbutton[-1])
+            self.cbutton[-1].text = extras.Text(str(x+1),64,(537+(90*x),378),color=(255,0,255),font_size=24)
+            self.cbutton[-1].text.layer = "all"
+            self.vstars[-1].layer = 'top'
             self.stars.add(self.vstars[x])
-            self.cbutton.clicked = lambda: spyral.director.push(vocab_search.VocabScene(x+1))
+            self.texts.add(self.cbutton[-1].text)
+            self.cbutton[-1].clicked = lambda: spyral.director.push(vocab_search.VocabScene(x+1))
+        print str(len(self.cbutton))
 
     def purgestars(self):
         self.fstars = []

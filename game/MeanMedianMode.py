@@ -92,7 +92,7 @@ class MeanMedianMode(spyral.Scene):
             self.biggest = 15
         
         self.correct = correct
-        print correct
+        print "Correct Answer IS: "+str(correct)
         self.camera = self.parent_camera.make_child(virtual_size = (WIDTH, HEIGHT), layers=['bottom', 'middle','top'])
 
         self.group = spyral.Group(self.camera)
@@ -262,17 +262,6 @@ class MeanMedianMode(spyral.Scene):
         #Updating Conversations
         if(self.conversation != 0):
             self.conversation.update_text()
-        #Restarting the game
-        if(self.timer < self.time_end):
-            self.timer += 1
-            print "Timer: "+str(self.timer)
-        if(self.timer == self.time_end):
-            print "Correct: "+str(self.correct)
-            if(self.correct == self.FINISH):
-                village_selection_scene = spyral.director._stack[-2]
-                village_selection_scene.MMM_difficulty = self.difficulty + 1
-                return spyral.director.pop()
-            return spyral.director.replace(MeanMedianMode(self.difficulty,correct=self.correct,firsttime=0))
         #Check for any new/relevant events
         for event in self.event_handler.get():
             if(self.correct >= self.FINISH):
@@ -285,7 +274,7 @@ class MeanMedianMode(spyral.Scene):
             elif event['type'] == 'KEYDOWN':
                 self.ntext = self.get_type(self.type)+event['ascii']
                 self.set_type(self.ntext,self.type)
-                print self.type.dtext
+                #print "Typing: "+self.type.dtext
                 #ascii 27 is escape key
                 if event['ascii'] == chr(27):
                     spyral.director.pop()
@@ -329,3 +318,14 @@ class MeanMedianMode(spyral.Scene):
                 self.deselect(self.Selectable)
             elif event['type'] == 'MOUSEMOTION':
                 self.moveselected(event['pos'])
+        #Restarting the game
+        if(self.timer < self.time_end):
+            self.timer += 1
+            #print "Timer: "+str(self.timer)
+        if(self.timer == self.time_end):
+            print "Correct: "+str(self.correct)
+            if(self.correct == self.FINISH):
+                village_selection_scene = spyral.director._stack[-2]
+                village_selection_scene.MMM_difficulty = self.difficulty + 1
+                return spyral.director.pop()
+            return spyral.director.replace(MeanMedianMode(self.difficulty,correct=self.correct,firsttime=0))
