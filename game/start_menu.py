@@ -26,17 +26,15 @@ class StartMenu(spyral.Scene):
 
 
 	#The play, vocab input, high score, and quit buttons to be used, layer = 'bottom'
-	play_button = extras.Button(image_size=(200, 50), position=(WIDTH/2, HEIGHT/2 - 75), layer = 'bottom',filename="images/Buttons/Start Game 1.png")
-	vocab_input_button = extras.Button(image_size=(200, 50), position=(WIDTH/2, HEIGHT/2), layer = 'bottom',filename="images/Buttons/Input Vocab 1.png")
-	high_score_button = extras.Button(image_size=(200, 50), position=(WIDTH/2, HEIGHT/2 + 75), layer = 'bottom',filename="images/Buttons/High Scores 1.png")
-	quit_button = extras.Button(image_size=(200, 50), position=(WIDTH/2, HEIGHT/2 + 150), layer = 'bottom',filename="images/Buttons/Quit 1.png")
+	play_button = extras.Button(image_size=(200, 50), position=(WIDTH/2, HEIGHT/2), layer = 'bottom',filename="images/Buttons/Start Game 1.png")
+	quit_button = extras.Button(image_size=(200, 50), position=(WIDTH/2, HEIGHT/2 + 75), layer = 'bottom',filename="images/Buttons/Quit 1.png")
 
 	#Assigning the actions to be taken when each of the buttons are clicked
 	#using lambda functions.
 	#All but the quit pushes a new scene onto the stack
 	play_button.clicked = lambda: spyral.director.push(character_choice.CharacterPick())
         #vocab_input_button.clicked = lambda: self.toggle_menu()
-        high_score_button.clicked = lambda: spyral.director.push(high_score.EndScene())
+        #high_score_button.clicked = lambda: spyral.director.push(high_score.EndScene())
         quit_button.clicked = lambda: spyral.director.pop()
 
         #Adding the text over the buttons, layer = 'top'
@@ -46,7 +44,7 @@ class StartMenu(spyral.Scene):
         #quit_text = extras.Text("Quit", (200, 50), (WIDTH/2, HEIGHT/2 + 150), layer = 'top')
 
         #Adding the buttons and text to their respective groups
-        self.buttons.add(play_button, vocab_input_button, high_score_button, quit_button)
+        self.buttons.add(play_button, quit_button)
         #self.texts.add(play_text, vocab_input_text, high_score_text, quit_text)
 
     def toggle_menu(self):
