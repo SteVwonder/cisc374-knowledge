@@ -10,7 +10,7 @@ class VocabScene(spyral.Scene):
     def __init__(self, difficulty):
 	super(VocabScene, self).__init__()
 
-	self.camera = self.parent_camera.make_child(virtual_size = (WIDTH, HEIGHT), layers = ['bottom', 'top', 'all'])
+	self.camera = self.parent_camera.make_child(virtual_size = (WIDTH, HEIGHT), layers = ['bottom', 'middle', 'top', 'all'])
 	self.texts = spyral.Group(self.camera)
 	self.buttons = spyral.Group(self.camera)
 	self.highlights = spyral.Group(self.camera)
@@ -30,12 +30,12 @@ class VocabScene(spyral.Scene):
 	self.words.append("WORD BANK:")
 	self.words.reverse()
 	wordbank = extras.MultiLineText(self.words, (300, 800), (50, 50), spacing = 0, columns = 1, layer = 'top', font_size = 18)
-
+	self.answercount = 0
 	self.last_clicked = 0
 	self.current_choices = []
 	self.cellsize = 600/self.grid.width
 	self.build_choices()
-
+	
 	self.texts.add(self.wordsearch_text, wordbank, self.goodjob)
 
     def build_choices(self):
@@ -43,7 +43,7 @@ class VocabScene(spyral.Scene):
 	for row in xrange(self.grid.height):
 	    for column in xrange(self.grid.width):
 
-		new_button = extras.Button(image_size=(self.cellsize, self.cellsize), position=(320+(self.cellsize/4)+column*self.cellsize, 200+(self.cellsize/4)+row*self.cellsize), anchor = 'center', layer='bottom', fill=(0,0,255))
+		new_button = extras.Button(image_size=(self.cellsize, self.cellsize), position=(320+(self.cellsize/4)+column*self.cellsize, 200+(self.cellsize/4)+row*self.cellsize), anchor = 'center', layer='middle', fill=(0,0,255))
 		new_button.visible = False
 		new_button.clicked = lambda: self.button_clicked()
 		self.buttons.add(new_button)
@@ -56,7 +56,7 @@ class VocabScene(spyral.Scene):
 	if sprite == 0:
 	    return
 	sprite.visible = not sprite.visible
-	sprite.draw(self.camera)
+	#sprite.draw(self.camera)
 	if sprite.visible == False:
 	    self.current_choices.remove(self.grid.buttons.index(sprite))
 	    print "Removed sprite at index: {0} from choices".format(self.grid.buttons.index(sprite))
@@ -66,7 +66,7 @@ class VocabScene(spyral.Scene):
 	else:
 	    old_choice = self.current_choices.pop(0)
 	    self.grid.buttons[old_choice].visible = False
-	    self.grid.buttons[old_choice].draw(self.camera)
+	    #self.grid.buttons[old_choice].draw(self.camera)
 	    self.current_choices.append(self.grid.buttons.index(sprite))
 	    print "Replaced sprite at {0} with sprite at {1}".format(old_choice, self.grid.buttons.index(sprite))
 
@@ -91,26 +91,23 @@ class VocabScene(spyral.Scene):
 		    else:
 			increment = self.grid.width
 		
-		self.answered.append(coord[0])
+
+		self.grid.buttons[self.current_choices[0]].visible = False
+		self.grid.buttons[self.current_choices[1]].visible = False
 		for box in xrange(self.current_choices[0], self.current_choices[1]+1, increment):
 		    sprit = self.grid.buttons[box]
-		    sprit.image = spyral.Image(size=(self.cellsize, self.cellsize))
-		    sprit.image.fill((0,255,255))
-		    sprit.visible = True
-		    #self.buttons.remove(sprit)
-		    self.highlights.add(sprit)
-		    sprit.draw(self.camera)
-		del self.current_choices[:]
+		    highlight = extras.Button(sprit.position, (self.cellsize, self.cellsize), anchor='center', layer='bottom', fill=(0,255,255))
+		    self.highlights.add(highlight)
+		
 		self.last_clicked = 0
-	    if len(self.answered) == len(self.words)-1:
+		self.answercount += 1
+		return
+	    if self.answercount == len(self.words)-1:
 		background = spyral.Image(size=(WIDTH, HEIGHT))
 		background.fill((0,0,0))
 		self.camera.set_background(background)
 		self.goodjob.visible = True
 		self.goodjob.draw(self.camera)
-		count = 0
-		while count < 10000000:
-		    count += 1
 		spyral.director.pop()
 		spyral.director.pop()
 		return	
@@ -136,6 +133,7 @@ class VocabScene(spyral.Scene):
 
     def render(self):
 	self.buttons.draw()
+	self.highlights.draw()
 	self.texts.draw()
 
     def check_click(self, position, group):
