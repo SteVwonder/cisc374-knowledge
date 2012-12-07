@@ -60,7 +60,7 @@ class Text(spyral.Sprite):
 #   -- order   : "topdown" fills the first column first, second column second, etc.
 #		 "leftright" fills the first row first, second row second, etc.
 class MultiLineText(spyral.Sprite):
-    def __init__(self, text, image_size, position, spacing=0, columns=1, order="topdown", alignment='left', anchor='topleft', layer='all', font_size=14, color=(0,0,0), group=None):
+    def __init__(self, text, image_size, position, spacing=0, columns=1, order="topdown", anchor='topleft', layer='all', font_size=14, color=(0,0,0), group=None):
 
 	super(MultiLineText, self).__init__(group=group)
 	self.font_size = font_size
@@ -71,7 +71,6 @@ class MultiLineText(spyral.Sprite):
 	self.spacing = spacing
 	self.columns = columns
 	self.order = order
-	self.alignment = alignment
 	self.image = spyral.Image(size=image_size)
 	self.wdth = (image_size[0]/columns)
 	self.texts = []
