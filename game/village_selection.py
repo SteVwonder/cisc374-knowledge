@@ -111,7 +111,8 @@ class VillageSelection(spyral.Scene):
             self.fstars[-1].layer = 'top'
             self.stars.add(self.fstars[x])
             self.texts.add(self.cbutton[-1].text)
-            self.cbutton[-1].clicked = self.launchMMM(x+1)
+            self.cbutton[-1].number = x+1
+            self.cbutton[-1].clicked = lambda: spyral.director.push(MeanMedianMode.MeanMedianMode())
         for x in range(0,self.MMM_difficulty):
             self.cbutton.append(extras.Button(filename="images/Star.png",layer='bottom',position=(212+(90*x),370)))
             self.mstars.append(self.cbutton[-1])
