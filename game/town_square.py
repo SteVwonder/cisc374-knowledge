@@ -32,7 +32,7 @@ class TownSquare(spyral.Scene):
 
 	self.greetings = {'fraction': FRACTION_TEXT, 'MMM': MMM_TEXT, 'vocabsearch': VOCABSEARCH_TEXT}
 	self.greeting = conversation.Conversation(self.greetings[town], (0, HEIGHT), self, WIDTH, HEIGHT, tcolor=(0, 255, 0))
-	#self.buttons.add(self.greeting.button)
+	self.greeting.button.draw(self.camera)
 
 	self.ready_button = extras.Button((WIDTH/2, HEIGHT/2), (200, 200), layer = 'bottom')
 	self.ready_button.visible = False
@@ -55,7 +55,7 @@ class TownSquare(spyral.Scene):
 		sprite.clicked()
 
     def on_enter(self):
-	background = spyral.Image(filename="images/oldtownsquare.png")
+	background = spyral.Image(filename="images/townsquare.png")
 	self.camera.set_background(background)
 
     def render(self):

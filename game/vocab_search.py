@@ -23,13 +23,12 @@ class VocabScene(spyral.Scene):
 
 	self.wordsearch_text = extras.MultiLineText(self.grid.data, (600, 600), (WIDTH/2 + 20, 500), anchor='center', columns = self.grid.width, layer="top", font_size=24, color=(255,255,255))
 	#definitions_text = extras.MultiLineText(self.definitions, (1050, 250), (75, 680), spacing = 0, columns = 2, order="leftright", layer="top", font_size = 18, color=(255,255,255))
-
 	self.last_clicked = 0
 	self.current_choices = []
 	self.cellsize = 600/self.grid.width
 	self.build_choices()
 
-	self.texts.add(self.wordsearch_text)#, definitions_text)   
+	self.texts.add(self.wordsearch_text)
 
     def build_choices(self):
 
