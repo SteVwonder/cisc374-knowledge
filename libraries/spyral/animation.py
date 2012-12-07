@@ -85,13 +85,13 @@ class MultiAnimation(Animation):
             if animation.loop:
                 self.loop = True
         # Ensure we don't clobber on properties
-        clobbering_animations = [('scale', {'scale_x', 'scale_y'}),
-                                 ('pos', {'x', 'y', 'position'}),
-                                 ('position', {'x', 'y', 'pos'})]
-        print clobbering_animations
-        for p, others in clobbering_animations:
-            if p in self.properties and self.properties.intersection(others):
-                raise ValueError("Cannot animate on %s and %s in the same animation." % (p, str(self.properties.intersection(others).pop())))
+        # clobbering_animations = [('scale', {'scale_x', 'scale_y'}),
+        #                          ('pos', {'x', 'y', 'position'}),
+        #                          ('position', {'x', 'y', 'pos'})]
+        # print clobbering_animations
+        # for p, others in clobbering_animations:
+        #     if p in self.properties and self.properties.intersection(others):
+        #         raise ValueError("Cannot animate on %s and %s in the same animation." % (p, str(self.properties.intersection(others).pop())))
         self.loop = kwargs.get('loop', self.loop)
         self.on_complete = spyral.Signal()
 
