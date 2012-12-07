@@ -106,7 +106,7 @@ class VillageSelection(spyral.Scene):
     def setupstars(self):
         #Add stars under Buttons
         self.cbutton = []
-        for x in range(self.fraction_difficulty):
+        for x in range(min(self.fraction_difficulty,3)):
             self.cbutton.append(extras.Button(filename="images/Star.png",layer='bottom',position=(430+(90*x),775)))
             self.fstars.append(self.cbutton[-1])
             self.cbutton[-1].text = extras.Text(str(x+1),64,(430+(90*x),790),color=(255,0,255),font_size=24)
@@ -116,7 +116,7 @@ class VillageSelection(spyral.Scene):
             self.texts.add(self.cbutton[-1].text)
             self.cbutton[-1].number = x+1
             self.cbutton[-1].clicked = self.launchFG
-        for x in range(0,self.MMM_difficulty):
+        for x in range(0,min(self.MMM_difficulty,3)):
             self.cbutton.append(extras.Button(filename="images/Star.png",layer='bottom',position=(212+(90*x),370)))
             self.mstars.append(self.cbutton[-1])
             self.cbutton[-1].text = extras.Text(str(x+1),64,(212+(90*x),385),color=(255,0,255),font_size=24)
@@ -126,7 +126,7 @@ class VillageSelection(spyral.Scene):
             self.texts.add(self.cbutton[-1].text)
             self.cbutton[-1].number = x+1
             self.cbutton[-1].clicked = self.launchMMM
-        for x in range(0,self.Vocab_difficulty):
+        for x in range(0,min(self.Vocab_difficulty,3)):
             self.cbutton.append(extras.Button(filename="images/Star.png",layer='bottom',position=(537+(90*x),370)))
             self.vstars.append(self.cbutton[-1])
             self.cbutton[-1].text = extras.Text(str(x+1),64,(537+(90*x),385),color=(255,0,255),font_size=24)
@@ -139,13 +139,13 @@ class VillageSelection(spyral.Scene):
         print str(len(self.cbutton))
     def launchFG(self,difficulty):
         print "Difficulty passed on: "+str(difficulty)
-        spyral.director.push(fraction_game.FractionGame(difficulty,gender=self.gender,name=self.name))
+        spyral.director.push(town_square.TownSquare('fraction',fd=self.fraction_difficulty,md=self.MMM_difficulty,vd=self.Vocab_difficulty,gender=self.gender,name=self.name))
     def launchMMM(self,difficulty):
         print "Difficulty passed on: "+str(difficulty)
-        spyral.director.push(MeanMedianMode.MeanMedianMode(difficulty,gender=self.gender,name=self.name))
+        spyral.director.push(town_square.TownSquare('MMM',fd=self.fraction_difficulty,md=self.MMM_difficulty,vd=self.Vocab_difficulty,gender=self.gender,name=self.name))
     def launchVS(self,difficulty):
         print "Difficulty passed on: "+str(difficulty)
-        spyral.director.push(vocab_search.VocabScene(difficulty,gender=self.gender,name=self.name))
+        spyral.director.push(town_square.TownSquare('vocabsearch',fd=self.fraction_difficulty,md=self.MMM_difficulty,vd=self.Vocab_difficulty,gender=self.gender,name=self.name))
     def purgestars(self):
         self.fstars = []
         self.mstars = []
