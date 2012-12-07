@@ -67,12 +67,12 @@ class VillageSelection(spyral.Scene):
         #Using two different groups for text and buttons
         #That way we only have to check for clicks on the buttons
 
-        fraction_game_button.clicked = lambda: spyral.director.push(town_square.TownSquare('fraction'))
-        play_MMM.clicked = lambda: spyral.director.push(town_square.TownSquare('MMM'))
-	vocab_search_button.clicked = lambda: spyral.director.push(town_square.TownSquare('vocabsearch'))
-        fraction_game_button2.clicked = lambda: spyral.director.push(town_square.TownSquare('fraction'))
-        play_MMM2.clicked = lambda: spyral.director.push(town_square.TownSquare('MMM'))
-	vocab_search_button2.clicked = lambda: spyral.director.push(town_square.TownSquare('vocabsearch'))
+        fraction_game_button.clicked = lambda: spyral.director.push(town_square.TownSquare('fraction',fd=self.fraction_difficulty,md=self.MMM_difficulty,vd=self.Vocab_difficulty))
+        play_MMM.clicked = lambda: spyral.director.push(town_square.TownSquare('MMM',fd=self.fraction_difficulty,md=self.MMM_difficulty,vd=self.Vocab_difficulty))
+	vocab_search_button.clicked = lambda: spyral.director.push(town_square.TownSquare('vocabsearch',fd=self.fraction_difficulty,md=self.MMM_difficulty,vd=self.Vocab_difficulty))
+        fraction_game_button2.clicked = lambda: spyral.director.push(town_square.TownSquare('fraction',fd=self.fraction_difficulty,md=self.MMM_difficulty,vd=self.Vocab_difficulty))
+        play_MMM2.clicked = lambda: spyral.director.push(town_square.TownSquare('MMM',fd=self.fraction_difficulty,md=self.MMM_difficulty,vd=self.Vocab_difficulty))
+	vocab_search_button2.clicked = lambda: spyral.director.push(town_square.TownSquare('vocabsearch',fd=self.fraction_difficulty,md=self.MMM_difficulty,vd=self.Vocab_difficulty))
         
         #Using two different groups for text and buttons
         #That way we only have to check for clicks on the buttons

@@ -282,20 +282,21 @@ class MeanMedianMode(spyral.Scene):
                 #ascii 13 is enter key
                 if(event['ascii'] == chr(13)):
                     self.canswer = self.type.get_answer()
-                    self.correct += self.canswer
-                    print "Correct Answers:"+str(self.correct)
-                    if(self.correct == self.FINISH):
-                        self.Ftext.visible = 1
-                        self.timer = 0
-                        self.time_end = FINISH_TIME
-                    else:
-                        self.CorrectAnswer.visible = 1
-                        if(self.canswer == 0):
-                            self.CorrectAnswer.set_text("The Answer Was:   "+str(self.type.answer))
+                    if(self.canswer != None):
+                        self.correct += self.canswer
+                        print "Correct Answers:"+str(self.correct)
+                        if(self.correct == self.FINISH):
+                            self.Ftext.visible = 1
+                            self.timer = 0
+                            self.time_end = FINISH_TIME
                         else:
-                            self.CorrectAnswer.set_text("Only "+str(self.FINISH-self.correct)+" more to go!")
-                        self.timer = 0
-                        self.time_end = FINISH_TIME
+                            self.CorrectAnswer.visible = 1
+                            if(self.canswer == 0):
+                                self.CorrectAnswer.set_text("The Answer Was:   "+str(self.type.answer))
+                            else:
+                                self.CorrectAnswer.set_text("Only "+str(self.FINISH-self.correct)+" more to go!")
+                            self.timer = 0
+                            self.time_end = FINISH_TIME
                 #ascii 8 is backspace key
                 if event['ascii'] == chr(8):
                     txt = self.get_type(self.type)
