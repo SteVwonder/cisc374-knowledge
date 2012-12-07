@@ -32,7 +32,7 @@ class VillageSelection(spyral.Scene):
         
         self.main_group = spyral.Group(self.camera)
         
-        self.fraction_difficulty = 2
+        self.fraction_difficulty = 1
         self.MMM_difficulty = 1
         self.Vocab_difficulty = 1
 

@@ -24,12 +24,19 @@ class TownSquare(spyral.Scene):
 	self.name = name
 
 	FRACTION_TEXT = []
-        FRACTION_TEXT.append([["Fraction townsperson", "Fraction townsperson", "Fraction townsperson"], ["Welcome "+self.name+" you have come right.", "wait it out and find", "fractions "]])
-        FRACTION_TEXT.append([["Fraction townsperson", "Fraction townsperson", "Fraction townsperson"], ["Sometimes you just have to", "wait it out and find", "fractions "]])
+        FRACTION_TEXT.append([["Fraction Townsperson", "Fraction Townsperson", "Fraction Townsperson","Fraction Townsperson"], ["Welcome "+self.name+" you have come at the right time!", "It seems the Wizard has stopped the rain from falling!", "We've always needed the rain to tell us how much water we need.","Will you help us?"]])
+        FRACTION_TEXT.append([["Fraction Townsperson", "Fraction Townsperson", "Fraction Townsperson"], ["Hooray for "+self.name+"!", "The drought continues but I think we're starting to get it.", "Can we rely on you again?"]])
+        FRACTION_TEXT.append([["Fraction Townsperson", "Fraction Townsperson", "Fraction Townsperson"], ["We love you "+self.name+"!", "The drought continues and we're having a tough time this week.", "Will you help us?"]])
+        
         MMM_TEXT = []
-        MMM_TEXT.append([["Off-scene guy", "Mr. President", "Snoop Lion"], ["Mean", "Median", "Mode-izzle my grizzle",]])
+        MMM_TEXT.append([["Mean Townsperson", "Median Townsperson", "Mode Townsperson"], ["The wizard has turned everyone into boxes", "What are we going to do!", "Will you help us "+self.name+"!?"]])
+        MMM_TEXT.append([["Mean Townsperson", "Median Townsperson", "Mode Townsperson"], ["The wizard came back and turned more people into boxes","He got more people than before!", "Please help us?"]])
+        MMM_TEXT.append([["Mean Townsperson", "Median Townsperson", "Mode Townsperson"], ["The wizard has turned everyone into boxes", "He's got a lot of people this time!", "Will you help us "+self.name+"!?"]])
+
         VOCABSEARCH_TEXT = []
-        VOCABSEARCH_TEXT.append([["Spooky voice", "Not so spooky voice", "Grandma"], ["Find it..", "Find the words", "They're good for you"]])
+        VOCABSEARCH_TEXT.append([["Vocab Townsperson", "Vocab Townsperson", "Vocab Townsperson"], ["Oh my the townshall is locked!", "What were all those words?", "Please help us!?"]])
+        VOCABSEARCH_TEXT.append([["Vocab Townsperson", "Vocab Townsperson", self.name,"Vocab Townsperson"], ["The townshall got locked again!", "How bored does a wizard have to be to bother us like this...", "I... don't know?","Will you help us?"]])
+        VOCABSEARCH_TEXT.append([["Vocab Townsperson", "Vocab Townsperson", self.name,"Vocab Townsperson"], ["...", "We should just find another town hall", "He'll probably lock that one too.","Will you help us?"]])
 
 	self.town = town
 	self.popularity = 0
@@ -51,7 +58,7 @@ class TownSquare(spyral.Scene):
             self.VLIST.append(extras.Button(position=(120+random.randrange(0,800,110), 300+random.randrange(0,300,110)), layer='bottom',filename=fle))
             self.texts.add(self.VLIST[x])
 
-	self.greetings = {'fraction': FRACTION_TEXT[0], 'MMM': MMM_TEXT[0], 'vocabsearch': VOCABSEARCH_TEXT[0]}
+	self.greetings = {'fraction': FRACTION_TEXT[self.fraction_difficulty-1], 'MMM': MMM_TEXT[self.MMM_difficulty-1], 'vocabsearch': VOCABSEARCH_TEXT[self.search_difficulty-1]}
 	self.greeting = conversation.Conversation(self.greetings[town], (0, HEIGHT), self, WIDTH, HEIGHT, tcolor=(0, 255, 0))
 	#self.greeting.button.draw(self.camera)
 	self.texts.add(self.greeting.button)
@@ -61,11 +68,11 @@ class TownSquare(spyral.Scene):
 	self.ready_button_text = extras.Text("< Yes >", (200, 200), (WIDTH/2, HEIGHT/2), layer = 'toptop', font_size = 26)
 	self.ready_button_text.visible = False
 	if town == 'fraction': 
-	    self.ready_button.clicked = lambda: spyral.director.push(fraction_game.FractionGame(self.fraction_difficulty))
+	    self.ready_button.clicked = lambda: spyral.director.push(fraction_game.FractionGame(self.fraction_difficulty,gender=self.gender,name=self.name))
 	elif town == 'MMM':
-	    self.ready_button.clicked = lambda: spyral.director.push(MeanMedianMode.MeanMedianMode(self.MMM_difficulty))
+	    self.ready_button.clicked = lambda: spyral.director.push(MeanMedianMode.MeanMedianMode(self.MMM_difficulty,gender=self.gender,name=self.name))
 	elif town == 'vocabsearch':
-	    self.ready_button.clicked = lambda: spyral.director.push(vocab_search.VocabScene(self.search_difficulty))
+	    self.ready_button.clicked = lambda: spyral.director.push(vocab_search.VocabScene(self.search_difficulty,gender=self.gender,name=self.name))
 
 	self.buttons.add(self.ready_button)
 	self.texts.add(self.ready_button_text, self.greeting.next, self.greeting.visibletext, self.greeting.nametext)
