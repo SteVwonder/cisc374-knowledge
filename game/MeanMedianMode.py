@@ -116,14 +116,14 @@ class MeanMedianMode(spyral.Scene):
         self.VillagerList = []
         self.NumberList = []
         
-        self.ListofText = ["You selected difficulty number : "+str(self.difficulty),
-                           "The problem is I cannot get more than one line to draw.",
-                           "Using multiline strings will not work so instead",
-                           "We should just use it like this."]
-        self.ListofNames = ["Random Villager #1",
-                           "Mohamed Dicko",
-                           "Super Grandiose Man of Infinite Wisdom",
-                           "A Pair of Pants"]
+        self.ListofText = ["Help, <Name Here> the wizard came and trapped us in boxes!",
+                           "These boxes are magic and cant be broken by anything!",
+                           "I think the wizard is hiding with us!",
+                           "Move us around and find the Mean, Median and Mode of us to find the Wizard!"]
+        self.ListofNames = ["Random Villager",
+                           "Random Villager",
+                           "Random Villager",
+                           "Random Villager"]
         if(firsttime == 1):
             self.conversation = conversation.Conversation([self.ListofNames,self.ListofText],(0,HEIGHT+10),self,w=WIDTH,h=HEIGHT,tcolor=(0,0,0))
             self.group.add(self.conversation.button)
