@@ -5,6 +5,8 @@ import random
 import time
 import spyral.animator
 import math
+import conversation
+
 WIDTH = 1200
 HEIGHT = 900
 FRACTION_SIZE = (50,150)
@@ -20,13 +22,13 @@ NUMBER_TO_COMPLETE = 3
 # the widgets in the scene
 
 class FractionGame(spyral.Scene):
-    def __init__(self, difficulty):
+    def __init__(self, difficulty,firsttime=1):
         super(FractionGame, self).__init__()
 
         self.camera = self.parent_camera.make_child(virtual_size = (WIDTH, HEIGHT), layers=['bottom', 'top', 'toptop'])
         self.buttons = spyral.Group(self.camera)
         self.texts = spyral.Group(self.camera)
-        self.others = spyral.Group(self.camera)
+        self.others = spyral.Group(self.camera)       
         
         #Some variables used in the game
         self.water_in_bucket = extras.Fraction(0,0)
@@ -39,6 +41,25 @@ class FractionGame(spyral.Scene):
         self.operation = None
         self.completed = 0
         self.number_of_tries = 0
+
+        #Setup Conversations
+        self.ListofText = ["Help, <Name Here> the wizard came and trapped us in boxes!",
+                           "These boxes are magic and cant be broken by anything!",
+                           "I think the wizard is hiding with us!",
+                           "Move us around and find the Mean, Median and Mode of us to find the Wizard!"]
+        self.ListofNames = ["Random Villager",
+                           "Random Villager",
+                           "Random Villager",
+                           "Random Villager"]
+        if(firsttime == 1)and(self.difficulty == 1):
+            self.conversation = conversation.Conversation([self.ListofNames,self.ListofText],(0,HEIGHT+10),self,w=WIDTH,h=HEIGHT,tcolor=(0,0,0))
+            self.buttons.add(self.conversation.button)
+            self.texts.add(self.conversation.next)
+            self.texts.add(self.conversation.visibletext)
+            self.texts.add(self.conversation.nametext)
+        else:
+            self.conversation = 0 
+        
 
         #Button to move to the fractional tools scene
         fraction_tools_button = extras.Button(image_size=(200, 50), position=(WIDTH-5, 5), anchor='topright', layer='bottom', fill=(194, 194, 194))
@@ -223,6 +244,9 @@ class FractionGame(spyral.Scene):
         self.watering.animate(anim)
     
     def update(self, dt):
+        #Updating Conversations
+        if(self.conversation != 0):
+            self.conversation.update_text()
         self.others.update(dt)
         self.buttons.update(dt)
         self.texts.update(dt)
@@ -236,6 +260,15 @@ class FractionGame(spyral.Scene):
                 if event['ascii'] == chr(27):
                     spyral.director.pop()
                     return
+                #ascii 122 is the z key
+                if event['ascii'] == chr(122) or event['ascii'] == chr(13):
+                    if(self.conversation != 0):
+                        if(self.conversation.currentposition < len(self.conversation.ctext)-1):
+                            self.conversation.quick_end()
+                            return
+                        if(self.conversation.currentposition >= len(self.conversation.ctext)-1):
+                            self.conversation.to_next()
+                            return
             #They clicked somewhere
             elif event['type'] == 'MOUSEBUTTONDOWN':
                 self.check_click(event['pos'], self.buttons.sprites())

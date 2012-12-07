@@ -12,15 +12,35 @@ LINE_THICKNESS = 5
 # Several widgets that help the kids visualize fractional operations
 
 class FractionTools(spyral.Scene):
-    def __init__(self, difficulty, fractions, operation):
+    def __init__(self, difficulty, fractions, operation,firsttime = 1):
         super(FractionTools, self).__init__()
 
         self.camera = self.parent_camera.make_child(virtual_size = (WIDTH, HEIGHT), layers=['bottom', 'all', 'shaded', 'grid_lines'])
+        self.difficulty = difficulty
         
         self.main_group = spyral.Group(self.camera)
         self.vertical_lines = spyral.Group(self.camera)
         self.horizontal_lines = spyral.Group(self.camera)
         self.buttons = spyral.Group(self.camera)
+        
+        #Setup Conversations
+        self.ListofText = ["Help, <Name Here> the wizard came and trapped us in boxes!",
+                           "These boxes are magic and cant be broken by anything!",
+                           "I think the wizard is hiding with us!",
+                           "Move us around and find the Mean, Median and Mode of us to find the Wizard!"]
+        self.ListofNames = ["Random Villager",
+                           "Random Villager",
+                           "Random Villager",
+                           "Random Villager"]
+        if(firsttime == 1)and(self.difficulty == 1):
+            self.conversation = conversation.Conversation([self.ListofNames,self.ListofText],(0,HEIGHT+10),self,w=WIDTH,h=HEIGHT,tcolor=(0,0,0))
+            self.main_group.add(self.conversation.button)
+            self.main_group.add(self.conversation.next)
+            self.main_group.add(self.conversation.visibletext)
+            self.main_group.add(self.conversation.nametext)
+        else:
+            self.conversation = 0 
+
         main_box = extras.Button((WIDTH/3, HEIGHT/2-100), image_size=(BOX_W, BOX_H), layer='bottom', group=self.main_group)
 
         box_bottom = (HEIGHT/2-100) + (BOX_H/2)
@@ -70,6 +90,9 @@ class FractionTools(spyral.Scene):
         self.give_tutorial(operation, fractions)
         
     def update(self, dt):
+        #Updating Conversations
+        if(self.conversation != 0):
+            self.conversation.update_text()
         #Check for any new/relevant events
         for event in self.event_handler.get():
             #Check to see if they clicked a button or slider
@@ -80,6 +103,15 @@ class FractionTools(spyral.Scene):
                 if event['ascii'] == chr(27):
                     spyral.director.pop()
                     return
+                #ascii 122 is the z key
+                if event['ascii'] == chr(122) or event['ascii'] == chr(13):
+                    if(self.conversation != 0):
+                        if(self.conversation.currentposition < len(self.conversation.ctext)-1):
+                            self.conversation.quick_end()
+                            return
+                        if(self.conversation.currentposition >= len(self.conversation.ctext)-1):
+                            self.conversation.to_next()
+                            return
             elif event['type'] == 'MOUSEBUTTONUP':
                 was_true = False
                 for button in self.buttons.sprites():
@@ -203,6 +235,6 @@ class FractionTools(spyral.Scene):
         fraction_one = str(fractions[0].numerator) + "/" + str(fractions[0].denominator)
         fraction_two = str(fractions[1].numerator) + "/" + str(fractions[1].denominator)
         problem_description = extras.MultiLineText("You are trying to " + operator + " " + fraction_one + " " + preposition + " " + fraction_two + "\n"
-                                                   "So the first thing we need to do is drag the sliders to match the fractions in the equation", (700,150), (10,HEIGHT-10), font_size=30 ,anchor='bottomleft', group=self.main_group)
+                                                   "Drag the sliders to match the fractions in the equation", (700,150), (10,HEIGHT-10), font_size=30 ,anchor='bottomleft', group=self.main_group)
         
         return problem_description

@@ -82,13 +82,13 @@ class MeanMedianMode(spyral.Scene):
         self.difficulty = difficulty
 
         if(self.difficulty == 1):
-            self.FINISH = random.randrange(3,5)
+            self.FINISH = 3
             self.biggest = 5
         if(self.difficulty == 2):
-            self.FINISH = random.randrange(4,6)
+            self.FINISH = 5
             self.biggest = 9
         if(self.difficulty == 3):
-            self.FINISH = random.randrange(5,7)
+            self.FINISH = 7
             self.biggest = 15
         
         self.correct = correct
@@ -124,7 +124,7 @@ class MeanMedianMode(spyral.Scene):
                            "Random Villager",
                            "Random Villager",
                            "Random Villager"]
-        if(firsttime == 1):
+        if(firsttime == 1)and(self.difficulty == 1):
             self.conversation = conversation.Conversation([self.ListofNames,self.ListofText],(0,HEIGHT+10),self,w=WIDTH,h=HEIGHT,tcolor=(0,0,0))
             self.group.add(self.conversation.button)
             self.text.add(self.conversation.next)
@@ -325,7 +325,7 @@ class MeanMedianMode(spyral.Scene):
             print "Correct Amount: "+str(self.correct)+"/"+str(self.FINISH)
             if(self.correct == self.FINISH):
                 village_selection_scene = spyral.director._stack[-2]
-                village_selection_scene.MMM_difficulty = self.difficulty + 1
+                village_selection_scene.MMM_difficulty = min(self.difficulty + 1,3)
                 return spyral.director.pop()
             else:
                 return spyral.director.replace(MeanMedianMode(self.difficulty,correct=self.correct,firsttime=0))
