@@ -44,7 +44,7 @@ class TownSquare(spyral.Scene):
 	self.fraction_difficulty = fd
 	self.MMM_difficulty = md
 	self.search_difficulty = vd
-
+	
         if(town == 'fraction'):
             self.dif = self.fraction_difficulty
         elif(town == 'MMM'):
@@ -115,8 +115,13 @@ class TownSquare(spyral.Scene):
 		    if (self.greeting.currentposition >= len(self.greeting.ctext)-1):
 			moveflag = self.greeting.to_next()
 			if moveflag == -1:
-			    self.ready_button.visible = True
-			    self.ready_button_text.visible = True
+                            if self.town == 'fraction':
+                                spyral.director.push(fraction_game.FractionGame(self.fraction_difficulty,gender=self.gender,name=self.name))
+                            elif self.town == 'MMM':
+                                spyral.director.push(MeanMedianMode.MeanMedianMode(self.MMM_difficulty,gender=self.gender,name=self.name))
+                            elif self.town == 'vocabsearch':
+                                spyral.director.push(vocab_search.VocabScene(self.search_difficulty,gender=self.gender,name=self.name))
+                        self.town = self.town
 			return
 	    elif event['type'] == 'MOUSEBUTTONDOWN':
 		self.check_click(event['pos'], self.buttons.sprites())

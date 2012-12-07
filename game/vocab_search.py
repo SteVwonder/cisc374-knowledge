@@ -20,6 +20,7 @@ class VocabScene(spyral.Scene):
 	self.name = name
 
 	self.words, self.definitions = wordsearch_generator.getvocab('vocablist.txt')
+	self.dif = difficulty
 	self.difficulty = "hard"
 	self.grid = wordsearch_generator.make_grid(self.difficulty, self.words, 100)
 	if self.grid == None:
@@ -113,8 +114,10 @@ class VocabScene(spyral.Scene):
 		self.camera.set_background(background)
 		#self.goodjob.visible = True
 		#self.goodjob.draw(self.camera)
-		spyral.director.pop()
-		spyral.director.pop()
+                village_selection_scene = spyral.director._stack[-3]
+                village_selection_scene.Vocab_difficulty = min(self.dif + 1,3)
+                spyral.director.pop()
+                spyral.director.pop()
 		return	
  
 
