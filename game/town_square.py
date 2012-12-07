@@ -9,9 +9,9 @@ import vocab_search
 WIDTH = 1200
 HEIGHT = 900
 
-FRACTION_TEXT = [" ", " ", " "]
-MMM_TEXT = [" ", " ", " ",]
-VOCABSEARCH_TEXT = [" ", " ", " "]
+FRACTION_TEXT = [["Fraction townsperson", "Fraction personperson", "Person person person"], ["Sometimes you just have to", "wait it out and find", "fractions "]]
+MMM_TEXT = [["Off-scene guy", "Mr. President", "Snoop Lion"], ["Mean", "Median", "Mode-izzle my grizzle",]]
+VOCABSEARCH_TEXT = [["Spooky voice", "Not so spooky voice", "Grandma"], ["Find it..", "Find the words", "They're good for you"]]
 
 class TownSquare(spyral.Scene):
     def __init__(self, town):
@@ -30,7 +30,9 @@ class TownSquare(spyral.Scene):
 	self.search_difficulty = 'easy'
 
 	self.greetings = {'fraction': FRACTION_TEXT, 'MMM': MMM_TEXT, 'vocabsearch': VOCABSEARCH_TEXT}
-	#self.greeting = conversation.Conversation(self.greetings[town], (0, HEIGHT), self, WIDTH, HEIGHT, tcolor=(0, 255, 0))
+	self.greeting = conversation.Conversation(self.greetings[town], (0, HEIGHT), self, WIDTH, HEIGHT, tcolor=(0, 255, 0))
+	#self.buttons.add(self.greeting.button)
+	self.texts.add(self.greeting.next, self.greeting.visibletext, self.greeting.nametext)
 
 	ready_button = extras.Button((WIDTH/2, HEIGHT/2), (200, 200), layer = 'bottom')
 	#ready_button.visible = False
@@ -62,8 +64,8 @@ class TownSquare(spyral.Scene):
 
     def update(self, dt):
 	#Update conversation
-	#if (self.greeting):
-	    #self.greeting.update_text()
+	if (self.greeting):
+	    self.greeting.update_text()
 	for event in self.event_handler.get():
 	    #Clicked on OS exit button
 	    if event['type'] == 'QUIT':
@@ -76,12 +78,13 @@ class TownSquare(spyral.Scene):
 		    spyral.director.pop()
 		    return
 		#ascii 13 is enter key - move conversation along
-		#if event['ascii'] == chr(13):
-		    #if (self.conversation.currentposition < len(self.conversation.ctext)-1):
-		    	#self.conversation.quick_end()
-			#return
-		    #if (self.conversation.currentposition >= len(self.conversation.ctext)-1):
-			#self.conversation.to_next()
-			#return
+		if event['ascii'] == chr(13):
+		    if (self.greeting):
+			if(self.greeting.currentposition < len(self.greeting.ctext)-1):
+			    self.greeting.quick_end()
+			    return
+		    if (self.greeting.currentposition >= len(self.greeting.ctext)-1):
+			self.greeting.to_next()
+			return
 	    elif event['type'] == 'MOUSEBUTTONDOWN':
 		self.check_click(event['pos'], self.buttons.sprites())
