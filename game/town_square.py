@@ -34,19 +34,19 @@ class TownSquare(spyral.Scene):
 	#self.buttons.add(self.greeting.button)
 	self.texts.add(self.greeting.next, self.greeting.visibletext, self.greeting.nametext)
 
-	ready_button = extras.Button((WIDTH/2, HEIGHT/2), (200, 200), layer = 'bottom')
-	#ready_button.visible = False
-	ready_button_text = extras.Text("< Yes >", (200, 200), (WIDTH/2, HEIGHT/2), layer = 'top', font_size = 26)
-	#ready_button_text.visible = False
+	self.ready_button = extras.Button((WIDTH/2, HEIGHT/2), (200, 200), layer = 'bottom')
+	self.ready_button.visible = False
+	self.ready_button_text = extras.Text("< Yes >", (200, 200), (WIDTH/2, HEIGHT/2), layer = 'top', font_size = 26)
+	self.ready_button_text.visible = False
 	if town == 'fraction': 
-	    ready_button.clicked = lambda: spyral.director.push(fraction_game.FractionGame(self.fraction_difficulty))
+	    self.ready_button.clicked = lambda: spyral.director.push(fraction_game.FractionGame(self.fraction_difficulty))
 	elif town == 'MMM':
-	    ready_button.clicked = lambda: spyral.director.push(MeanMedianMode.MeanMedianMode(self.MMM_difficulty))
+	    self.ready_button.clicked = lambda: spyral.director.push(MeanMedianMode.MeanMedianMode(self.MMM_difficulty))
 	elif town == 'vocabsearch':
-	    ready_button.clicked = lambda: spyral.director.push(vocab_search.VocabScene(self.search_difficulty))
+	    self.ready_button.clicked = lambda: spyral.director.push(vocab_search.VocabScene(self.search_difficulty))
 
-	self.buttons.add(ready_button)#self.greeting.button, ready_button)
-	self.texts.add(ready_button_text)#self.greeting.next, self.greeting.visibletext, ready_button_text)
+	self.buttons.add(self.ready_button)
+	self.texts.add(self.ready_button_text)
 	
     def check_click(self, position, group):
 	local_position = self.camera.world_to_local(position)
@@ -64,7 +64,10 @@ class TownSquare(spyral.Scene):
 
     def update(self, dt):
 	#Update conversation
-	if (self.greeting):
+	if self.greeting == -1:
+	    self.ready_button.visible = True
+	    self.ready_button_text.visible = True
+	else:
 	    self.greeting.update_text()
 	for event in self.event_handler.get():
 	    #Clicked on OS exit button
@@ -78,7 +81,7 @@ class TownSquare(spyral.Scene):
 		    spyral.director.pop()
 		    return
 		#ascii 13 is enter key - move conversation along
-		if event['ascii'] == chr(13):
+		if event['ascii'] == chr(122) or event['ascii'] == chr(13):
 		    if (self.greeting):
 			if(self.greeting.currentposition < len(self.greeting.ctext)-1):
 			    self.greeting.quick_end()
