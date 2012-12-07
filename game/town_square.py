@@ -30,7 +30,7 @@ class TownSquare(spyral.Scene):
 	self.search_difficulty = 'easy'
 
 	self.greetings = {'fraction': FRACTION_TEXT, 'MMM': MMM_TEXT, 'vocabsearch': VOCABSEARCH_TEXT}
-	#self.greeting = conversation.Conversation(self.greetings[town][0], (0, HEIGHT), self, WIDTH, HEIGHT, tcolor=(0, 255, 0))
+	#self.greeting = conversation.Conversation(self.greetings[town], (0, HEIGHT), self, WIDTH, HEIGHT, tcolor=(0, 255, 0))
 
 	ready_button = extras.Button((WIDTH/2, HEIGHT/2), (200, 200), layer = 'bottom')
 	#ready_button.visible = False
