@@ -20,6 +20,7 @@ class FractionTools(spyral.Scene):
 
         self.gender=gender
         self.name = name
+        self.fractions = fractions
         
         self.main_group = spyral.Group(self.camera)
         self.vertical_lines = spyral.Group(self.camera)
@@ -53,6 +54,7 @@ class FractionTools(spyral.Scene):
         self.bb = box_bottom
         self.bl = box_left
         self.bt = box_top
+        self.br = box_right
         d = fractions[0].denominator
         self.num_of_horizontal_lines = d + 1
         #Horizontal Lines and Vertical Slider
@@ -181,13 +183,43 @@ class FractionTools(spyral.Scene):
             old_height = self.shaded_box.get_rect()._h
             #old_height = self.shaded_box.height
             self.shaded_box.image = spyral.Image(size=(lines[x-1]-self.bl, old_height))
-            self.shaded_box.image.fill((135,206,250))
+            if self.check_for_correct_answer():
+                self.shaded_box.image.fill((0,255,0))
+            else:
+                self.shaded_box.image.fill((135,206,250))
         elif slider == self.vertical_slider and slider.y != lines[x-1]:
             slider.y = lines[x-1]
             old_width = self.shaded_box.get_rect()._w
             self.shaded_box.image = spyral.Image(size=(old_width, BOX_H - (lines[x-1]-self.bt)))
-            self.shaded_box.image.fill((135,206,250))
+            if self.check_for_correct_answer():
+                self.shaded_box.image.fill((0,255,0))
+            else:
+                self.shaded_box.image.fill((135,206,250))
 
+    def check_for_correct_answer(self):
+        #Vertical Slider
+        denominator0 = self.fractions[0].denominator
+        #Horizontal Slider
+        denominator1 = self.fractions[1].denominator
+
+        vertical_segment_size = BOX_H / denominator0
+        horizontal_segment_size = BOX_W / denominator1
+        
+        vertical_slider_correct = self.bb - (vertical_segment_size * self.fractions[0].numerator)
+        horizontal_slider_correct = self.bl + (horizontal_segment_size * self.fractions[1].numerator)
+
+        if (self.vertical_slider.y > vertical_slider_correct - 5) and (self.vertical_slider.y < vertical_slider_correct + 5) and (self.horizontal_slider.x > horizontal_slider_correct - 5) and (self.horizontal_slider.x < horizontal_slider_correct + 5):
+                return True
+        elif denominator0 == denominator1:
+            vertical_slider_correct = self.bb - (vertical_segment_size * self.fractions[1].numerator)
+            horizontal_slider_correct = self.bl + (horizontal_segment_size * self.fractions[0].numerator)
+            if (self.vertical_slider.y > vertical_slider_correct - 5) and (self.vertical_slider.y < vertical_slider_correct + 5) and (self.horizontal_slider.x > horizontal_slider_correct - 5) and (self.horizontal_slider.x < horizontal_slider_correct + 5):
+                return True
+            else:
+                return False
+        else:
+            return False
+        
     def dragging(self, slider):
         slider.dragging = True
 
