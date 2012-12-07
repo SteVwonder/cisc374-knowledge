@@ -13,8 +13,8 @@ class VocabScene(spyral.Scene):
 	self.camera = self.parent_camera.make_child(virtual_size = (WIDTH, HEIGHT), layers = ['bottom', 'top', 'all'])
 	self.texts = spyral.Group(self.camera)
 	self.buttons = spyral.Group(self.camera)
-	self.answered = spyral.Group(self.camera)
-
+	self.highlights = spyral.Group(self.camera)
+	self.answered = []
 	self.words, self.definitions = wordsearch_generator.getvocab('vocablist.txt')
 	self.difficulty = "hard"
 	self.grid = wordsearch_generator.make_grid(self.difficulty, self.words, 100)
@@ -23,12 +23,20 @@ class VocabScene(spyral.Scene):
 
 	self.wordsearch_text = extras.MultiLineText(self.grid.data, (600, 600), (WIDTH/2 + 20, 500), anchor='center', columns = self.grid.width, layer="top", font_size=24, color=(255,255,255))
 	#definitions_text = extras.MultiLineText(self.definitions, (1050, 250), (75, 680), spacing = 0, columns = 2, order="leftright", layer="top", font_size = 18, color=(255,255,255))
+
+	self.goodjob = extras.Text("Good Job! You've solved the puzzle.", (800, 300), (WIDTH/2, HEIGHT/2), anchor = 'center', layer = 'top', font_size = 48, color = (255, 255, 255))
+	self.goodjob.visible = False
+	self.words.reverse()
+	self.words.append("WORD BANK:")
+	self.words.reverse()
+	wordbank = extras.MultiLineText(self.words, (300, 800), (50, 50), spacing = 0, columns = 1, layer = 'top', font_size = 18)
+
 	self.last_clicked = 0
 	self.current_choices = []
 	self.cellsize = 600/self.grid.width
 	self.build_choices()
 
-	self.texts.add(self.wordsearch_text)
+	self.texts.add(self.wordsearch_text, wordbank, self.goodjob)
 
     def build_choices(self):
 
@@ -43,7 +51,7 @@ class VocabScene(spyral.Scene):
 
     def button_clicked(self):
 	sprite = self.last_clicked
-	if self.answered.has(sprite):
+	if self.highlights.has(sprite):
 	    return
 	if sprite == 0:
 	    return
@@ -82,18 +90,30 @@ class VocabScene(spyral.Scene):
 		    #vertical
 		    else:
 			increment = self.grid.width
-
+		
+		self.answered.append(coord[0])
 		for box in xrange(self.current_choices[0], self.current_choices[1]+1, increment):
 		    sprit = self.grid.buttons[box]
 		    sprit.image = spyral.Image(size=(self.cellsize, self.cellsize))
 		    sprit.image.fill((0,255,255))
 		    sprit.visible = True
 		    #self.buttons.remove(sprit)
-		    self.answered.add(sprit)
+		    self.highlights.add(sprit)
 		    sprit.draw(self.camera)
 		del self.current_choices[:]
 		self.last_clicked = 0
-		break
+	    if len(self.answered) == len(self.words)-1:
+		background = spyral.Image(size=(WIDTH, HEIGHT))
+		background.fill((0,0,0))
+		self.camera.set_background(background)
+		self.goodjob.visible = True
+		self.goodjob.draw(self.camera)
+		count = 0
+		while count < 10000000:
+		    count += 1
+		spyral.director.pop()
+		spyral.director.pop()
+		return	
 		    
 
     def update(self, dt):
