@@ -35,19 +35,20 @@ class FractionGame(spyral.Scene):
         self.difficulty = difficulty
         self.problem_fractions = None
         self.results_timer = RESULTS_TIME_ON_SCREEN
+        self.running_animation = False
         self.operation = None
         self.completed = 0
         self.number_of_tries = 0
-        
+
         #Button to move to the fractional tools scene
         fraction_tools_button = extras.Button(image_size=(200, 50), position=(WIDTH-5, 5), anchor='topright', layer='bottom', fill=(194, 194, 194))
         done_button = extras.Button(image_size=(200, 50), position=(WIDTH - 5, HEIGHT - 5), anchor='bottomright', layer='bottom', fill=(194, 194, 194))
-        tower_position = (160,765)
+        tower_position = (990,460)
         water_tower = extras.Button(filename="images/water_tower.png", position=tower_position, anchor='midbottom', layer='top')
-        self.water_tower_overflow = extras.Button(filename="images/water_tower.png", position=(tower_position[0]+water_tower.width+5, tower_position[1]), anchor='midbottom', layer='top')
+        self.water_tower_overflow = extras.Button(filename="images/water_tower.png", position=(tower_position[0], tower_position[1] + (water_tower.height) + 5), anchor='midbottom', layer='top')
         self.water_tower_overflow.visible = False
-        increase_water_button = extras.Button(filename="images/up_arrow.png", position=(tower_position[0]-water_tower.width, tower_position[1]-water_tower.height), anchor='midtop', layer='bottom')
-        decrease_water_button = extras.Button(filename="images/down_arrow.png", position=(tower_position[0]-water_tower.width, tower_position[1]), anchor='midbottom', layer='bottom')
+        increase_water_button = extras.Button(filename="images/up_arrow.png", position=(tower_position[0]+water_tower.width, tower_position[1]-water_tower.height), anchor='midtop', layer='bottom')
+        decrease_water_button = extras.Button(filename="images/down_arrow.png", position=(tower_position[0]+water_tower.width, tower_position[1]), anchor='midbottom', layer='bottom')
         self.results_button = extras.Button(image_size=(600,250), position=(WIDTH/2, HEIGHT/2), layer='top', fill=(255,255,255), group=self.others)
         self.results_button.visible = False
         
@@ -66,7 +67,13 @@ class FractionGame(spyral.Scene):
         self.hint_text.visible = False
         self.operation_text = extras.Text(self.operation, (50, 50), (2*WIDTH/6, FRACTION_SIZE[1] + 10), layer='bottom', font_size=70)
         equal_sign_text = extras.Text("=", (50,50), (4*WIDTH/6, FRACTION_SIZE[1] + 10), layer='bottom', font_size=70)
-        self.user_answer = self.generate_fraction_image(self.water_in_bucket, FRACTION_SIZE, (5*WIDTH/6, FRACTION_SIZE[1] + 10), layer='bottom')
+        self.user_answer = spyral.AggregateSprite(spyral.Group(self.camera))
+        self.user_answer.image = spyral.Image(size=FRACTION_SIZE)
+        self.user_answer.pos = (5*WIDTH/6, FRACTION_SIZE[1] + 10)
+        self.user_answer.layer = 'bottom'
+        self.user_answer.anchor = 'center'
+        self.user_answer.add_child(extras.Text("?", (FRACTION_SIZE), position=(0,20), anchor="topleft", font_size=100, layer='bottom'))
+                              #self.generate_fraction_image(self.water_in_bucket, FRACTION_SIZE, (5*WIDTH/6, FRACTION_SIZE[1] + 10), layer='bottom')
 
         #water in the water tower
         self.water_column_size = (15,190)
@@ -74,13 +81,18 @@ class FractionGame(spyral.Scene):
         self.water_in_overflow =  extras.Button(image_size=self.water_column_size, position=(self.water_tower_overflow.position[0], self.water_tower_overflow.position[1]-2), anchor='midbottom', layer='bottom', fill=(0,0,255), group=self.others)
         self.water_in_overflow.visible = False
 
-        sprinkler_head_1 = extras.Button(filename="images/sprinkler_head_short.png", position=(WIDTH/2-20, 720), layer='bottom', anchor='bottomright')
-        sprinkler_head_2 = extras.Button(filename="images/sprinkler_head_short.png", position=(WIDTH/2+30, 720), layer='bottom', anchor='bottomleft')
+        sprinkler_head_1 = extras.Button(filename="images/sprinkler_head_short.png", position=(520, 730), layer='bottom', anchor='bottomright')
+        sprinkler_head_2 = extras.Button(filename="images/sprinkler_head_short.png", position=(550, 730), layer='bottom', anchor='bottomleft')
 
         self.watering = spyral.Sprite()
-        self.watering.position = (WIDTH/2+5, HEIGHT/2-20)
+        self.watering.position = (480, HEIGHT/2-20)
         self.watering.anchor = 'center'
         self.watering.image = spyral.Image(size=(0,0))
+
+        silo_position = (80,470)
+        self.silo = extras.Button(filename="images/silo.png", position=silo_position, layer='top', anchor="midbottom", group=self.others)
+        self.corn_in_silo_image = extras.Button(image_size=(0,0), position=silo_position, layer='bottom', anchor="midbottom", group=self.others)
+        self.corn_in_silo = 0
         
         if self.difficulty == 1 or self.difficulty == 3:
             fraction_tools_button.visible = False
@@ -98,8 +110,9 @@ class FractionGame(spyral.Scene):
         self.fractions_tuple = self.generate_problem()
         
     def increase_water_in_bucket(self):
-        self.water_in_bucket = self.water_in_bucket + self.increment_bucket_by
-        self.update_user_answer_graphics()
+        if (self.water_in_bucket + self.increment_bucket_by) <= 2:
+            self.water_in_bucket = self.water_in_bucket + self.increment_bucket_by
+            self.update_user_answer_graphics()
 
     def decrease_water_in_bucket(self):
         if (self.water_in_bucket - self.increment_bucket_by).numerator >= 0:
@@ -126,7 +139,7 @@ class FractionGame(spyral.Scene):
                     return {self.property: spyral.Image(filename="images/animations/watering_5.png")}
                 else:
                     return {self.property: spyral.Image(size=(0,0))}
-        anim = myAnimator(2.0)
+        anim = myAnimator(1.0)
         self.watering.stop_all_animations()
         self.watering.animate(anim)
 
@@ -138,31 +151,38 @@ class FractionGame(spyral.Scene):
             def evaluate(self, sprite, progress):
                 progress = progress / self.duration
                 value = self.animator(sprite, progress)
-                if (value >= 0) and (value < .1):
+                if (value >= 0) and (value < .08):
                     return {self.property: spyral.Image(filename="images/animations/watering_1.png")}
-                elif (value >= .1) and (value < .2):
+                elif (value >= .08) and (value < .16):
                     return {self.property: spyral.Image(filename="images/animations/watering_2.png")}
-                elif (value >= .2) and (value < .3):
+                elif (value >= .16) and (value < .24):
                     return {self.property: spyral.Image(filename="images/animations/watering_3.png")}
-                elif (value >= .3) and (value < .4):
+                elif (value >= .24) and (value < .32):
                     return {self.property: spyral.Image(filename="images/animations/watering_4.png")}
-                elif (value >= .4) and (value < .5):
+                elif (value >= .32) and (value < .40):
                     return {self.property: spyral.Image(filename="images/animations/watering_5.png")}
-                elif (value >= .5) and (value < .6):
+                elif (value >= .40) and (value < .48):
                     return {self.property: spyral.Image(filename="images/animations/growing_sprout.png")}
-                elif (value >= .6) and (value < .7):
-                    return {self.property: spyral.Image(filename="images/animations/growing_sprout.png")}
-                elif (value >= .7) and (value < .8):
+                elif (value >= .48) and (value < .56):
                     return {self.property: spyral.Image(filename="images/animations/growing_full.png")}
-                elif (value >= .8) and (value < .9):
-                    return {self.property: spyral.Image(filename="images/animations/growing_full.png")}
-                elif (value >= .9) and (value < 1.0):
-                    return {self.property: spyral.Image(filename="images/animations/growing_full.png")}
+                elif (value >= .56) and (value < .63):
+                    return {self.property: spyral.Image(filename="images/animations/gathering_1.png")}
+                elif (value >= .63) and (value < .70):
+                    return {self.property: spyral.Image(filename="images/animations/gathering_2.png")}
+                elif (value >= .70) and (value < .77):
+                    return {self.property: spyral.Image(filename="images/animations/gathering_3.png")}
+                elif (value >= .77) and (value < .84):
+                    return {self.property: spyral.Image(filename="images/animations/gathering_4.png")}
+                elif (value >= .84) and (value < .91):
+                    return {self.property: spyral.Image(filename="images/animations/gathering_5.png")}
+                elif (value >= .91) and (value < 1.0):
+                    return {self.property: spyral.Image(filename="images/animations/gathering_6.png")}
                 else:
                     return {self.property: spyral.Image(size=(0,0))}
-                
-        anim = myAnimator(4.0)
-        self.results_timer = 4.0
+
+        anim = myAnimator(2.5)
+        self.results_timer = 2.5
+        self.running_animation = True
         self.watering.stop_all_animations()
         self.watering.animate(anim)
 
@@ -198,7 +218,7 @@ class FractionGame(spyral.Scene):
                 else:
                     return {self.property: spyral.Image(size=(0,0))}
                 
-        anim = myAnimator(4.0)
+        anim = myAnimator(2.0)
         self.watering.stop_all_animations()
         self.watering.animate(anim)
     
@@ -220,12 +240,16 @@ class FractionGame(spyral.Scene):
             elif event['type'] == 'MOUSEBUTTONDOWN':
                 self.check_click(event['pos'], self.buttons.sprites())
 
-        if self.completed >= NUMBER_TO_COMPLETE:
-            self.results_timer -= dt
-            if self.results_timer <= 0:
+        if self.running_animation == True:
+            if self.results_timer > 0:
+                self.results_timer -= dt
+            elif self.corn_in_silo >= 1.0:
                 village_selection_scene = spyral.director._stack[-2]
                 village_selection_scene.fraction_difficulty = self.difficulty + 1
                 spyral.director.pop()
+            else:
+                self.update_corn_in_silo()
+                self.running_animation = False
 
     def render(self):
         self.buttons.draw()
@@ -335,7 +359,7 @@ class FractionGame(spyral.Scene):
 
     def generate_multiply_same_denominator_problem(self, min, max):
         self.problem_fractions = self.generate_same_denominator_fractions(min, max)
-        self.operation = "*"
+        self.operation = "X"
         self.answer = self.problem_fractions[0] * self.problem_fractions[1]
         self.operation_text.set_text(self.operation)
         a = self.generate_fraction_image(self.problem_fractions[0], FRACTION_SIZE, (WIDTH/6, FRACTION_SIZE[1] + 10), layer='bottom')
@@ -347,7 +371,7 @@ class FractionGame(spyral.Scene):
 
     def generate_multiply_different_denominator_problem(self, min, max):
         self.problem_fractions = self.generate_different_denominator_fractions(min, max)
-        self.operation = "*"
+        self.operation = "X"
         self.answer = self.problem_fractions[0] * self.problem_fractions[1]
         self.operation_text.set_text(self.operation)
         a = self.generate_fraction_image(self.problem_fractions[0], FRACTION_SIZE, (WIDTH/6, FRACTION_SIZE[1] + 10), layer='bottom')
@@ -386,22 +410,27 @@ class FractionGame(spyral.Scene):
             self.water_in_tower.image = spyral.Image(size=(self.water_column_size[0], self.water_column_size[1] * (float(self.water_in_bucket.numerator)/float(self.water_in_bucket.denominator))))
             self.water_in_tower.image.fill((0,0,255))
         
+    def update_corn_in_silo(self):
+        self.corn_in_silo_image.image = extras.Button(image_size=(23,(self.silo.height * self.corn_in_silo)), position=self.silo.position, layer='bottom', anchor="midbottom", fill=(251, 236, 93)).image
+        
     def correct_answer(self):
         #Reset hint stuff
         self.number_of_tries = 0
         self.hint_text.visible = False
         
         self.completed += 1
+        self.corn_in_silo += float(1)/float(NUMBER_TO_COMPLETE)
+
         for fraction in self.fractions_tuple:
             #fraction.visible = False
             for sprite in fraction.get_children():
                 fraction.remove_child(sprite)
                 #fraction.draw(self.camera)
-        if self.completed != NUMBER_TO_COMPLETE:
+        if self.corn_in_silo < 1.0:
             self.fractions_tuple = self.generate_problem()
             self.update_user_answer_graphics()
                 #self.increase_water_text.set_text("Add Water (" + str(self.water_in_bucket) + ")")
-        elif self.completed == NUMBER_TO_COMPLETE:
+        elif self.corn_in_silo >= 1.0:
             for sprite in self.user_answer.get_children():
                 self.user_answer.remove_child(sprite)
             for sprite in self.texts.sprites():
@@ -423,6 +452,11 @@ class FractionGame(spyral.Scene):
         if (self.number_of_tries > 2):
             self.hint_text.set_text("Try something a little " + direction_of_answer)
             self.hint_text.visible = True
+            if self.corn_in_silo > .1:
+                self.corn_in_silo -= .1
+            else:
+                self.corn_in_silo = 0
+            self.update_corn_in_silo()
         else:
             self.hint_text.visible = False
 
@@ -435,7 +469,7 @@ class FractionGame(spyral.Scene):
                 return a
             return ( a * b ) / gcd(a, b)
 
-        self.results_timer = RESULTS_TIME_ON_SCREEN
+        #self.results_timer = RESULTS_TIME_ON_SCREEN
         if self.water_in_bucket == self.answer:
             self.correct_answer()
         else:
