@@ -229,7 +229,7 @@ class FractionTools(spyral.Scene):
         elif operation == '-':
             operator = "subtract"
             preposition = "from"
-        elif operation == '*':
+        elif operation == 'X':
             operator = "multiply"
             preposition = "with"
         fraction_one = str(fractions[0].numerator) + "/" + str(fractions[0].denominator)
