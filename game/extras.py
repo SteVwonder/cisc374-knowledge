@@ -141,6 +141,7 @@ class TextBox(spyral.Sprite):
         self.dcolor = dcolor
 
         self.description = Text(dtext,64,(position[0],position[1]-30),anchor=self.anchor,color=self.dcolor,font_size=self.font_size)
+        self.description.layer = "bottom"
         
         self.button = spyral.Sprite()
         self.button.image = spyral.Image(size = (width,height))
@@ -284,11 +285,3 @@ class Fraction():
                 b, a = a%b, b
             return a
         return ( a * b ) / gcd(a, b)
-
-class OverGrid(spyral.Sprite):
-    def __init__(self, width, height):
-	self.width = width
-	self.height = height
-	self.data = ['.'] * (width * height)
-	self.choices = ['0'] * (width * height)
-	self.words = []

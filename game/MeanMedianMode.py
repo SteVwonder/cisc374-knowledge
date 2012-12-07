@@ -15,13 +15,12 @@ FG_COLOR = (255, 255, 255)
 
 RESULT_TIME = 10
 FINISH_TIME = 60
-FINISH = 3
 
 VILLAGERS = ["images/Villager.png"
     ]
     
 class Villager(spyral.Sprite):
-    def __init__(self,x,y):
+    def __init__(self,x,y,biggest):
         super(Villager, self).__init__()
         #Villager Stuff
         self.layer = 'bottom'
@@ -40,7 +39,7 @@ class Villager(spyral.Sprite):
         self.x = x
         self.y = y
 
-        self.number = random.randrange(1,15)
+        self.number = random.randrange(1,biggest)
         self.text = extras.Text(str(self.number),64,(x,y+self.voff),color=(255,255,255),font_size=24)
         self.text.font_size = 24
         self.text.anchor = 'center'
@@ -56,12 +55,6 @@ class Villager(spyral.Sprite):
         self.billboard.x = x
         self.billboard.y = y+self.voff
         self.billboard.layer = 'middle'
-
-        if(self.text.y != y):
-            print "Not ON TOp Of Head!"
-        else:
-            print "jklfjaljdklfjaslkdjf What the hell!"
-        #add_child(self.billboard)
         
     def check_click(self, position):
         return self.get_rect().collide_point(position)
@@ -79,24 +72,38 @@ class Villager(spyral.Sprite):
         self.text = extras.Text(str(number),64,(self.x,self.y+self.voff),color=(255,255,255), font_size=24)
         
 class MeanMedianMode(spyral.Scene):
-    def __init__(self,correct=0):
+    def __init__(self,difficulty,correct=0,firsttime=1):
         super(MeanMedianMode, self).__init__()
         
         self.time_end = RESULT_TIME
         self.timer = self.time_end+1
         self.createmode = 0
         self.modenum = 0
+        self.difficulty = difficulty
+
+        if(self.difficulty == 1):
+            self.FINISH = random.randrange(3,5)
+            self.biggest = 5
+        if(self.difficulty == 2):
+            self.FINISH = random.randrange(4,6)
+            self.biggest = 9
+        if(self.difficulty == 3):
+            self.FINISH = random.randrange(5,7)
+            self.biggest = 15
         
         self.correct = correct
-        print correct
+        print "Correct Answer IS: "+str(correct)
         self.camera = self.parent_camera.make_child(virtual_size = (WIDTH, HEIGHT), layers=['bottom', 'middle','top'])
 
         self.group = spyral.Group(self.camera)
         self.text = spyral.Group(self.camera)
 
-        self.Ftext = extras.Text("Great Job!", (600, 450), (WIDTH/2, HEIGHT/2), layer='toptop', font_size=110,color=(255,255,255))
+        self.Ftext = extras.Text("Great Job!", (600, 450), (WIDTH/2, HEIGHT/2), layer='toptop', font_size=110,color=(0,0,255))
+        self.CorrectAnswer = extras.Text("", (600, 450), (WIDTH/2, HEIGHT/2), layer='toptop', font_size=55,color=(255,0,0))
+        
         self.group.add(self.Ftext)
-        if(self.correct < FINISH):
+        self.group.add(self.CorrectAnswer)
+        if(self.correct < self.FINISH):
             self.Ftext.visible = 0
             
         self.multiselect = 0
@@ -109,7 +116,7 @@ class MeanMedianMode(spyral.Scene):
         self.VillagerList = []
         self.NumberList = []
         
-        self.ListofText = ["Hey this is a conversation Box.",
+        self.ListofText = ["You selected difficulty number : "+str(self.difficulty),
                            "The problem is I cannot get more than one line to draw.",
                            "Using multiline strings will not work so instead",
                            "We should just use it like this."]
@@ -117,21 +124,30 @@ class MeanMedianMode(spyral.Scene):
                            "Mohamed Dicko",
                            "Super Grandiose Man of Infinite Wisdom",
                            "A Pair of Pants"]
-        self.conversation = conversation.Conversation([self.ListofNames,self.ListofText],(0,HEIGHT+10),self,w=WIDTH,h=HEIGHT,tcolor=(0,0,0))
-        self.group.add(self.conversation.button)
-        self.text.add(self.conversation.next)
-        self.text.add(self.conversation.visibletext)
-        self.text.add(self.conversation.nametext)
+        if(firsttime == 1):
+            self.conversation = conversation.Conversation([self.ListofNames,self.ListofText],(0,HEIGHT+10),self,w=WIDTH,h=HEIGHT,tcolor=(0,0,0))
+            self.group.add(self.conversation.button)
+            self.text.add(self.conversation.next)
+            self.text.add(self.conversation.visibletext)
+            self.text.add(self.conversation.nametext)
+        else:
+            self.conversation = 0
 
         self.totalnumber = random.randrange(5,8,2)
         for count in range(2,self.totalnumber):
-            nvil = Villager(random.randrange(200+(WIDTH-400)),random.randrange(200+(HEIGHT-500)))
-            if(self.createmode > 0)and(self.createmode < random.randrange(2,4))and(self.totalnumber != 5):
+            nvil = Villager(200+(random.randrange(WIDTH-400)),200+random.randrange(HEIGHT-500),self.biggest)
+            if(self.createmode > 0)and(self.createmode < random.randrange(3,4))and(self.totalnumber >= 5):
                 nvil.set_number(self.modenum)
                 self.createmode += 1
             if(self.createmode == 0)and(self.modenum == 0)and(self.totalnumber != 5):
                 self.modenum = nvil.number
                 self.createmode += 1
+            if(self.mean != 0):
+                if(count == self.totalnumber-1):
+                    while((nvil.number+self.mean) % (len(self.VillagerList)+1) != 0):
+                        print "Fixing MEAN : "+str(nvil.number)+" % "+str((len(self.VillagerList)+1))+" = "+str((nvil.number+self.mean) % (len(self.VillagerList)+1))
+                        nvil.set_number(nvil.number+1)
+                print "Fixed MEAN : "+str(nvil.number)+" % "+str((len(self.VillagerList)+1))+" = "+str((nvil.number+self.mean) % (len(self.VillagerList)+1))
             self.VillagerList.append(nvil)
             self.text.add(nvil.text)
             self.NumberList.append(nvil.number)
@@ -159,7 +175,7 @@ class MeanMedianMode(spyral.Scene):
 
         rnd = random.randrange(0,100)            
         if(len(self.VillagerList) <= 3):
-            if(rnd < 90):
+            if(rnd != -1):
                 self.meantext.visible = 1
                 self.mediantext.visible = 0
                 self.modetext.visible = 0
@@ -246,18 +262,9 @@ class MeanMedianMode(spyral.Scene):
         #Updating Conversations
         if(self.conversation != 0):
             self.conversation.update_text()
-        #Restarting the game
-        if(self.timer < self.time_end):
-            self.timer += 1
-            print "Timer: "+str(self.timer)
-        if(self.timer == self.time_end):
-            print "Correct: "+str(self.correct)
-            if(self.correct == FINISH):
-                return spyral.director.pop()
-            return spyral.director.replace(MeanMedianMode(self.correct))
         #Check for any new/relevant events
         for event in self.event_handler.get():
-            if(self.correct >= FINISH):
+            if(self.correct >= self.FINISH):
                 break
             #They clicked the OS exit button at the top of the frame
             if event['type'] == 'QUIT':
@@ -267,16 +274,26 @@ class MeanMedianMode(spyral.Scene):
             elif event['type'] == 'KEYDOWN':
                 self.ntext = self.get_type(self.type)+event['ascii']
                 self.set_type(self.ntext,self.type)
-                print self.type.dtext
+                #print "Typing: "+self.type.dtext
                 #ascii 27 is escape key
                 if event['ascii'] == chr(27):
                     spyral.director.pop()
                     return
                 #ascii 13 is enter key
                 if(event['ascii'] == chr(13))and(self.timer > RESULT_TIME):
-                    self.correct += self.type.get_answer()
-                    if(self.correct == FINISH):
+                    self.canswer = self.type.get_answer()
+                    self.correct += self.canswer
+                    print "Correct Answers:"+str(self.correct)
+                    if(self.correct == self.FINISH):
                         self.Ftext.visible = 1
+                        self.timer = 0
+                        self.time_end = FINISH_TIME
+                    else:
+                        self.CorrectAnswer.visible = 1
+                        if(self.canswer == 0):
+                            self.CorrectAnswer.set_text("The Answer Was:   "+str(self.type.answer))
+                        else:
+                            self.CorrectAnswer.set_text("Only "+str(self.FINISH-self.correct)+" more to go!")
                         self.timer = 0
                         self.time_end = FINISH_TIME
                     self.timer = 0
@@ -301,3 +318,14 @@ class MeanMedianMode(spyral.Scene):
                 self.deselect(self.Selectable)
             elif event['type'] == 'MOUSEMOTION':
                 self.moveselected(event['pos'])
+        #Restarting the game
+        if(self.timer < self.time_end):
+            self.timer += 1
+            #print "Timer: "+str(self.timer)
+        if(self.timer == self.time_end):
+            print "Correct: "+str(self.correct)
+            if(self.correct == self.FINISH):
+                village_selection_scene = spyral.director._stack[-2]
+                village_selection_scene.MMM_difficulty = self.difficulty + 1
+                return spyral.director.pop()
+            return spyral.director.replace(MeanMedianMode(self.difficulty,correct=self.correct,firsttime=0))

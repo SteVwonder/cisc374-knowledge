@@ -64,8 +64,6 @@ class CharacterPick(spyral.Scene):
     def on_enter(self):
 	background = spyral.Image(size=(WIDTH,HEIGHT))
 	background.fill((255,255,255))
-	bg_img = spyral.Image(filename="images/BB_who_resize.png")
-	background.draw_image(bg_img, ((WIDTH-bg_img.get_width())/2,(HEIGHT-bg_img.get_height())/5))
 	self.camera.set_background(background)
 
     def render(self):
