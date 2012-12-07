@@ -5,6 +5,7 @@ import fraction_game
 import MeanMedianMode
 import conversation
 import vocab_search
+import random
 
 WIDTH = 1200
 HEIGHT = 900
@@ -14,7 +15,7 @@ MMM_TEXT = [["Off-scene guy", "Mr. President", "Snoop Lion"], ["Mean", "Median",
 VOCABSEARCH_TEXT = [["Spooky voice", "Not so spooky voice", "Grandma"], ["Find it..", "Find the words", "They're good for you"]]
 
 class TownSquare(spyral.Scene):
-    def __init__(self, town):
+    def __init__(self, town,fd=1,md=1,vd=1):
 
 	super(TownSquare, self).__init__()
 
@@ -26,17 +27,31 @@ class TownSquare(spyral.Scene):
 	self.town = town
 	self.popularity = 0
 	#self.crowd = spyral.Image()
-	self.fraction_difficulty = 1
-	self.MMM_difficulty = 1
-	self.search_difficulty = 'easy'
+	self.fraction_difficulty = fd
+	self.MMM_difficulty = md
+	self.search_difficulty = vd
+
+        if(town == 'fraction'):
+            self.dif = self.fraction_difficulty
+        elif(town == 'MMM'):
+            self.dif = self.MMM_difficulty
+        elif(town == "vocabsearch"):
+            self.dif = self.search_difficulty
+            
+        self.VLIST = []
+	for x in range(0,4*self.dif):
+            fle = "images/Character Boy.png"
+            self.VLIST.append(extras.Button(position=(120+random.randrange(0,800,110), 300+random.randrange(0,300,110)), layer='bottom',filename=fle))
+            self.texts.add(self.VLIST[x])
 
 	self.greetings = {'fraction': FRACTION_TEXT, 'MMM': MMM_TEXT, 'vocabsearch': VOCABSEARCH_TEXT}
 	self.greeting = conversation.Conversation(self.greetings[town], (0, HEIGHT), self, WIDTH, HEIGHT, tcolor=(0, 255, 0))
-	self.greeting.button.draw(self.camera)
+	#self.greeting.button.draw(self.camera)
+	self.texts.add(self.greeting.button)
 
-	self.ready_button = extras.Button((WIDTH/2, HEIGHT/2), (200, 200), layer = 'bottom')
+	self.ready_button = extras.Button((WIDTH/2, HEIGHT/2), (200, 200), layer = 'top')
 	self.ready_button.visible = False
-	self.ready_button_text = extras.Text("< Yes >", (200, 200), (WIDTH/2, HEIGHT/2), layer = 'top', font_size = 26)
+	self.ready_button_text = extras.Text("< Yes >", (200, 200), (WIDTH/2, HEIGHT/2), layer = 'toptop', font_size = 26)
 	self.ready_button_text.visible = False
 	if town == 'fraction': 
 	    self.ready_button.clicked = lambda: spyral.director.push(fraction_game.FractionGame(self.fraction_difficulty))
