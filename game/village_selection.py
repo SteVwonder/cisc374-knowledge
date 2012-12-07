@@ -90,15 +90,15 @@ class VillageSelection(spyral.Scene):
         for sprite in self.fstars:
             if sprite.check_click(local_position):
                 #This method needs to be set with a lambda function
-                return sprite.clicked()
+                return sprite.clicked(sprite.number)
         for sprite in self.mstars:
             if sprite.check_click(local_position):
                 #This method needs to be set with a lambda function
-                return sprite.clicked()
+                return sprite.clicked(sprite.number)
         for sprite in self.vstars:
             if sprite.check_click(local_position):
                 #This method needs to be set with a lambda function
-                return sprite.clicked()
+                return sprite.clicked(sprite.number)
 
     def setupstars(self):
         #Add stars under Buttons
@@ -106,35 +106,43 @@ class VillageSelection(spyral.Scene):
         for x in range(self.fraction_difficulty):
             self.cbutton.append(extras.Button(filename="images/Star.png",layer='bottom',position=(430+(90*x),775)))
             self.fstars.append(self.cbutton[-1])
-            self.cbutton[-1].text = extras.Text(str(x+1),64,(430+(90*x),782),color=(255,0,255),font_size=24)
+            self.cbutton[-1].text = extras.Text(str(x+1),64,(430+(90*x),790),color=(255,0,255),font_size=24)
             self.cbutton[-1].text.layer = "all"
             self.fstars[-1].layer = 'top'
             self.stars.add(self.fstars[x])
             self.texts.add(self.cbutton[-1].text)
             self.cbutton[-1].number = x+1
-            self.cbutton[-1].clicked = lambda: spyral.director.push(MeanMedianMode.MeanMedianMode())
+            self.cbutton[-1].clicked = self.launchFG
         for x in range(0,self.MMM_difficulty):
             self.cbutton.append(extras.Button(filename="images/Star.png",layer='bottom',position=(212+(90*x),370)))
             self.mstars.append(self.cbutton[-1])
-            self.cbutton[-1].text = extras.Text(str(x+1),64,(212+(90*x),378),color=(255,0,255),font_size=24)
+            self.cbutton[-1].text = extras.Text(str(x+1),64,(212+(90*x),385),color=(255,0,255),font_size=24)
             self.cbutton[-1].text.layer = "all"
             self.mstars[-1].layer = 'top'
             self.stars.add(self.mstars[x])
             self.texts.add(self.cbutton[-1].text)
-            self.cbutton[-1].clicked = lambda: spyral.director.push(MeanMedianMode.MeanMedianMode(x+1))
+            self.cbutton[-1].number = x+1
+            self.cbutton[-1].clicked = self.launchMMM
         for x in range(0,self.Vocab_difficulty):
             self.cbutton.append(extras.Button(filename="images/Star.png",layer='bottom',position=(537+(90*x),370)))
             self.vstars.append(self.cbutton[-1])
-            self.cbutton[-1].text = extras.Text(str(x+1),64,(537+(90*x),378),color=(255,0,255),font_size=24)
+            self.cbutton[-1].text = extras.Text(str(x+1),64,(537+(90*x),385),color=(255,0,255),font_size=24)
             self.cbutton[-1].text.layer = "all"
             self.vstars[-1].layer = 'top'
             self.stars.add(self.vstars[x])
             self.texts.add(self.cbutton[-1].text)
-            self.cbutton[-1].clicked = lambda: spyral.director.push(vocab_search.VocabScene(x+1))
+            self.cbutton[-1].number = x+1
+            self.cbutton[-1].clicked = self.launchVS
         print str(len(self.cbutton))
-    def launchMMM(self,difficulty):
+    def launchFG(self,difficulty):
         print "Difficulty passed on: "+str(difficulty)
         spyral.director.push(fraction_game.FractionGame(difficulty))
+    def launchMMM(self,difficulty):
+        print "Difficulty passed on: "+str(difficulty)
+        spyral.director.push(MeanMedianMode.MeanMedianMode(difficulty))
+    def launchVS(self,difficulty):
+        print "Difficulty passed on: "+str(difficulty)
+        spyral.director.push(vocab_search.VocabScene(difficulty))
     def purgestars(self):
         self.fstars = []
         self.mstars = []
@@ -152,7 +160,7 @@ class VillageSelection(spyral.Scene):
     def render(self):
         self.main_group.draw()
         self.buttons.draw()
-        #self.texts.draw()
+        self.texts.draw()
         self.stars.draw()
 
     #Check for someone trying to quit

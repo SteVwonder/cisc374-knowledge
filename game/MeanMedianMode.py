@@ -280,7 +280,7 @@ class MeanMedianMode(spyral.Scene):
                     spyral.director.pop()
                     return
                 #ascii 13 is enter key
-                if(event['ascii'] == chr(13))and(self.timer > RESULT_TIME):
+                if(event['ascii'] == chr(13)):
                     self.canswer = self.type.get_answer()
                     self.correct += self.canswer
                     print "Correct Answers:"+str(self.correct)
@@ -296,7 +296,6 @@ class MeanMedianMode(spyral.Scene):
                             self.CorrectAnswer.set_text("Only "+str(self.FINISH-self.correct)+" more to go!")
                         self.timer = 0
                         self.time_end = FINISH_TIME
-                    self.timer = 0
                 #ascii 8 is backspace key
                 if event['ascii'] == chr(8):
                     txt = self.get_type(self.type)
@@ -322,10 +321,11 @@ class MeanMedianMode(spyral.Scene):
         if(self.timer < self.time_end):
             self.timer += 1
             #print "Timer: "+str(self.timer)
-        if(self.timer == self.time_end):
-            print "Correct: "+str(self.correct)
+        if(self.timer == self.time_end):           
+            print "Correct Amount: "+str(self.correct)+"/"+str(self.FINISH)
             if(self.correct == self.FINISH):
                 village_selection_scene = spyral.director._stack[-2]
                 village_selection_scene.MMM_difficulty = self.difficulty + 1
                 return spyral.director.pop()
-            return spyral.director.replace(MeanMedianMode(self.difficulty,correct=self.correct,firsttime=0))
+            else:
+                return spyral.director.replace(MeanMedianMode(self.difficulty,correct=self.correct,firsttime=0))

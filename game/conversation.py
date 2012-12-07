@@ -78,7 +78,7 @@ class Conversation(spyral.Sprite):
             self.button.visible = 0
             self.next.visible = 0
             self.nametext.visible = 0
-            return
+            return -1
         print "Going to next text"
     def set_text(self, tlist):
         self.tlist = tlist
