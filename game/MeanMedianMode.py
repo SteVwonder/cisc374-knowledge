@@ -135,7 +135,7 @@ class MeanMedianMode(spyral.Scene):
                             "Random Villager",
                            "Random Villager"]
         if(firsttime == 1)and(self.difficulty == 1):
-            self.conversation = conversation.Conversation([self.ListofNames,self.ListofText],(0,HEIGHT+10),self,w=WIDTH,h=HEIGHT,tcolor=(0,0,0))
+            self.conversation = conversation.Conversation([self.ListofNames,self.ListofText],(0,HEIGHT+10),self,w=WIDTH,h=HEIGHT,tcolor=(0,255,0))
             self.group.add(self.conversation.button)
             self.text.add(self.conversation.next)
             self.text.add(self.conversation.visibletext)

@@ -48,7 +48,7 @@ class FractionGame(spyral.Scene):
         self.ListofText = ["Use the red arrows to change the amount of water you use."]
         self.ListofNames = [self.name]
         if(firsttime == 1)and(self.difficulty == 1):
-            self.conversation = conversation.Conversation([self.ListofNames,self.ListofText],(0,HEIGHT+10),self,w=WIDTH,h=HEIGHT,tcolor=(0,255,200))
+            self.conversation = conversation.Conversation([self.ListofNames,self.ListofText],(0,HEIGHT+10),self,w=WIDTH,h=HEIGHT,tcolor=(0,255,0))
             self.texts.add(self.conversation.button)
             self.texts.add(self.conversation.next)
             self.texts.add(self.conversation.visibletext)
