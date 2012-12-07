@@ -284,11 +284,3 @@ class Fraction():
                 b, a = a%b, b
             return a
         return ( a * b ) / gcd(a, b)
-
-class OverGrid(spyral.Sprite):
-    def __init__(self, width, height):
-	self.width = width
-	self.height = height
-	self.data = ['.'] * (width * height)
-	self.choices = ['0'] * (width * height)
-	self.words = []

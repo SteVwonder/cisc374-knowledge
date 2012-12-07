@@ -41,7 +41,7 @@ class Grid(object):
 	self.height = height
 	self.data = ['.'] * (width * height)
 	self.words = []
-	self.choices = ['0'] * (width * height)
+	self.buttons = []
 
     # Determines the placement of the word at random
     # The length of an existing word can be input to determine 
@@ -93,7 +93,11 @@ class Grid(object):
 	    while True:
 		x, y, x_dir, y_dir = self.word_placement(word_len, level_directions)
 		if self.write_word(word, x, y, x_dir, y_dir):
-		    self.words.append((word, x, y, x_dir, y_dir))
+		    print x, y, x_dir, y_dir
+		    coord = [x*self.width + y, 0]
+		    coord[1] = coord[0] + (word_len-1)*(y_dir + x_dir*self.width)
+		    coord.sort()
+		    self.words.append((word, coord))
 		    break
 		tries -= 1
 		if tries <= 0:
@@ -106,8 +110,6 @@ class Grid(object):
         for pos in xrange(self.width * self.height):
 	    if self.data[pos] == '.':
 		self.data[pos] = random.choice(alphabet)
-	    else:
-		self.choices[pos] = '1'
 
 ''' # Prints screen to stdout for testing purposes
     def print_to_screen(self):
