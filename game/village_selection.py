@@ -1,8 +1,6 @@
 import spyral
-import fraction_game
-import vocab_search
+import town_square
 import extras
-import MeanMedianMode
 
 WIDTH = 1200
 HEIGHT = 900
@@ -65,10 +63,10 @@ class VillageSelection(spyral.Scene):
 
         fraction_game_button.clicked = lambda: spyral.director.push(town_square.TownSquare('fraction'))
         play_MMM.clicked = lambda: spyral.director.push(town_square.TownSquare('MMM'))
-	vocab_search_button = lambda: spyral.director.push(town_square.TownSquare('vocabsearch'))
+	vocab_search_button.clicked = lambda: spyral.director.push(town_square.TownSquare('vocabsearch'))
         fraction_game_button2.clicked = lambda: spyral.director.push(town_square.TownSquare('fraction'))
-        play_MMM2.clicked = lambda: spyral.director.push(town_square.TownSquare('MMM')
-	vocab_search_button2 = lambda: spyral.director.push(town_square.TownSquare('vocabsearch'))
+        play_MMM2.clicked = lambda: spyral.director.push(town_square.TownSquare('MMM'))
+	vocab_search_button2.clicked = lambda: spyral.director.push(town_square.TownSquare('vocabsearch'))
         
         #Using two different groups for text and buttons
         #That way we only have to check for clicks on the buttons
@@ -123,7 +121,7 @@ class VillageSelection(spyral.Scene):
         
     #Set the background of the scene
     def on_enter(self):
-        self.fraction_game_text._expire_static()
+        #self.fraction_game_text._expire_static()
         background = spyral.Image(filename="images/BG.png")
         self.camera.set_background(background)
         self.purgestars()
@@ -132,7 +130,7 @@ class VillageSelection(spyral.Scene):
     def render(self):
         self.main_group.draw()
         self.buttons.draw()
-        self.texts.draw()
+        #self.texts.draw()
         self.stars.draw()
 
     #Check for someone trying to quit

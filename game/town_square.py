@@ -39,7 +39,7 @@ class TownSquare(spyral.Scene):
 	if town == 'fraction': 
 	    ready_button.clicked = lambda: spyral.director.push(fraction_game.FractionGame(self.fraction_difficulty))
 	elif town == 'MMM':
-	    ready_button.clicked = lambda: spyral.director.push(MeanMedianMode.MeanMedianMode())
+	    ready_button.clicked = lambda: spyral.director.push(MeanMedianMode.MeanMedianMode(self.MMM_difficulty))
 	elif town == 'vocabsearch':
 	    ready_button.clicked = lambda: spyral.director.push(vocab_search.VocabScene(self.search_difficulty))
 
