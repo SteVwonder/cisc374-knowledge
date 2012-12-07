@@ -21,6 +21,7 @@ class TownSquare(spyral.Scene):
 	self.camera = self.parent_camera.make_child(virtual_size = (WIDTH, HEIGHT), layers = ['bottom', 'top', 'all'])
 	self.buttons = spyral.Group(self.camera)
 	self.texts = spyral.Group(self.camera)
+	self.move_on = spyral.Group(self.camera)
 
 	self.town = town
 	self.popularity = 0
@@ -32,7 +33,6 @@ class TownSquare(spyral.Scene):
 	self.greetings = {'fraction': FRACTION_TEXT, 'MMM': MMM_TEXT, 'vocabsearch': VOCABSEARCH_TEXT}
 	self.greeting = conversation.Conversation(self.greetings[town], (0, HEIGHT), self, WIDTH, HEIGHT, tcolor=(0, 255, 0))
 	#self.buttons.add(self.greeting.button)
-	self.texts.add(self.greeting.next, self.greeting.visibletext, self.greeting.nametext)
 
 	self.ready_button = extras.Button((WIDTH/2, HEIGHT/2), (200, 200), layer = 'bottom')
 	self.ready_button.visible = False
@@ -46,7 +46,7 @@ class TownSquare(spyral.Scene):
 	    self.ready_button.clicked = lambda: spyral.director.push(vocab_search.VocabScene(self.search_difficulty))
 
 	self.buttons.add(self.ready_button)
-	self.texts.add(self.ready_button_text)
+	self.texts.add(self.ready_button_text, self.greeting.next, self.greeting.visibletext, self.greeting.nametext)
 	
     def check_click(self, position, group):
 	local_position = self.camera.world_to_local(position)
@@ -64,10 +64,7 @@ class TownSquare(spyral.Scene):
 
     def update(self, dt):
 	#Update conversation
-	if self.greeting == -1:
-	    self.ready_button.visible = True
-	    self.ready_button_text.visible = True
-	else:
+	if self.greeting != -1:
 	    self.greeting.update_text()
 	for event in self.event_handler.get():
 	    #Clicked on OS exit button
@@ -87,7 +84,10 @@ class TownSquare(spyral.Scene):
 			    self.greeting.quick_end()
 			    return
 		    if (self.greeting.currentposition >= len(self.greeting.ctext)-1):
-			self.greeting.to_next()
+			moveflag = self.greeting.to_next()
+			if moveflag == -1:
+			    self.ready_button.visible = True
+			    self.ready_button_text.visible = True
 			return
 	    elif event['type'] == 'MOUSEBUTTONDOWN':
 		self.check_click(event['pos'], self.buttons.sprites())
