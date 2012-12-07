@@ -117,7 +117,7 @@ class FractionGame(spyral.Scene):
         self.corn_in_silo_image = extras.Button(image_size=(0,0), position=silo_position, layer='bottom', anchor="midbottom", group=self.others)
         self.corn_in_silo = 0
         
-        if self.difficulty == 1 or self.difficulty == 3:
+        if self.difficulty == 1:
             fraction_tools_button.visible = False
             fraction_tools_text.visible = False
         else:
@@ -420,11 +420,11 @@ class FractionGame(spyral.Scene):
         if self.difficulty == 1:
             return self.generate_simple_same_denominator_problem(1, 6)
         elif self.difficulty == 3:
-            return self.generate_simple_different_denominator_problem(1, 6)
+            return self.generate_multiply_different_denominator_problem(1, 5)
         elif self.difficulty == 2:
             return self.generate_multiply_same_denominator_problem(1, 6)
-        elif self.difficulty == 4:
-            return self.generate_multiply_different_denominator_problem(1, 5)
+#        elif self.difficulty == 4:
+#            return self.generate_simple_different_denominator_problem(1, 6)
         else:
             raise ValueError("Unrecognized Difficulty Level")
 
