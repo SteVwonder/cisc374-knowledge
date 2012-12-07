@@ -22,7 +22,7 @@ class CharacterPick(spyral.Scene):
 	self.name = 'Hero'
 	self.gender = "Hero"
 
-	self.textbox = extras.TextBox("Name:", (500, 800), "Nice name!", width = 200, height = 50, font_size = 22, dcolor=(0,0,0), tcolor=(0,255,0))
+	self.textbox = extras.TextBox("Name:", (600, 800), "Nice name!", width = 200, height = 50, font_size = 22, dcolor=(0,0,0), tcolor=(0,255,0))
 	self.textbox.selecting = 1
 
 	male_button = extras.Button(image_size = (350, 400), position = (WIDTH/4, 475), filename = "images/VikingMale.png", layer = 'bottom')

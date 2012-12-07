@@ -54,7 +54,7 @@ class Conversation(spyral.Sprite):
             self.visibletext.set_text(self.ctext[:self.currentposition])
             self.visibletext.layer = self.layer
 
-            self.button.image = spyral.Image(filename=self.button_image)
+            #self.button.image = spyral.Image(filename=self.button_image)
             self.next.visible = 0
         if(self.currentposition >= len(self.ctext)) and(self.button.visible == 1):
             self.next.visible = 1
