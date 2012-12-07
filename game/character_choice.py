@@ -94,8 +94,6 @@ class CharacterPick(spyral.Scene):
                 if event['ascii'] == chr(27):
                     spyral.director.pop()
                     return
-		if event['ascii'] == chr(13):
-		    return self.textbox.get_answer()
 		if event['ascii'] == chr(8):
                     txt = self.textbox.get_text() 
 		    txt = txt[:len(txt)-2]
