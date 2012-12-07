@@ -103,9 +103,11 @@ class MeanMedianMode(spyral.Scene):
 
         self.Ftext = extras.Text("Great Job!", (600, 450), (WIDTH/2, HEIGHT/2), layer='toptop', font_size=110,color=(0,0,255))
         self.CorrectAnswer = extras.Text("", (600, 450), (WIDTH/2, HEIGHT/2), layer='toptop', font_size=55,color=(255,0,0))
+        self.MON = extras.Text("Press Enter to Move On", (600,450),(WIDTH, HEIGHT), layer='bottom', anchor='bottomright',font_size=32,color=(0,0,0))
         
         self.group.add(self.Ftext)
         self.group.add(self.CorrectAnswer)
+        self.group.add(self.MON)
         if(self.correct < self.FINISH):
             self.Ftext.visible = 0
             
@@ -119,7 +121,7 @@ class MeanMedianMode(spyral.Scene):
         self.VillagerList = []
         self.NumberList = []
         
-        self.ListofText = ["Help, <Name Here> the wizard came and trapped us in boxes!",
+        self.ListofText = ["Help us "+self.name+"! The wizard came and trapped us in boxes!",
                            "These boxes are magic and cant be broken by anything!",
                            "I think the wizard is hiding with us!",
                            "Move us around and find the Mean, Median and Mode of us to find the Wizard!"]
