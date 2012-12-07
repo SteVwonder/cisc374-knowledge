@@ -7,13 +7,16 @@ WIDTH = 1200
 HEIGHT = 900
 
 class VocabScene(spyral.Scene):
-    def __init__(self, difficulty):
+    def __init__(self, difficulty,gender='Hero',name='Hero'):
 	super(VocabScene, self).__init__()
 
 	self.camera = self.parent_camera.make_child(virtual_size = (WIDTH, HEIGHT), layers = ['bottom', 'top', 'all'])
 	self.texts = spyral.Group(self.camera)
 	self.buttons = spyral.Group(self.camera)
 	self.answered = spyral.Group(self.camera)
+
+	self.gender = gender
+	self.name = name
 
 	self.words, self.definitions = wordsearch_generator.getvocab('vocablist.txt')
 	self.difficulty = "hard"

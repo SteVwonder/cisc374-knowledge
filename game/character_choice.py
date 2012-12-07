@@ -16,7 +16,11 @@ class CharacterPick(spyral.Scene):
 	self.texts = spyral.Group(self.camera)
 	self.after = spyral.Group(self.camera)
 
+	spyral.director.gender = "tobecon"
+	spyral.director.name = "foobar"
+
 	self.name = 'Hero'
+	self.gender = "Hero"
 
 	self.textbox = extras.TextBox("Name:", (500, 800), "Nice name!", width = 200, height = 50, font_size = 22, dcolor=(0,0,0), tcolor=(0,255,0))
 	self.textbox.selecting = 1
@@ -28,14 +32,21 @@ class CharacterPick(spyral.Scene):
 	#male_text = extras.Text("Male", (350, 500), (WIDTH/4, 325), layer = 'top', font_size = 22)
 	#female_text = extras.Text("Female", (350, 500), (3*WIDTH/4, 325), layer = 'top', font_size = 22)
 
-	male_button.clicked = lambda: self.char_chosen()
-	female_button.clicked = lambda: self.char_chosen()
+	male_button.clicked = lambda: self.char_chosen(0)
+	female_button.clicked = lambda: self.char_chosen(1)
 	#self.textbox.button.clicked = lambda: self.textbox.button.select(self)
 
 	self.buttons.add(male_button, female_button)
 	self.texts.add(self.textbox.description, self.textbox.btext, title_text)
 
-    def char_chosen(self):
+    def char_chosen(self,sex):
+        if(sex == 0):
+            spyral.director.gender = "Hero"
+        else:
+            spyral.director.gender = "Heroine"
+            if(self.name == "Hero"):
+                self.name = "Heroine"
+        spyral.director.name = self.name
 	for sprite in self.buttons.sprites():
 	    sprite.visible = False
 	for sprite in self.texts.sprites():
@@ -49,7 +60,7 @@ class CharacterPick(spyral.Scene):
 	chosen_text = extras.MultiLineText(["Congratulations, {0}!".format(self.name), "You have been chosen to save the kingdom", "Are you ready?"], (850, 400), (WIDTH/2, 450), anchor='center', layer = 'top', font_size = 34)
 
 	move_on_button = extras.Button(image_size = (900, 500), position = (WIDTH/2, HEIGHT/2), anchor = 'center', layer = 'bottom')
-	move_on_button.clicked = lambda: spyral.director.push(village_selection.VillageSelection())
+	move_on_button.clicked = lambda: spyral.director.push(village_selection.VillageSelection(gender = self.gender,name = self.name))
 
 	self.texts.add(chosen_text, move_on_text)
 	self.buttons.add(move_on_button)
