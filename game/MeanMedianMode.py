@@ -72,8 +72,11 @@ class Villager(spyral.Sprite):
         self.text = extras.Text(str(number),64,(self.x,self.y+self.voff),color=(255,255,255), font_size=24)
         
 class MeanMedianMode(spyral.Scene):
-    def __init__(self,difficulty,correct=0,firsttime=1):
+    def __init__(self,difficulty,correct=0,firsttime=1,gender="Hero",name="Hero"):
         super(MeanMedianMode, self).__init__()
+
+        self.gender = gender
+        self.name = name
         
         self.time_end = RESULT_TIME
         self.timer = self.time_end+1
@@ -325,8 +328,9 @@ class MeanMedianMode(spyral.Scene):
         if(self.timer == self.time_end):           
             print "Correct Amount: "+str(self.correct)+"/"+str(self.FINISH)
             if(self.correct == self.FINISH):
-                village_selection_scene = spyral.director._stack[-2]
+                village_selection_scene = spyral.director._stack[-3]
                 village_selection_scene.MMM_difficulty = min(self.difficulty + 1,3)
-                return spyral.director.pop()
+                spyral.director.pop()
+                spyral.director.pop()
             else:
                 return spyral.director.replace(MeanMedianMode(self.difficulty,correct=self.correct,firsttime=0))

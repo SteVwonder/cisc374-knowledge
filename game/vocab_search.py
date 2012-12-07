@@ -7,14 +7,18 @@ WIDTH = 1200
 HEIGHT = 900
 
 class VocabScene(spyral.Scene):
-    def __init__(self, difficulty):
+    def __init__(self, difficulty,gender='Hero',name='Hero'):
 	super(VocabScene, self).__init__()
 
 	self.camera = self.parent_camera.make_child(virtual_size = (WIDTH, HEIGHT), layers = ['bottom', 'middle', 'top', 'all'])
 	self.texts = spyral.Group(self.camera)
 	self.buttons = spyral.Group(self.camera)
 	self.highlights = spyral.Group(self.camera)
-	self.answered = []
+    
+
+	self.gender = gender
+	self.name = name
+
 	self.words, self.definitions = wordsearch_generator.getvocab('vocablist.txt')
 	self.difficulty = "hard"
 	self.grid = wordsearch_generator.make_grid(self.difficulty, self.words, 100)
@@ -24,19 +28,21 @@ class VocabScene(spyral.Scene):
 	self.wordsearch_text = extras.MultiLineText(self.grid.data, (600, 600), (WIDTH/2 + 20, 500), anchor='center', columns = self.grid.width, layer="top", font_size=24, color=(255,255,255))
 	#definitions_text = extras.MultiLineText(self.definitions, (1050, 250), (75, 680), spacing = 0, columns = 2, order="leftright", layer="top", font_size = 18, color=(255,255,255))
 
-	self.goodjob = extras.Text("Good Job! You've solved the puzzle.", (800, 300), (WIDTH/2, HEIGHT/2), anchor = 'center', layer = 'top', font_size = 48, color = (255, 255, 255))
-	self.goodjob.visible = False
+	#self.goodjob = extras.Text("Good Job! You've solved the puzzle.", (800, 300), (WIDTH/2, HEIGHT/2), anchor = 'center', layer = 'top', font_size = 48, color = (255, 255, 255))
+	#self.goodjob.visible = False
 	self.words.reverse()
 	self.words.append("WORD BANK:")
 	self.words.reverse()
 	wordbank = extras.MultiLineText(self.words, (300, 800), (50, 50), spacing = 0, columns = 1, layer = 'top', font_size = 18)
 	self.answercount = 0
+
 	self.last_clicked = 0
 	self.current_choices = []
 	self.cellsize = 600/self.grid.width
 	self.build_choices()
 	
-	self.texts.add(self.wordsearch_text, wordbank, self.goodjob)
+	self.texts.add(self.wordsearch_text, wordbank)
+
 
     def build_choices(self):
 
@@ -89,8 +95,7 @@ class VocabScene(spyral.Scene):
 			increment = self.grid.width-1
 		    #vertical
 		    else:
-			increment = self.grid.width
-		
+			increment = self.grid.width		
 
 		self.grid.buttons[self.current_choices[0]].visible = False
 		self.grid.buttons[self.current_choices[1]].visible = False
@@ -111,7 +116,7 @@ class VocabScene(spyral.Scene):
 		spyral.director.pop()
 		spyral.director.pop()
 		return	
-		    
+ 
 
     def update(self, dt):
 

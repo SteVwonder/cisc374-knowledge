@@ -12,11 +12,14 @@ LINE_THICKNESS = 5
 # Several widgets that help the kids visualize fractional operations
 
 class FractionTools(spyral.Scene):
-    def __init__(self, difficulty, fractions, operation,firsttime = 1):
+    def __init__(self, difficulty, fractions, operation,firsttime = 1,gender="Hero",name="Hero"):
         super(FractionTools, self).__init__()
 
         self.camera = self.parent_camera.make_child(virtual_size = (WIDTH, HEIGHT), layers=['bottom', 'all', 'shaded', 'grid_lines'])
         self.difficulty = difficulty
+
+        self.gender=gender
+        self.name = name
         
         self.main_group = spyral.Group(self.camera)
         self.vertical_lines = spyral.Group(self.camera)
@@ -229,7 +232,7 @@ class FractionTools(spyral.Scene):
         elif operation == '-':
             operator = "subtract"
             preposition = "from"
-        elif operation == '*':
+        elif operation == 'X':
             operator = "multiply"
             preposition = "with"
         fraction_one = str(fractions[0].numerator) + "/" + str(fractions[0].denominator)
