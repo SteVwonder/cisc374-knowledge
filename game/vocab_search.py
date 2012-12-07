@@ -111,8 +111,8 @@ class VocabScene(spyral.Scene):
 		background = spyral.Image(size=(WIDTH, HEIGHT))
 		background.fill((0,0,0))
 		self.camera.set_background(background)
-		self.goodjob.visible = True
-		self.goodjob.draw(self.camera)
+		#self.goodjob.visible = True
+		#self.goodjob.draw(self.camera)
 		spyral.director.pop()
 		spyral.director.pop()
 		return	

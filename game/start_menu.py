@@ -24,6 +24,7 @@ class StartMenu(spyral.Scene):
 	self.buttons = spyral.Group(self.camera)
 	self.texts = spyral.Group(self.camera)
 
+
 	#The play, vocab input, high score, and quit buttons to be used, layer = 'bottom'
 	play_button = extras.Button(image_size=(200, 50), position=(WIDTH/2, HEIGHT/2 - 75), layer = 'bottom',filename="images/Buttons/Start Game 1.png")
 	vocab_input_button = extras.Button(image_size=(200, 50), position=(WIDTH/2, HEIGHT/2), layer = 'bottom',filename="images/Buttons/Input Vocab 1.png")
@@ -34,7 +35,7 @@ class StartMenu(spyral.Scene):
 	#using lambda functions.
 	#All but the quit pushes a new scene onto the stack
 	play_button.clicked = lambda: spyral.director.push(character_choice.CharacterPick())
-        #vocab_input_button.clicked = lambda: spyral.director.push()
+        #vocab_input_button.clicked = lambda: self.toggle_menu()
         high_score_button.clicked = lambda: spyral.director.push(high_score.EndScene())
         quit_button.clicked = lambda: spyral.director.pop()
 
@@ -47,6 +48,9 @@ class StartMenu(spyral.Scene):
         #Adding the buttons and text to their respective groups
         self.buttons.add(play_button, vocab_input_button, high_score_button, quit_button)
         #self.texts.add(play_text, vocab_input_text, high_score_text, quit_text)
+
+    def toggle_menu(self):
+	pass	
 
     #Converts the position of the click from real to virtual
     #Then checks to see if any of the sprites in the button group have been clicked
