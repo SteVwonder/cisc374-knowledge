@@ -16,9 +16,9 @@ HEIGHT = 900
 # director's stack
 
 class VillageSelection(spyral.Scene):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, gender= 'Hero', name = 'Hero'):
         
-        super(VillageSelection, self).__init__(*args, **kwargs)
+        super(VillageSelection, self).__init__()
 
         #Notice how I'm using non-default layers, this is needed to display text over the buttons
         self.camera = self.parent_camera.make_child(virtual_size = (WIDTH, HEIGHT), layers= ['bottom', 'top', 'all'])
@@ -26,11 +26,14 @@ class VillageSelection(spyral.Scene):
         self.buttons = spyral.Group(self.camera)
         self.texts = spyral.Group(self.camera)
         self.stars = spyral.Group(self.camera)
+
+        self.gender = gender
+        self.name = name
         
         self.main_group = spyral.Group(self.camera)
         
-        self.fraction_difficulty = 2
-        self.MMM_difficulty = 1
+        self.fraction_difficulty = 1
+        self.MMM_difficulty = 3
         self.Vocab_difficulty = 1
 
         self.fstars = []
@@ -67,12 +70,12 @@ class VillageSelection(spyral.Scene):
         #Using two different groups for text and buttons
         #That way we only have to check for clicks on the buttons
 
-        fraction_game_button.clicked = lambda: spyral.director.push(town_square.TownSquare('fraction',fd=self.fraction_difficulty,md=self.MMM_difficulty,vd=self.Vocab_difficulty))
-        play_MMM.clicked = lambda: spyral.director.push(town_square.TownSquare('MMM',fd=self.fraction_difficulty,md=self.MMM_difficulty,vd=self.Vocab_difficulty))
-	vocab_search_button.clicked = lambda: spyral.director.push(town_square.TownSquare('vocabsearch',fd=self.fraction_difficulty,md=self.MMM_difficulty,vd=self.Vocab_difficulty))
-        fraction_game_button2.clicked = lambda: spyral.director.push(town_square.TownSquare('fraction',fd=self.fraction_difficulty,md=self.MMM_difficulty,vd=self.Vocab_difficulty))
-        play_MMM2.clicked = lambda: spyral.director.push(town_square.TownSquare('MMM',fd=self.fraction_difficulty,md=self.MMM_difficulty,vd=self.Vocab_difficulty))
-	vocab_search_button2.clicked = lambda: spyral.director.push(town_square.TownSquare('vocabsearch',fd=self.fraction_difficulty,md=self.MMM_difficulty,vd=self.Vocab_difficulty))
+        fraction_game_button.clicked = lambda: spyral.director.push(town_square.TownSquare('fraction',fd=self.fraction_difficulty,md=self.MMM_difficulty,vd=self.Vocab_difficulty,gender=self.gender,name=self.name))
+        play_MMM.clicked = lambda: spyral.director.push(town_square.TownSquare('MMM',fd=self.fraction_difficulty,md=self.MMM_difficulty,vd=self.Vocab_difficulty,gender=self.gender,name=self.name))
+	vocab_search_button.clicked = lambda: spyral.director.push(town_square.TownSquare('vocabsearch',fd=self.fraction_difficulty,md=self.MMM_difficulty,vd=self.Vocab_difficulty,gender=self.gender,name=self.name))
+        fraction_game_button2.clicked = lambda: spyral.director.push(town_square.TownSquare('fraction',fd=self.fraction_difficulty,md=self.MMM_difficulty,vd=self.Vocab_difficulty,gender=self.gender,name=self.name))
+        play_MMM2.clicked = lambda: spyral.director.push(town_square.TownSquare('MMM',fd=self.fraction_difficulty,md=self.MMM_difficulty,vd=self.Vocab_difficulty,gender=self.gender,name=self.name))
+	vocab_search_button2.clicked = lambda: spyral.director.push(town_square.TownSquare('vocabsearch',fd=self.fraction_difficulty,md=self.MMM_difficulty,vd=self.Vocab_difficulty,gender=self.gender,name=self.name))
         
         #Using two different groups for text and buttons
         #That way we only have to check for clicks on the buttons
@@ -136,13 +139,13 @@ class VillageSelection(spyral.Scene):
         print str(len(self.cbutton))
     def launchFG(self,difficulty):
         print "Difficulty passed on: "+str(difficulty)
-        spyral.director.push(fraction_game.FractionGame(difficulty))
+        spyral.director.push(fraction_game.FractionGame(difficulty,gender=self.gender,name=self.name))
     def launchMMM(self,difficulty):
         print "Difficulty passed on: "+str(difficulty)
-        spyral.director.push(MeanMedianMode.MeanMedianMode(difficulty))
+        spyral.director.push(MeanMedianMode.MeanMedianMode(difficulty,gender=self.gender,name=self.name))
     def launchVS(self,difficulty):
         print "Difficulty passed on: "+str(difficulty)
-        spyral.director.push(vocab_search.VocabScene(difficulty))
+        spyral.director.push(vocab_search.VocabScene(difficulty,gender=self.gender,name=self.name))
     def purgestars(self):
         self.fstars = []
         self.mstars = []

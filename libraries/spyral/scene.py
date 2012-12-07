@@ -11,6 +11,8 @@ class Director(object):
         """
     def __init__(self):
         self._initialized = False
+        self.gender = 'empty'
+        self.name = 'empty'
         pass
 
     def init(self,

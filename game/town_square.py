@@ -10,12 +10,8 @@ import random
 WIDTH = 1200
 HEIGHT = 900
 
-FRACTION_TEXT = [["Fraction townsperson", "Fraction personperson", "Person person person"], ["Sometimes you just have to", "wait it out and find", "fractions "]]
-MMM_TEXT = [["Off-scene guy", "Mr. President", "Snoop Lion"], ["Mean", "Median", "Mode-izzle my grizzle",]]
-VOCABSEARCH_TEXT = [["Spooky voice", "Not so spooky voice", "Grandma"], ["Find it..", "Find the words", "They're good for you"]]
-
 class TownSquare(spyral.Scene):
-    def __init__(self, town,fd=1,md=1,vd=1):
+    def __init__(self, town,fd=1,md=1,vd=1,gender='Hero',name="Hero"):
 
 	super(TownSquare, self).__init__()
 
@@ -23,6 +19,17 @@ class TownSquare(spyral.Scene):
 	self.buttons = spyral.Group(self.camera)
 	self.texts = spyral.Group(self.camera)
 	self.move_on = spyral.Group(self.camera)
+
+	self.gender = gender
+	self.name = name
+
+	FRACTION_TEXT = []
+        FRACTION_TEXT.append([["Fraction townsperson", "Fraction townsperson", "Fraction townsperson"], ["Welcome "+self.name+" you have come right.", "wait it out and find", "fractions "]])
+        FRACTION_TEXT.append([["Fraction townsperson", "Fraction townsperson", "Fraction townsperson"], ["Sometimes you just have to", "wait it out and find", "fractions "]])
+        MMM_TEXT = []
+        MMM_TEXT.append([["Off-scene guy", "Mr. President", "Snoop Lion"], ["Mean", "Median", "Mode-izzle my grizzle",]])
+        VOCABSEARCH_TEXT = []
+        VOCABSEARCH_TEXT.append([["Spooky voice", "Not so spooky voice", "Grandma"], ["Find it..", "Find the words", "They're good for you"]])
 
 	self.town = town
 	self.popularity = 0
@@ -44,7 +51,7 @@ class TownSquare(spyral.Scene):
             self.VLIST.append(extras.Button(position=(120+random.randrange(0,800,110), 300+random.randrange(0,300,110)), layer='bottom',filename=fle))
             self.texts.add(self.VLIST[x])
 
-	self.greetings = {'fraction': FRACTION_TEXT, 'MMM': MMM_TEXT, 'vocabsearch': VOCABSEARCH_TEXT}
+	self.greetings = {'fraction': FRACTION_TEXT[0], 'MMM': MMM_TEXT[0], 'vocabsearch': VOCABSEARCH_TEXT[0]}
 	self.greeting = conversation.Conversation(self.greetings[town], (0, HEIGHT), self, WIDTH, HEIGHT, tcolor=(0, 255, 0))
 	#self.greeting.button.draw(self.camera)
 	self.texts.add(self.greeting.button)

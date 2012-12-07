@@ -22,13 +22,15 @@ NUMBER_TO_COMPLETE = 3
 # the widgets in the scene
 
 class FractionGame(spyral.Scene):
-    def __init__(self, difficulty,firsttime=1):
+    def __init__(self, difficulty,firsttime=1,gender="Hero",name="Hero"):
         super(FractionGame, self).__init__()
 
         self.camera = self.parent_camera.make_child(virtual_size = (WIDTH, HEIGHT), layers=['bottom', 'top', 'toptop'])
         self.buttons = spyral.Group(self.camera)
         self.texts = spyral.Group(self.camera)
-        self.others = spyral.Group(self.camera)       
+        self.others = spyral.Group(self.camera)
+        self.gender = gender
+        self.name = name
         
         #Some variables used in the game
         self.water_in_bucket = extras.Fraction(0,0)
@@ -74,7 +76,7 @@ class FractionGame(spyral.Scene):
         self.results_button.visible = False
         
         #Need to assign an action to the button for when it is clicked
-        fraction_tools_button.clicked = lambda: spyral.director.push(fraction_tools.FractionTools(self.difficulty, self.problem_fractions, self.operation))
+        fraction_tools_button.clicked = lambda: spyral.director.push(fraction_tools.FractionTools(self.difficulty, self.problem_fractions, self.operation,gender=self.gender,name=self.name))
         increase_water_button.clicked = lambda: self.increase_water_in_bucket()
         decrease_water_button.clicked = lambda: self.decrease_water_in_bucket()
         done_button.clicked = lambda: spyral.director.pop()
