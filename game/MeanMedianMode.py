@@ -83,7 +83,8 @@ class MeanMedianMode(spyral.Scene):
         self.createmode = 0
         self.modenum = 0
         self.difficulty = difficulty
-
+        if(self.difficulty > 3):
+            self.difficulty = 3
         if(self.difficulty == 1):
             self.FINISH = 3
             self.biggest = 5

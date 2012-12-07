@@ -45,17 +45,11 @@ class FractionGame(spyral.Scene):
         self.number_of_tries = 0
 
         #Setup Conversations
-        self.ListofText = ["Help, <Name Here> the wizard came and trapped us in boxes!",
-                           "These boxes are magic and cant be broken by anything!",
-                           "I think the wizard is hiding with us!",
-                           "Move us around and find the Mean, Median and Mode of us to find the Wizard!"]
-        self.ListofNames = ["Random Villager",
-                           "Random Villager",
-                           "Random Villager",
-                           "Random Villager"]
+        self.ListofText = ["Use the red arrows to change the amount of water you use."]
+        self.ListofNames = [self.name]
         if(firsttime == 1)and(self.difficulty == 1):
-            self.conversation = conversation.Conversation([self.ListofNames,self.ListofText],(0,HEIGHT+10),self,w=WIDTH,h=HEIGHT,tcolor=(0,0,0))
-            self.buttons.add(self.conversation.button)
+            self.conversation = conversation.Conversation([self.ListofNames,self.ListofText],(0,HEIGHT+10),self,w=WIDTH,h=HEIGHT,tcolor=(0,255,200))
+            self.texts.add(self.conversation.button)
             self.texts.add(self.conversation.next)
             self.texts.add(self.conversation.visibletext)
             self.texts.add(self.conversation.nametext)
@@ -79,7 +73,13 @@ class FractionGame(spyral.Scene):
         fraction_tools_button.clicked = lambda: spyral.director.push(fraction_tools.FractionTools(self.difficulty, self.problem_fractions, self.operation,gender=self.gender,name=self.name))
         increase_water_button.clicked = lambda: self.increase_water_in_bucket()
         decrease_water_button.clicked = lambda: self.decrease_water_in_bucket()
-        done_button.clicked = lambda: spyral.director.pop()
+
+        def get_me_out():
+            spyral.director.pop()
+            spyral.director.pop()
+            return
+        
+        done_button.clicked = lambda: get_me_out()
         water_tower.clicked = lambda: self.check_answer()
         
         #Add text over the button, notice how I set the layer
@@ -279,9 +279,11 @@ class FractionGame(spyral.Scene):
             if self.results_timer > 0:
                 self.results_timer -= dt
             elif self.corn_in_silo >= 1.0:
-                village_selection_scene = spyral.director._stack[-2]
+                village_selection_scene = spyral.director._stack[-3]
                 village_selection_scene.fraction_difficulty = self.difficulty + 1
                 spyral.director.pop()
+                spyral.director.pop()
+                return
             else:
                 self.update_corn_in_silo()
                 self.running_animation = False
@@ -419,7 +421,7 @@ class FractionGame(spyral.Scene):
     def generate_problem(self):
         if self.difficulty == 1:
             return self.generate_simple_same_denominator_problem(1, 6)
-        elif self.difficulty == 3:
+        elif self.difficulty >= 3:
             return self.generate_multiply_different_denominator_problem(1, 5)
         elif self.difficulty == 2:
             return self.generate_multiply_same_denominator_problem(1, 6)
