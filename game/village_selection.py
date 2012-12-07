@@ -1,5 +1,8 @@
 import spyral
 import town_square
+import fraction_game
+import MeanMedianMode
+import vocab_search
 import extras
 
 WIDTH = 1200
@@ -21,7 +24,7 @@ class VillageSelection(spyral.Scene):
         self.camera = self.parent_camera.make_child(virtual_size = (WIDTH, HEIGHT), layers= ['bottom', 'top', 'all'])
         #Do not draw this layer, just used to group together clickable buttons
         self.buttons = spyral.Group(self.camera)
-        #self.texts = spyral.Group(self.camera)
+        self.texts = spyral.Group(self.camera)
         self.stars = spyral.Group(self.camera)
         
         self.main_group = spyral.Group(self.camera)
@@ -108,7 +111,7 @@ class VillageSelection(spyral.Scene):
             self.fstars[-1].layer = 'top'
             self.stars.add(self.fstars[x])
             self.texts.add(self.cbutton[-1].text)
-            self.cbutton[-1].clicked = lambda: spyral.director.push(fraction_game.FractionGame(x+1))
+            self.cbutton[-1].clicked = self.launchMMM(x+1)
         for x in range(0,self.MMM_difficulty):
             self.cbutton.append(extras.Button(filename="images/Star.png",layer='bottom',position=(212+(90*x),370)))
             self.mstars.append(self.cbutton[-1])
@@ -128,7 +131,9 @@ class VillageSelection(spyral.Scene):
             self.texts.add(self.cbutton[-1].text)
             self.cbutton[-1].clicked = lambda: spyral.director.push(vocab_search.VocabScene(x+1))
         print str(len(self.cbutton))
-
+    def launchMMM(self,difficulty):
+        print "Difficulty passed on: "+str(difficulty)
+        spyral.director.push(fraction_game.FractionGame(difficulty))
     def purgestars(self):
         self.fstars = []
         self.mstars = []
