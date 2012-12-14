@@ -93,7 +93,6 @@ class Grid(object):
 	    while True:
 		x, y, x_dir, y_dir = self.word_placement(word_len, level_directions)
 		if self.write_word(word, x, y, x_dir, y_dir):
-		    print x, y, x_dir, y_dir
 		    coord = [x*self.width + y, 0]
 		    coord[1] = coord[0] + (word_len-1)*(y_dir + x_dir*self.width)
 		    coord.sort()

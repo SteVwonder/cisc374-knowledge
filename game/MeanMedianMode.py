@@ -96,7 +96,6 @@ class MeanMedianMode(spyral.Scene):
             self.biggest = 15
         
         self.correct = correct
-        print "Correct Answer IS: "+str(correct)
         self.camera = self.parent_camera.make_child(virtual_size = (WIDTH, HEIGHT), layers=['bottom', 'middle','top'])
 
         self.group = spyral.Group(self.camera)
@@ -122,18 +121,12 @@ class MeanMedianMode(spyral.Scene):
         self.VillagerList = []
         self.NumberList = []
         
-        self.ListofText = ["Help us "+self.name+"! The wizard came and trapped us in boxes!",
-                           "These boxes are magic and cant be broken by anything!",
-                           "I think the wizard is hiding with us!",
-                           "Move us around and find the Mean, Median and Mode of us to find the Wizard!",
+        self.ListofText = ["Move us around and find the Mean, Median and Mode of us to find the Wizard!",
                            "Click on the box and type in the answer when you think you've got it.",
                            "Press Enter to confirm your desicision."]
-        self.ListofNames = ["Random Villager",
-                           "Random Villager",
-                           "Random Villager",
-                            "Random Villager",
-                            "Random Villager",
-                           "Random Villager"]
+        self.ListofNames = [self.name,
+                            self.name,
+                            self.name]
         if(firsttime == 1)and(self.difficulty == 1):
             self.conversation = conversation.Conversation([self.ListofNames,self.ListofText],(0,HEIGHT+10),self,w=WIDTH,h=HEIGHT,tcolor=(0,255,0))
             self.group.add(self.conversation.button)
@@ -155,20 +148,16 @@ class MeanMedianMode(spyral.Scene):
             if(self.mean != 0):
                 if(count == self.totalnumber-1):
                     while((nvil.number+self.mean) % (len(self.VillagerList)+1) != 0):
-                        print "Fixing MEAN : "+str(nvil.number)+" % "+str((len(self.VillagerList)+1))+" = "+str((nvil.number+self.mean) % (len(self.VillagerList)+1))
                         nvil.set_number(nvil.number+1)
-                print "Fixed MEAN : "+str(nvil.number)+" % "+str((len(self.VillagerList)+1))+" = "+str((nvil.number+self.mean) % (len(self.VillagerList)+1))
             self.VillagerList.append(nvil)
             self.text.add(nvil.text)
             self.NumberList.append(nvil.number)
             self.mean += nvil.number
 
         self.mean /= len(self.VillagerList)
-        print "Mean = "+str(self.mean)
 
         self.NumberList.sort()
         self.median = self.NumberList[int(len(self.NumberList)/2)]
-        print "Median = "+str(self.median)
 
         for villager in self.VillagerList:
             self.group.add(villager)
@@ -192,7 +181,6 @@ class MeanMedianMode(spyral.Scene):
 
                 self.type = self.meantext
                 rnd = 900
-                print "Showing Mean"
         if(rnd < 40):
             self.meantext.visible = 0
             self.mediantext.visible = 1
@@ -200,14 +188,12 @@ class MeanMedianMode(spyral.Scene):
 
             self.type = self.mediantext
             rnd = 900
-            print "Showing Median"
         if(rnd > 39)and(rnd < 101): 
             self.meantext.visible = 0
             self.mediantext.visible = 0
             self.modetext.visible = 1
 
             self.type = self.modetext
-            print "Showing Mode"
 
         self.Selectable.append(self.meantext)
         self.Selectable.append(self.mediantext)
@@ -240,7 +226,6 @@ class MeanMedianMode(spyral.Scene):
     def on_enter(self):
         background = spyral.Image(filename="images/Mean Median Mode BG.png")
         self.camera.set_background(background)
-        print self.camera.layers()
         
     def render(self):
         self.group.draw()
@@ -284,7 +269,6 @@ class MeanMedianMode(spyral.Scene):
             elif event['type'] == 'KEYDOWN':
                 self.ntext = self.get_type(self.type)+event['ascii']
                 self.set_type(self.ntext,self.type)
-                #print "Typing: "+self.type.dtext
                 #ascii 27 is escape key
                 if event['ascii'] == chr(27):
                     spyral.director.pop()
@@ -294,7 +278,6 @@ class MeanMedianMode(spyral.Scene):
                     self.canswer = self.type.get_answer()
                     if(self.canswer != None):
                         self.correct += self.canswer
-                        print "Correct Answers:"+str(self.correct)
                         if(self.correct == self.FINISH):
                             self.Ftext.visible = 1
                             self.timer = 0
@@ -331,9 +314,7 @@ class MeanMedianMode(spyral.Scene):
         #Restarting the game
         if(self.timer < self.time_end):
             self.timer += 1
-            #print "Timer: "+str(self.timer)
         if(self.timer == self.time_end):           
-            print "Correct Amount: "+str(self.correct)+"/"+str(self.FINISH)
             if(self.correct == self.FINISH):
                 village_selection_scene = spyral.director._stack[-3]
                 village_selection_scene.MMM_difficulty = min(self.difficulty + 1,3)

@@ -62,7 +62,6 @@ class Conversation(spyral.Sprite):
         self.currentposition = len(self.ctext)
         self.visibletext.set_text(self.ctext[:self.currentposition])
         self.visibletext.layer = self.layer
-        print "Ending Text"
     def to_next(self):
         if(self.currenttext < len(self.tlist)-1):
             self.currentposition = 0
@@ -79,7 +78,6 @@ class Conversation(spyral.Sprite):
             self.next.visible = 0
             self.nametext.visible = 0
             return -1
-        print "Going to next text"
     def set_text(self, tlist):
         self.tlist = tlist
     def get_text(self):

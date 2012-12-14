@@ -45,8 +45,8 @@ class FractionGame(spyral.Scene):
         self.number_of_tries = 0
 
         #Setup Conversations
-        self.ListofText = ["Use the red arrows to change the amount of water you use."]
-        self.ListofNames = [self.name]
+        self.ListofText = ["Use the red arrows to change the amount of water you use.", "Then press the blue water tower to water the field."]
+        self.ListofNames = [self.name, self.name]
         if(firsttime == 1)and(self.difficulty == 1):
             self.conversation = conversation.Conversation([self.ListofNames,self.ListofText],(0,HEIGHT+10),self,w=WIDTH,h=HEIGHT,tcolor=(0,255,0))
             self.texts.add(self.conversation.button)
@@ -280,7 +280,8 @@ class FractionGame(spyral.Scene):
                 self.results_timer -= dt
             elif self.corn_in_silo >= 1.0:
                 village_selection_scene = spyral.director._stack[-3]
-                village_selection_scene.fraction_difficulty = self.difficulty + 1
+                if village_selection_scene.fraction_difficulty < 3:
+                    village_selection_scene.fraction_difficulty = self.difficulty + 1
                 spyral.director.pop()
                 spyral.director.pop()
                 return

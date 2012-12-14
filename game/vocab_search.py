@@ -66,23 +66,18 @@ class VocabScene(spyral.Scene):
 	#sprite.draw(self.camera)
 	if sprite.visible == False:
 	    self.current_choices.remove(self.grid.buttons.index(sprite))
-	    print "Removed sprite at index: {0} from choices".format(self.grid.buttons.index(sprite))
 	elif len(self.current_choices) < 2:
 	    self.current_choices.append(self.grid.buttons.index(sprite))
-	    print "Added sprite at index: {0} to choices".format(self.grid.buttons.index(sprite))
 	else:
 	    old_choice = self.current_choices.pop(0)
 	    self.grid.buttons[old_choice].visible = False
 	    #self.grid.buttons[old_choice].draw(self.camera)
 	    self.current_choices.append(self.grid.buttons.index(sprite))
-	    print "Replaced sprite at {0} with sprite at {1}".format(old_choice, self.grid.buttons.index(sprite))
 
     def enter_answer(self):
-	print "enter key received"
 	self.current_choices.sort()	
 	for coord in self.grid.words:
 	    if self.current_choices == coord[1]:
-		print "correct answer"
 		#horizontal word
 		if (self.current_choices[0]/self.grid.width) == (self.current_choices[1]/self.grid.width):
 		    increment = 1		    

@@ -136,15 +136,11 @@ class VillageSelection(spyral.Scene):
             self.texts.add(self.cbutton[-1].text)
             self.cbutton[-1].number = x+1
             self.cbutton[-1].clicked = self.launchVS
-        print str(len(self.cbutton))
     def launchFG(self,difficulty):
-        print "Difficulty passed on: "+str(difficulty)
         spyral.director.push(town_square.TownSquare('fraction',fd=self.fraction_difficulty,md=self.MMM_difficulty,vd=self.Vocab_difficulty,gender=self.gender,name=self.name))
     def launchMMM(self,difficulty):
-        print "Difficulty passed on: "+str(difficulty)
         spyral.director.push(town_square.TownSquare('MMM',fd=self.fraction_difficulty,md=self.MMM_difficulty,vd=self.Vocab_difficulty,gender=self.gender,name=self.name))
     def launchVS(self,difficulty):
-        print "Difficulty passed on: "+str(difficulty)
         spyral.director.push(town_square.TownSquare('vocabsearch',fd=self.fraction_difficulty,md=self.MMM_difficulty,vd=self.Vocab_difficulty,gender=self.gender,name=self.name))
     def purgestars(self):
         self.fstars = []

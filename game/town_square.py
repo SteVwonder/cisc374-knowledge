@@ -24,17 +24,17 @@ class TownSquare(spyral.Scene):
 	self.name = name
 
 	FRACTION_TEXT = []
-        FRACTION_TEXT.append([["Fraction Townsperson", "Fraction Townsperson", "Fraction Townsperson","Fraction Townsperson"], ["Welcome "+self.name+" you have come at the right time!", "It seems the Wizard has stopped the rain from falling!", "We've always needed the rain to tell us how much water we need.","Will you help us?"]])
+        FRACTION_TEXT.append([["Fraction Townsperson", "Fraction Townsperson", "Fraction Townsperson","Fraction Townsperson"], ["Welcome "+self.name+" you have come at the right time!", "It seems the Wizard has stopped the rain from falling!", "We've always needed the rain to water our crops.","Will you help us?"]])
         FRACTION_TEXT.append([["Fraction Townsperson", "Fraction Townsperson", "Fraction Townsperson"], ["Hooray for "+self.name+"!", "The drought continues but I think we're starting to get it.", "Can we rely on you again?"]])
         FRACTION_TEXT.append([["Fraction Townsperson", "Fraction Townsperson", "Fraction Townsperson"], ["We love you "+self.name+"!", "The drought continues and we're having a tough time this week.", "Will you help us?"]])
         
         MMM_TEXT = []
-        MMM_TEXT.append([["Mean Townsperson", "Median Townsperson", "Mode Townsperson"], ["The wizard has turned everyone into boxes", "What are we going to do!", "Will you help us "+self.name+"!?"]])
+        MMM_TEXT.append([["Mean Townsperson", "Median Townsperson", "Mode Townsperson"], ["The wizard has turned everyone into boxes", "What are we going to do?!?", "Will you help us "+self.name+"!?"]])
         MMM_TEXT.append([["Mean Townsperson", "Median Townsperson", "Mode Townsperson"], ["The wizard came back and turned more people into boxes","He got more people than before!", "Please help us?"]])
         MMM_TEXT.append([["Mean Townsperson", "Median Townsperson", "Mode Townsperson"], ["The wizard has turned everyone into boxes", "He's got a lot of people this time!", "Will you help us "+self.name+"!?"]])
 
         VOCABSEARCH_TEXT = []
-        VOCABSEARCH_TEXT.append([["Vocab Townsperson", "Vocab Townsperson", "Vocab Townsperson"], ["Oh my the townshall is locked!", "What were all those words?", "Please help us!?"]])
+        VOCABSEARCH_TEXT.append([["Vocab Townsperson", "Vocab Townsperson", "Vocab Townsperson"], ["Oh my the town hall door has been enchanted by the wizard", "What were all those words?", "Please help us!?"]])
         VOCABSEARCH_TEXT.append([["Vocab Townsperson", "Vocab Townsperson", self.name,"Vocab Townsperson"], ["The townshall got locked again!", "How bored does a wizard have to be to bother us like this...", "I... don't know?","Will you help us?"]])
         VOCABSEARCH_TEXT.append([["Vocab Townsperson", "Vocab Townsperson", self.name,"Vocab Townsperson"], ["...", "We should just find another town hall", "He'll probably lock that one too.","Will you help us?"]])
 
